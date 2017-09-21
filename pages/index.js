@@ -9,25 +9,12 @@ Para.propTypes = {
 
 export default () => (
   <div>
-    Hello world
-    <Para text="hiii" />
     <style jsx>{`
       p {
         color: blue;
       }
-      div {
-        background: grey;
-      }
-      @media (max-width: 600px) {
-        div {
-          background: blue;
-        }
-      }
     `}</style>
-    <style global jsx>{`
-      body {
-        background: black;
-      }
-    `}</style>
+    Hello world
+    <Para text="hiii" />
   </div>
 );

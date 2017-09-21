@@ -1,0 +1,31 @@
+{
+	"name": "clairic",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"dev": "next",
+		"eslint": "eslint \"./**/*.js\"",
+    "export": "next build && next export -o build",
+		"prettier": "prettier --write \"./**/*.js\""
+	},
+	"dependencies": {
+		"babel-eslint": "8.0.0",
+		"eslint": "3.19.0",
+		"eslint-config-airbnb": "15.0.1",
+		"eslint-plugin-import": "2.7.0",
+		"eslint-plugin-jsx-a11y": "6.0.2",
+		"eslint-plugin-react": "7.3.0",
+		"material-ui": "0.19.2",
+		"moment": "2.18.1",
+		"next": "3.2.2",
+		"polished": "1.7.0",
+		"prettier": "1.7.0",
+		"prop-types": "15.5.10",
+		"ramda": "0.24.1",
+		"react": "15.6.1",
+		"react-dom": "15.6.1",
+		"react-redux": "5.0.6",
+		"redux": "3.7.2",
+		"redux-thunk": "2.2.0"
+	}
+}

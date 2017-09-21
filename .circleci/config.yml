@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/clairic
+    docker:
+      - image: circleci/node:8
+        environment:
+          AWS_REGION: us-east-1
+          NODE_ENV: production
+    steps:
+      - checkout
+      - run: yarn
+      - run: yarn export
+      - run: yarn eslint
+      - run: yarn prettier -l
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              sudo apt-get update && sudo apt-get install -y awscli
+              yarn sync
+              yarn invalidate
+            fi

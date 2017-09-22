@@ -7,7 +7,7 @@ class ServerlessPlugin {
     this.options = options;
     this.commands = {
       sync: {
-        usage: 'Deploys the `app` directory to your bucket',
+        usage: 'Deploys the `build` directory to your bucket',
         lifecycleEvents: ['sync']
       }
     };
@@ -18,15 +18,41 @@ class ServerlessPlugin {
   }
 
   sync() {
-    const args = [
+    let args;
+    let result;
+    let stdout;
+    let sterr;
+
+    // Remove previous files
+    args = [
+      's3',
+      'rm',
+      '--recursive',
+      `s3://${name}/`
+    ];
+    result = spawnSync('aws', args);
+    stdout = result.stdout.toString();
+    sterr = result.stderr.toString();
+    if (stdout) {
+      this.serverless.cli.log(stdout);
+    }
+    if (sterr) {
+      this.serverless.cli.log(sterr);
+    }
+    if (!sterr) {
+      this.serverless.cli.log('Successfully removed files from S3 bucket');
+    }
+
+    // Upload files
+    args = [
       's3',
       'sync',
       'build/',
       `s3://${name}/`
     ];
-    const result = spawnSync('aws', args);
-    const stdout = result.stdout.toString();
-    const sterr = result.stderr.toString();
+    result = spawnSync('aws', args);
+    stdout = result.stdout.toString();
+    sterr = result.stderr.toString();
     if (stdout) {
       this.serverless.cli.log(stdout);
     }

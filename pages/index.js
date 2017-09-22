@@ -1,7 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Para = ({ text }) => <p>{text}</p>;
+const Para = ({ text }) => (
+  <div>
+    <style jsx>{`
+      p {
+        color: blue;
+      }
+    `}</style>
+    <p>{text}</p>
+  </div>
+);
 
 Para.propTypes = {
   text: PropTypes.string.isRequired,
@@ -10,8 +19,8 @@ Para.propTypes = {
 export default () => (
   <div>
     <style jsx>{`
-      p {
-        color: blue;
+      div {
+        color: green;
       }
     `}</style>
     Hello world

@@ -2,8 +2,9 @@
   "extends": "airbnb",
   "parser": "babel-eslint",
   "rules": {
-    "react/forbid-prop-types": 0, // Sometimes helpful
-    "react/jsx-filename-extension": 0, // All .js please
-    "react/no-danger": 0 // Sometimes you need it
+    "arrow-parens": 0,
+    "react/forbid-prop-types": 0,
+    "react/jsx-filename-extension": 0,
+    "react/no-danger": 0
   }
 }

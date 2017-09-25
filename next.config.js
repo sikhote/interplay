@@ -1,6 +1,7 @@
 module.exports = {
   exportPathMap: () => ({
     '/': { page: '/' },
+    '/settings': { page: '/settings' },
   }),
   webpack: config => {
     config.module.rules.push(

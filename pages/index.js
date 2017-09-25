@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Page from '../components/Page';
 
 const Para = ({ text }) => (
   <div>
@@ -17,7 +18,7 @@ Para.propTypes = {
 };
 
 export default () => (
-  <div>
+  <Page>
     <style jsx>{`
       div {
         color: green;
@@ -25,5 +26,5 @@ export default () => (
     `}</style>
     Hello world
     <Para text="hiii" />
-  </div>
+  </Page>
 );

@@ -1,34 +1,31 @@
 import React from 'react';
-import { compose } from 'ramda';
-import { connect } from 'react-redux';
 import { Menu, Icon } from 'antd';
 import PropTypes from 'prop-types';
+import { withRouter } from 'next/router';
 
-const Item = ({ key, message, icon, ...props }) => (
-  <Menu.Item key={key} {...props}>
-    <Icon type={icon} />
-    <FormattedMessage {...message}>{message => <span>{message}</span>}</FormattedMessage>
-  </Menu.Item>
+const Navigation = ({ router }) => (
+  <Menu
+    onClick={({ key }) => router.push(key)}
+    selectedKeys={[router.pathname]}
+    mode="inline"
+    style={{ height: '100vh', width: 200 }}
+    theme="dark"
+  >
+    {[
+      { key: '/', icon: 'caret-right', message: 'Player' },
+      { key: '/audio', icon: 'notification', message: 'Audio' },
+      { key: '/video', icon: 'video-camera', message: 'Video' },
+      { key: '/settings', icon: 'setting', message: 'Settings' },
+    ].map(({ key, icon, message }) => (
+      <Menu.Item key={key}>
+        <Icon type={icon} /> {message}
+      </Menu.Item>
+    ))}
+  </Menu>
 );
 
-const Navigation = ({ viewer, path }, { router }) => (
-  <Box>
-    <Menu
-      onClick={({ key }) => router.replace(key)}
-      selectedKeys={[path]}
-      mode="inline"
-      style={{ height: '100vh', width: 200 }}
-      theme="dark"
-    >
-      <Item key="/" message="Player" icon="caret-right" />
-      <Item key="/audio" message="Audio" icon="bars" />
-      <Item key="/video" message="Video" icon="bars" />
-      <Item key="/settings" message={linksMessages.settings} icon="setting" />
-      <Item key="/signin" message={linksMessages.signIn} icon="user" />
-    </Menu>
-  </Box>
-);
+Navigation.propTypes = {
+  router: PropTypes.object.isRequired,
+};
 
-Header.contextTypes = { router: React.PropTypes.object };
-
-export default compose(connect((state: State) => ({ viewer: state.users.viewer })))(Header);
+export default withRouter(Navigation);

@@ -8,13 +8,12 @@ const Navigation = ({ router }) => (
     onClick={({ key }) => router.push(key)}
     selectedKeys={[router.pathname]}
     mode="inline"
-    style={{ height: '100vh', width: 200 }}
     theme="dark"
   >
     {[
       { key: '/', icon: 'caret-right', message: 'Player' },
-      { key: '/audio', icon: 'notification', message: 'Audio' },
-      { key: '/video', icon: 'video-camera', message: 'Video' },
+      // { key: '/audio', icon: 'notification', message: 'Audio' },
+      // { key: '/video', icon: 'video-camera', message: 'Video' },
       { key: '/settings', icon: 'setting', message: 'Settings' },
     ].map(({ key, icon, message }) => (
       <Menu.Item key={key}>

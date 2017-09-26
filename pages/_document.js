@@ -16,11 +16,6 @@ export default class extends Document {
         <Head>
           <title>clairic</title>
           <style dangerouslySetInnerHTML={{ __html: antd }} />
-          <style>{`
-            body {
-              background: grey;
-            }
-          `}</style>
         </Head>
         <body>
           <Main />

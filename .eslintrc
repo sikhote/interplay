@@ -3,6 +3,7 @@
   "parser": "babel-eslint",
   "rules": {
     "arrow-parens": 0,
+    "max-len": [2, 80],
     "react/forbid-prop-types": 0,
     "react/jsx-filename-extension": 0,
     "react/no-danger": 0

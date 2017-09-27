@@ -23,12 +23,9 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'ON_SETTINGS': {
+    case 'SETTINGS_UPDATE': {
       const { settings } = action.payload;
-      if (!settings) {
-        return state;
-      }
-      return mergeDeepRight(state, settings);
+      return settings ? mergeDeepRight(state, settings) : state;
     }
 
     default:

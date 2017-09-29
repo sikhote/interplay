@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Input, Button, Tooltip } from 'antd';
+import { Input, Button, Tooltip, DatePicker } from 'antd';
+import inject from '../lib/inject';
 import Page from '../components/Page';
 
 const Settings = ({ dropbox }) => (
@@ -38,7 +39,7 @@ const Settings = ({ dropbox }) => (
               </tr>
               <tr className="ant-table-row ant-table-row-level-0">
                 <td>Sync</td>
-                <td>Actions</td>
+                <td><DatePicker /></td>
               </tr>
             </tbody>
           </table>
@@ -52,8 +53,7 @@ Settings.propTypes = {
   dropbox: PropTypes.object.isRequired,
 };
 
-export default connect(
-  // state => ({ dropbox: state.settings.dropbox }),
-  null,
+export default inject(connect(
+  state => ({ dropbox: state.settings.dropbox }),
   {}, // { saveSettings, signOut, syncFiles },
-)(Settings);
+)(Settings));

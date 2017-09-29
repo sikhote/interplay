@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Navigation from './Navigation';
-import App from './App';
 
 const Page = ({ children }) => (
-  <App>
+  <div>
     <style jsx>{`
       .main  {
         display: grid;
@@ -14,11 +13,9 @@ const Page = ({ children }) => (
     `}</style>
     <div className="main">
       <Navigation />
-      <div>
-        {children}
-      </div>
+      {children}
     </div>
-  </App>
+  </div>
 );
 
 Page.propTypes = {

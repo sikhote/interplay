@@ -5,45 +5,23 @@ import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import Promise from 'bluebird';
 import extensions from '../lib/extensions';
-import { appError } from '../app/actions';
 
-export const onSettings = (snap) => {
-  const settings = snap.val();
-  return {
-    type: 'ON_SETTINGS',
-    payload: { settings },
-  };
-};
-
-export const saveSettings = (settings) => ({
-  type: 'SAVE_SETTINGS',
+export const settingsUpdate = settings => ({
+  type: 'SETTINGS_UPDATE',
   payload: { settings },
 });
 
-export const saveSettingsDone = () => ({
-  type: 'SAVE_SETTINGS_DONE',
+export const settingsDropboxDelete = () => ({
+  type: 'SETTINGS_DROPBOX_DELETE',
 });
 
-const saveSettingsEpic = (action$: any, deps) =>
-  Observable.merge(
-    action$.filter((action) => action.type === 'SAVE_SETTINGS'),
-  ).mergeMap(action => {
-    const { firebase, getState } = deps;
-    const { id } = getState().users.viewer;
-    const { settings } = action.payload;
-    const promise = firebase.update({ [`users-settings/${id}`]: settings });
-    return Observable.from(promise)
-      .map(saveSettingsDone)
-      .catch(error => Observable.of(appError(error)));
-  });
-
-export const syncFiles = () => ({
-  type: 'SYNC_FILES',
+export const settingsDropboxSync = () => ({
+  type: 'SETTINGS_DROPBOX_SYNC',
 });
 
-const syncFilesEpic = (action$: any, deps) =>
+const settingsDropboxSyncEpic = (action$: any, deps) =>
   Observable.merge(
-    action$.filter((action) => action.type === 'SYNC_FILES'),
+    action$.filter((action) => action.type === 'SETTINGS_DROPBOX_SYNC'),
   ).mergeMap(() => {
     const { firebase, getState } = deps;
     const { id } = getState().users.viewer;
@@ -156,4 +134,4 @@ const syncFilesEpic = (action$: any, deps) =>
       .catch(error => Observable.of(syncFilesFail(error)));
   });
 
-export const epics = [saveSettingsEpic, syncFilesEpic];
+export const epics = [settingsDropboxSyncEpic];

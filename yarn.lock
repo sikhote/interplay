@@ -163,9 +163,9 @@ ansi-styles@^3.1.0:
   dependencies:
     color-convert "^1.9.0"
 
-antd@2.13.2:
-  version "2.13.2"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-2.13.2.tgz#381f046b13acfc11d45d71c9a0d36da2ebe42a12"
+antd@2.13.4:
+  version "2.13.4"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-2.13.4.tgz#8c1ccd3622eb36677e68889899342508de96ef05"
   dependencies:
     array-tree-filter "~1.0.0"
     babel-runtime "6.x"
@@ -177,7 +177,7 @@ antd@2.13.2:
     moment "^2.18.1"
     omit.js "^1.0.0"
     prop-types "^15.5.7"
-    rc-animate "^2.3.6"
+    rc-animate "^2.4.1"
     rc-calendar "~9.0.0"
     rc-cascader "~0.11.3"
     rc-checkbox "~2.0.3"
@@ -193,7 +193,7 @@ antd@2.13.2:
     rc-progress "~2.2.2"
     rc-rate "~2.1.1"
     rc-select "~6.9.0"
-    rc-slider "~8.2.0"
+    rc-slider "~8.3.0"
     rc-steps "~2.5.1"
     rc-switch "~1.5.1"
     rc-table "~5.6.9"
@@ -4754,7 +4754,7 @@ rc-align@2.x:
     prop-types "^15.5.8"
     rc-util "4.x"
 
-rc-animate@2.x, rc-animate@^2.0.2, rc-animate@^2.3.0, rc-animate@^2.3.6:
+rc-animate@2.x, rc-animate@^2.0.2, rc-animate@^2.3.0, rc-animate@^2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/rc-animate/-/rc-animate-2.4.1.tgz#df3e0f56fe106afe4bf52ff408ced241c5178919"
   dependencies:
@@ -4929,9 +4929,9 @@ rc-select@~6.9.0:
     rc-util "^4.0.4"
     warning "2.x"
 
-rc-slider@~8.2.0:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-8.2.0.tgz#ae37d17144cad60e1da6eac0ee4ffcfea0b0a6e8"
+rc-slider@~8.3.0:
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/rc-slider/-/rc-slider-8.3.1.tgz#b64d66ca1d1b755e4b411ca10906767180a7aeff"
   dependencies:
     babel-runtime "6.x"
     classnames "^2.2.5"
@@ -5282,6 +5282,10 @@ redent@^1.0.0:
   dependencies:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
+
+redux-observable@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/redux-observable/-/redux-observable-0.16.0.tgz#dc431d0f47a9c3af232639d6bdd70d80c1b620d9"
 
 redux-persist@4.10.1:
   version "4.10.1"

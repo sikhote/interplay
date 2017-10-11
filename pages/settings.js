@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Input, Button, Tooltip } from 'antd';
 import moment from 'moment';
-import { assocPath } from 'ramda';
 import inject from '../lib/inject';
 import Page from '../components/Page';
 import {
@@ -38,9 +37,7 @@ const Settings = ({
                     style={{ border: 0 }}
                     value={dropbox.key}
                     onChange={({ target: { value } }) =>
-                      settingsUpdate({
-                        dropbox: assocPath(['key'], value, dropbox),
-                      })}
+                      settingsUpdate({ dropbox: { key: value } })}
                   />
                 </td>
               </tr>
@@ -52,9 +49,7 @@ const Settings = ({
                     style={{ border: 0 }}
                     value={dropbox.path}
                     onChange={({ target: { value } }) =>
-                      settingsUpdate({
-                        dropbox: assocPath(['path'], value, dropbox),
-                      })}
+                      settingsUpdate({ dropbox: { path: value } })}
                   />
                 </td>
               </tr>
@@ -73,9 +68,7 @@ const Settings = ({
                   <Tooltip
                     placement="top"
                     title={
-                      dropbox.sync.status === 'syncing'
-                        ? 'Syncing'
-                        : 'Start sync'
+                      dropbox.status === 'syncing' ? 'Syncing' : 'Start sync'
                     }
                   >
                     <Button
@@ -83,20 +76,16 @@ const Settings = ({
                       shape="circle"
                       icon="retweet"
                       style={{ marginLeft: 10 }}
-                      loading={dropbox.sync.status === 'syncing'}
+                      loading={dropbox.status === 'syncing'}
                       onClick={() => {
                         settingsUpdate({
-                          dropbox: assocPath(
-                            ['sync'],
-                            { date: Date.now(), status: 'syncing' },
-                            dropbox,
-                          ),
+                          dropbox: { date: Date.now(), status: 'syncing' },
                         });
                         settingsDropboxSync();
                       }}
                     />
                   </Tooltip>
-                  {dropbox.sync.status === 'syncing' ? (
+                  {dropbox.status === 'syncing' ? (
                     <Tooltip placement="top" title="Cancel sync">
                       <Button
                         type="danger"
@@ -110,22 +99,18 @@ const Settings = ({
                     <Tooltip
                       placement="top"
                       title={
-                        dropbox.sync.date
-                          ? moment().from(dropbox.sync.date)
+                        dropbox.date
+                          ? moment(dropbox.date).fromNow()
                           : 'Never synced'
                       }
                     >
                       <Button
                         type={
-                          dropbox.sync.status === 'success'
-                            ? 'default'
-                            : 'danger'
+                          dropbox.status === 'success' ? 'default' : 'danger'
                         }
                         shape="circle"
                         icon={
-                          dropbox.sync.status === 'success'
-                            ? 'check'
-                            : 'exclamation'
+                          dropbox.status === 'success' ? 'check' : 'exclamation'
                         }
                         style={{ marginLeft: 10 }}
                       />

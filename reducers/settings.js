@@ -4,10 +4,8 @@ const initialState = {
   dropbox: {
     key: '',
     path: '',
-    sync: {
-      date: null,
-      status: null,
-    },
+    date: null,
+    status: null,
   },
   audio: {
     position: 0,

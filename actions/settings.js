@@ -19,18 +19,16 @@ export const settingsDropboxSync = () => ({
   type: 'SETTINGS_DROPBOX_SYNC',
 });
 
-const settingsDropboxSyncEpic = (action$: any, deps) =>
+const settingsDropboxSyncEpic = (action$, deps) =>
   Observable.merge(
-    action$.filter((action) => action.type === 'SETTINGS_DROPBOX_SYNC'),
+    action$.filter(action => action.type === 'SETTINGS_DROPBOX_SYNC'),
   ).mergeMap(() => {
-    const { firebase, getState } = deps;
-    const { id } = getState().users.viewer;
+    const { getState } = deps;
+    const { key: accessToken, path } = getState().settings.dropbox;
+    const dbx = new Dropbox({ accessToken });
 
     const getFiles = Observable.from(
       Promise.coroutine(function* co() {
-        const { key: accessToken, path } = getState().settings.dropbox;
-        const dbx = new Dropbox({ accessToken });
-
         const getDropboxEntries = options => {
           const listPromise = options.cursor
             ? dbx.filesListFolderContinue({ cursor: options.cursor })
@@ -39,7 +37,7 @@ const settingsDropboxSyncEpic = (action$: any, deps) =>
           return listPromise.then(response => {
             options.entries.push(...response.entries);
 
-            if (getState().settings.dropbox.sync.status === 'cancelled') {
+            if (getState().settings.dropbox.status === 'cancelled') {
               return Promise.reject(new Error('cancelled'));
             }
 
@@ -52,7 +50,7 @@ const settingsDropboxSyncEpic = (action$: any, deps) =>
         };
 
         const entries = yield getDropboxEntries({
-          list: { path: `/${path}`, recursive: true },
+          list: { path, recursive: true },
           entries: [],
         });
 
@@ -68,7 +66,8 @@ const settingsDropboxSyncEpic = (action$: any, deps) =>
             const fileName = parts.pop().split('.');
             const fileExt = fileName.pop();
             const fileType = Object.keys(extensions).find(exts =>
-              extensions[exts].find(ext => ext === fileExt));
+              extensions[exts].find(ext => ext === fileExt),
+            );
             let name = startCase(fileName.join('.'));
             let track = null;
 
@@ -101,32 +100,35 @@ const settingsDropboxSyncEpic = (action$: any, deps) =>
     );
 
     const addFiles = getFiles.concatMap(files =>
-      Observable.from(firebase.update({ [`users-files/${id}`]: files })));
+      Observable.from(
+        dbx.filesUpload({
+          contents: JSON.stringify(files),
+          path: `${path}/clairic.json`,
+          mode: { '.tag': 'overwrite' },
+          mute: true,
+        }),
+      ),
+    );
 
     const syncFilesDone = () =>
-      saveSettings(
-        assocPath(
-          ['dropbox', 'sync'],
-          { date: Date.now(), status: 'success' },
-          getState().settings,
-        ),
-      );
+      settingsUpdate({
+        dropbox: { date: Date.now(), status: 'success' },
+      });
 
     const syncFilesFail = error => {
-      const settings = { date: Date.now(), status: 'error' };
+      const dropbox = { date: Date.now(), status: 'error' };
 
       if (error.message === 'cancelled') {
-        settings.status = 'cancelled';
+        dropbox.status = 'cancelled';
       } else {
-        error = error.error && error.error.error_summary
-          ? error.error.error_summary
-          : 'Unknown error';
-        notifier.error(error);
+        const errorMessage =
+          error.error && error.error.error_summary
+            ? error.error.error_summary
+            : 'Unknown error';
+        notifier.error(errorMessage);
       }
 
-      return saveSettings(
-        assocPath(['dropbox', 'sync'], settings, getState().settings),
-      );
+      return settingsUpdate({ dropbox });
     };
 
     return addFiles

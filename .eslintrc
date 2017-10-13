@@ -3,6 +3,7 @@
   parser: 'babel-eslint',
   rules: {
     'arrow-parens': 0,
+    'import/prefer-default-export': 0,
     'max-len': [2, 80],
     'no-shadow': 0,
     'react/forbid-prop-types': 0,

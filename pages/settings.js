@@ -45,7 +45,7 @@ const Settings = ({
                 <td>Path</td>
                 <td>
                   <Input
-                    placeholder="/iTunes/iTunes Music"
+                    placeholder="iTunes/iTunes Music"
                     style={{ border: 0 }}
                     value={dropbox.path}
                     onChange={({ target: { value } }) =>

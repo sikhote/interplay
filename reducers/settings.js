@@ -25,11 +25,9 @@ const reducer = (state = initialState, action) => {
       const { settings } = action.payload;
       return settings ? mergeDeepRight(state, settings) : state;
     }
-
     case 'SETTINGS_DROPBOX_DELETE': {
       return mergeDeepRight(state, { dropbox: initialState.dropbox });
     }
-
     default:
       return state;
   }

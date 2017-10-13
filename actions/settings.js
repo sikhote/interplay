@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs/Observable';
-import { assocPath } from 'ramda';
 import { startCase } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import Promise from 'bluebird';
 import extensions from '../lib/extensions';
+import { filesSave } from './files';
 
 export const settingsUpdate = settings => ({
   type: 'SETTINGS_UPDATE',
@@ -19,121 +19,127 @@ export const settingsDropboxSync = () => ({
   type: 'SETTINGS_DROPBOX_SYNC',
 });
 
-const settingsDropboxSyncEpic = (action$, deps) =>
-  Observable.merge(
-    action$.filter(action => action.type === 'SETTINGS_DROPBOX_SYNC'),
-  ).mergeMap(() => {
-    const { getState } = deps;
-    const { key: accessToken, path } = getState().settings.dropbox;
-    const dbx = new Dropbox({ accessToken });
+const settingsDropboxSyncEpic = (action$, { getState }) =>
+  action$
+    .ofType('SETTINGS_DROPBOX_SYNC')
+    // Get files
+    .mergeMap(() => {
+      const settingsDropbox = getState().settings.dropbox;
+      const accessToken = settingsDropbox.key;
+      const path = `/${settingsDropbox.path}`;
+      const dropbox = new Dropbox({ accessToken });
 
-    const getFiles = Observable.from(
-      Promise.coroutine(function* co() {
-        const getDropboxEntries = options => {
-          const listPromise = options.cursor
-            ? dbx.filesListFolderContinue({ cursor: options.cursor })
-            : dbx.filesListFolder(options.list);
+      const getFiles = Observable.from(
+        Promise.coroutine(function* co() {
+          const getEntries = options => {
+            const listPromise = options.cursor
+              ? dropbox.filesListFolderContinue({ cursor: options.cursor })
+              : dropbox.filesListFolder(options.list);
 
-          return listPromise.then(response => {
-            options.entries.push(...response.entries);
+            return listPromise.then(response => {
+              options.entries.push(...response.entries);
 
-            if (getState().settings.dropbox.status === 'cancelled') {
-              return Promise.reject(new Error('cancelled'));
-            }
+              if (getState().settings.dropbox.status === 'cancelled') {
+                return Promise.reject(new Error('cancelled'));
+              }
 
-            return response.has_more
-              ? getDropboxEntries(
-                  Object.assign({}, options, { cursor: response.cursor }),
-                )
-              : options.entries;
+              return response.has_more
+                ? getEntries({ ...options, cursor: response.cursor })
+                : options.entries;
+            });
+          };
+
+          const entries = yield getEntries({
+            list: { path, recursive: true },
+            entries: [],
           });
-        };
 
-        const entries = yield getDropboxEntries({
-          list: { path, recursive: true },
-          entries: [],
-        });
+          return entries.reduce(
+            (files, entry) => {
+              if (entry['.tag'] === 'file') {
+                const filePath = entry.path_lower.replace(`${path}/`, '');
+                const parts = filePath.split('/');
+                const fileName = parts.pop().split('.');
+                const fileExt = fileName.pop();
+                const fileType = Object.keys(extensions).find(exts =>
+                  extensions[exts].find(ext => ext === fileExt),
+                );
+                let name = startCase(fileName.join('.'));
+                let track = null;
 
-        const files = { audio: [], video: [] };
+                if (/^[0-9]{2}[" "]/.test(name)) {
+                  track = Number(name.substring(0, 2));
+                  name = name.substring(3);
+                }
 
-        if (!entries) {
-          return files;
-        }
+                if (fileType === 'audio') {
+                  files.audio.push({
+                    album: startCase(parts.pop()),
+                    artist: startCase(parts.pop()),
+                    name,
+                    path: filePath,
+                    track,
+                  });
+                } else if (fileType === 'video') {
+                  files.video.push({
+                    name: startCase(fileName.join('.')),
+                    path: filePath,
+                  });
+                }
+              }
 
-        entries.forEach(entry => {
-          if (entry['.tag'] === 'file') {
-            const parts = entry.path_lower.split('/');
-            const fileName = parts.pop().split('.');
-            const fileExt = fileName.pop();
-            const fileType = Object.keys(extensions).find(exts =>
-              extensions[exts].find(ext => ext === fileExt),
-            );
-            let name = startCase(fileName.join('.'));
-            let track = null;
+              return files;
+            },
+            { audio: [], video: [] },
+          );
+        })(),
+      );
 
-            if (/^[0-9]{2}[" "]/.test(name)) {
-              track = Number(name.substring(0, 2));
-              name = name.substring(3);
-            }
+      // combine get with save promise, then save to redux and update settings
+      // https://redux-observable.js.org/docs/basics/Epics.htmlhttps://www.learnrxjs.io/operators/transformation/mergemap.html
+      // https://stackoverflow.com/questions/40886655/redux-observable-dispatch-multiple-redux-actions-in-a-single-epic
 
-            if (fileType === 'audio') {
-              files.audio.push({
-                id: entry.path_lower,
-                album: startCase(parts.pop()),
-                artist: startCase(parts.pop()),
-                name,
-                path: entry.path_lower,
-                track,
-              });
-            } else if (fileType === 'video') {
-              files.video.push({
-                id: entry.path_lower,
-                name: startCase(fileName.join('.')),
-                path: entry.path_lower,
-              });
-            }
-          }
-        });
+      const saveToDropbox = files =>
+        Observable.from(
+          dropbox.filesUpload({
+            contents: JSON.stringify(files),
+            path: `${path}/clairic.json`,
+            mode: { '.tag': 'overwrite' },
+            mute: true,
+          }),
+        );
 
-        return files;
-      })(),
-    );
+      const syncSuccess = () =>
+        settingsUpdate({ dropbox: { date: Date.now(), status: 'success' } });
 
-    const addFiles = getFiles.concatMap(files =>
-      Observable.from(
-        dbx.filesUpload({
-          contents: JSON.stringify(files),
-          path: `${path}/clairic.json`,
-          mode: { '.tag': 'overwrite' },
-          mute: true,
-        }),
-      ),
-    );
+      return getFiles.mergeMap(files => [
+        saveToDropbox(files),
+        filesSave(files),
+        syncSuccess(),
+      ]);
+      // .map()
+      // .switchMap();
+    });
 
-    const syncFilesDone = () =>
-      settingsUpdate({
-        dropbox: { date: Date.now(), status: 'success' },
-      });
-
-    const syncFilesFail = error => {
-      const dropbox = { date: Date.now(), status: 'error' };
-
-      if (error.message === 'cancelled') {
-        dropbox.status = 'cancelled';
-      } else {
-        const errorMessage =
-          error.error && error.error.error_summary
-            ? error.error.error_summary
-            : 'Unknown error';
-        notifier.error(errorMessage);
-      }
-
-      return settingsUpdate({ dropbox });
-    };
-
-    return addFiles
-      .map(syncFilesDone)
-      .catch(error => Observable.of(syncFilesFail(error)));
-  });
+// // Complete
+// .map(() =>
+//   settingsUpdate({ dropbox: { date: Date.now(), status: 'success' } }),
+// )
+// // Fail
+// .catch(error => {
+//   const dropbox = { date: Date.now(), status: 'error' };
+//
+//   if (error.message === 'cancelled') {
+//     dropbox.status = 'cancelled';
+//   } else {
+//     const errorMessage =
+//       error.error && error.error.error_summary
+//         ? error.error.error_summary
+//         : 'Unknown error';
+//     notifier.error(errorMessage);
+//   }
+//
+//   return Observable.of(settingsUpdate({ dropbox }));
+// });
 
 export const epics = [settingsDropboxSyncEpic];

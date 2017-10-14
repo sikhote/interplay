@@ -5,16 +5,13 @@ import { Input, Button, Tooltip } from 'antd';
 import moment from 'moment';
 import inject from '../lib/inject';
 import Page from '../components/Page';
-import {
-  settingsUpdate,
-  settingsDropboxDelete,
-  settingsDropboxSync,
-} from '../actions/settings';
+import { settingsUpdate, settingsDropboxDelete } from '../actions/settings';
+import { filesDropboxSync } from '../actions/files';
 
 const Settings = ({
   settingsUpdate,
   settingsDropboxDelete,
-  settingsDropboxSync,
+  filesDropboxSync,
   dropbox,
 }) => (
   <Page>
@@ -77,12 +74,7 @@ const Settings = ({
                       icon="retweet"
                       style={{ marginLeft: 10 }}
                       loading={dropbox.status === 'syncing'}
-                      onClick={() => {
-                        settingsUpdate({
-                          dropbox: { date: Date.now(), status: 'syncing' },
-                        });
-                        settingsDropboxSync();
-                      }}
+                      onClick={() => filesDropboxSync()}
                     />
                   </Tooltip>
                   {dropbox.status === 'syncing' ? (
@@ -92,7 +84,7 @@ const Settings = ({
                         shape="circle"
                         icon="close"
                         style={{ marginLeft: 10 }}
-                        onClick={() => this.stopSync()}
+                        onChange={() => settingsUpdate({ status: 'cancelled' })}
                       />
                     </Tooltip>
                   ) : (
@@ -100,7 +92,7 @@ const Settings = ({
                       placement="top"
                       title={
                         dropbox.date
-                          ? moment(dropbox.date).fromNow()
+                          ? `Synced ${moment(dropbox.date).fromNow()}`
                           : 'Never synced'
                       }
                     >
@@ -130,7 +122,7 @@ Settings.propTypes = {
   dropbox: PropTypes.object.isRequired,
   settingsUpdate: PropTypes.func.isRequired,
   settingsDropboxDelete: PropTypes.func.isRequired,
-  settingsDropboxSync: PropTypes.func.isRequired,
+  filesDropboxSync: PropTypes.func.isRequired,
 };
 
 export default inject(
@@ -139,7 +131,7 @@ export default inject(
     dispatch => ({
       settingsUpdate: settings => dispatch(settingsUpdate(settings)),
       settingsDropboxDelete: () => dispatch(settingsDropboxDelete()),
-      settingsDropboxSync: () => dispatch(settingsDropboxSync()),
+      filesDropboxSync: () => dispatch(filesDropboxSync()),
     }),
   )(Settings),
 );

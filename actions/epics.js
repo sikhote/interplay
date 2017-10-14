@@ -1,7 +1,7 @@
 import 'rxjs';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
-import { epics as settingsEpics } from './settings';
+import { epics as filesEpics } from './files';
 
-const epics = [...settingsEpics];
+const epics = [...filesEpics];
 
 export default createEpicMiddleware(combineEpics(...epics));

@@ -22,14 +22,13 @@ export const settingsDropboxSync = () => ({
 const settingsDropboxSyncEpic = (action$, { getState }) =>
   action$
     .ofType('SETTINGS_DROPBOX_SYNC')
-    // Get files
     .mergeMap(() => {
       const settingsDropbox = getState().settings.dropbox;
       const accessToken = settingsDropbox.key;
       const path = `/${settingsDropbox.path}`;
       const dropbox = new Dropbox({ accessToken });
 
-      const getFiles = Observable.from(
+      const getAndSave = Observable.from(
         Promise.coroutine(function* co() {
           const getEntries = options => {
             const listPromise = options.cursor
@@ -92,28 +91,34 @@ const settingsDropboxSyncEpic = (action$, { getState }) =>
             },
             { audio: [], video: [] },
           );
-        })(),
+        })()
       );
+
+        // const saveFiles = Promise.coroutine(function* co(files) {
+        //   console.log('inside save');
+        //   console.log(files);
+        //   const uploadResult = yield dropbox.filesUpload({
+        //     contents: JSON.stringify(files),
+        //     path: `${path}/clairic.json`,
+        //     mode: { '.tag': 'overwrite' },
+        //     mute: true,
+        //   });
+        //   console.log(uploadResult);
+        //
+        //   return files;
+        // });
+        //
+        // return getFiles.then(saveFiles);
+      // });
 
       // combine get with save promise, then save to redux and update settings
       // https://redux-observable.js.org/docs/basics/Epics.htmlhttps://www.learnrxjs.io/operators/transformation/mergemap.html
       // https://stackoverflow.com/questions/40886655/redux-observable-dispatch-multiple-redux-actions-in-a-single-epic
 
-      const saveToDropbox = files =>
-        Observable.from(
-          dropbox.filesUpload({
-            contents: JSON.stringify(files),
-            path: `${path}/clairic.json`,
-            mode: { '.tag': 'overwrite' },
-            mute: true,
-          }),
-        );
-
       const syncSuccess = () =>
         settingsUpdate({ dropbox: { date: Date.now(), status: 'success' } });
 
-      return getFiles.mergeMap(files => [
-        saveToDropbox(files),
+      return getAndSave.mergeMap(files => [
         filesSave(files),
         syncSuccess(),
       ]);

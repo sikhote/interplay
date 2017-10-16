@@ -6,7 +6,6 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'FILES_SAVE': {
-      console.log('saving in reducer');
       const { files } = action.payload;
       return files || state;
     }

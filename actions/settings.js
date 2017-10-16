@@ -3,6 +3,6 @@ export const settingsUpdate = settings => ({
   payload: { settings },
 });
 
-export const settingsDropboxDelete = () => ({
-  type: 'SETTINGS_DROPBOX_DELETE',
+export const settingsCloudDelete = () => ({
+  type: 'SETTINGS_CLOUD_DELETE',
 });

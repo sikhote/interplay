@@ -1,7 +1,8 @@
 import { mergeDeepRight } from 'ramda';
 
 const initialState = {
-  dropbox: {
+  hasCloudStore: false,
+  cloud: {
     key: '',
     path: '',
     date: null,
@@ -25,8 +26,8 @@ const reducer = (state = initialState, action) => {
       const { settings } = action.payload;
       return settings ? mergeDeepRight(state, settings) : state;
     }
-    case 'SETTINGS_DROPBOX_DELETE': {
-      return mergeDeepRight(state, { dropbox: initialState.dropbox });
+    case 'SETTINGS_CLOUD_DELETE': {
+      return mergeDeepRight(state, { cloud: initialState.cloud });
     }
     default:
       return state;

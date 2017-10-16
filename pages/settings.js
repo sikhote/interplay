@@ -5,14 +5,14 @@ import { Input, Button, Tooltip } from 'antd';
 import moment from 'moment';
 import inject from '../lib/inject';
 import Page from '../components/Page';
-import { settingsUpdate, settingsDropboxDelete } from '../actions/settings';
-import { filesDropboxSync } from '../actions/files';
+import { settingsUpdate, settingsCloudDelete } from '../actions/settings';
+import { filesCloudSync } from '../actions/files';
 
 const Settings = ({
   settingsUpdate,
-  settingsDropboxDelete,
-  filesDropboxSync,
-  dropbox,
+  settingsCloudDelete,
+  filesCloudSync,
+  cloud,
 }) => (
   <Page>
     <div className="ant-table ant-table-middle">
@@ -32,9 +32,9 @@ const Settings = ({
                   <Input
                     placeholder="ABCD1234"
                     style={{ border: 0 }}
-                    value={dropbox.key}
+                    value={cloud.key}
                     onChange={({ target: { value } }) =>
-                      settingsUpdate({ dropbox: { key: value } })}
+                      settingsUpdate({ cloud: { key: value } })}
                   />
                 </td>
               </tr>
@@ -44,9 +44,9 @@ const Settings = ({
                   <Input
                     placeholder="iTunes/iTunes Music"
                     style={{ border: 0 }}
-                    value={dropbox.path}
+                    value={cloud.path}
                     onChange={({ target: { value } }) =>
-                      settingsUpdate({ dropbox: { path: value } })}
+                      settingsUpdate({ cloud: { path: value } })}
                   />
                 </td>
               </tr>
@@ -59,13 +59,13 @@ const Settings = ({
                       shape="circle"
                       icon="delete"
                       style={{ marginLeft: 10 }}
-                      onClick={() => settingsDropboxDelete()}
+                      onClick={() => settingsCloudDelete()}
                     />
                   </Tooltip>
                   <Tooltip
                     placement="top"
                     title={
-                      dropbox.status === 'syncing' ? 'Syncing' : 'Start sync'
+                      cloud.status === 'syncing' ? 'Syncing' : 'Start sync'
                     }
                   >
                     <Button
@@ -73,11 +73,11 @@ const Settings = ({
                       shape="circle"
                       icon="retweet"
                       style={{ marginLeft: 10 }}
-                      loading={dropbox.status === 'syncing'}
-                      onClick={() => filesDropboxSync()}
+                      loading={cloud.status === 'syncing'}
+                      onClick={() => filesCloudSync()}
                     />
                   </Tooltip>
-                  {dropbox.status === 'syncing' ? (
+                  {cloud.status === 'syncing' ? (
                     <Tooltip placement="top" title="Cancel sync">
                       <Button
                         type="danger"
@@ -91,18 +91,18 @@ const Settings = ({
                     <Tooltip
                       placement="top"
                       title={
-                        dropbox.date
-                          ? `Synced ${moment(dropbox.date).fromNow()}`
+                        cloud.date
+                          ? `Synced ${moment(cloud.date).fromNow()}`
                           : 'Never synced'
                       }
                     >
                       <Button
                         type={
-                          dropbox.status === 'success' ? 'default' : 'danger'
+                          cloud.status === 'success' ? 'default' : 'danger'
                         }
                         shape="circle"
                         icon={
-                          dropbox.status === 'success' ? 'check' : 'exclamation'
+                          cloud.status === 'success' ? 'check' : 'exclamation'
                         }
                         style={{ marginLeft: 10 }}
                       />
@@ -119,19 +119,19 @@ const Settings = ({
 );
 
 Settings.propTypes = {
-  dropbox: PropTypes.object.isRequired,
+  cloud: PropTypes.object.isRequired,
   settingsUpdate: PropTypes.func.isRequired,
-  settingsDropboxDelete: PropTypes.func.isRequired,
-  filesDropboxSync: PropTypes.func.isRequired,
+  settingsCloudDelete: PropTypes.func.isRequired,
+  filesCloudSync: PropTypes.func.isRequired,
 };
 
 export default inject(
   connect(
-    state => ({ dropbox: state.settings.dropbox }),
+    state => ({ cloud: state.settings.cloud }),
     dispatch => ({
       settingsUpdate: settings => dispatch(settingsUpdate(settings)),
-      settingsDropboxDelete: () => dispatch(settingsDropboxDelete()),
-      filesDropboxSync: () => dispatch(filesDropboxSync()),
+      settingsCloudDelete: () => dispatch(settingsCloudDelete()),
+      filesCloudSync: () => dispatch(filesCloudSync()),
     }),
   )(Settings),
 );

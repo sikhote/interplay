@@ -7,10 +7,7 @@ import Navigation from './Navigation';
 class Page extends PureComponent {
   componentWillReceiveProps({ hasCloudStore, cloud, cloudGet }) {
     if (!hasCloudStore && cloud.key && cloud.path) {
-      // dropboxGet();
-      console.log('get ittt');
-    } else {
-      console.log('not getting');
+      cloudGet();
     }
   }
   render() {
@@ -42,7 +39,7 @@ Page.propTypes = {
 export default connect(
   state => ({
     cloud: state.settings.cloud,
-    hasCloudStore: state.settings.hasCloudStore,
+    hasCloudStore: state.cloud.hasCloudStore,
   }),
   dispatch => ({
     cloudGet: () => dispatch(cloudGet()),

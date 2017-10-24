@@ -1,7 +1,6 @@
 import { mergeDeepRight } from 'ramda';
 
 const initialState = {
-  hasCloudStore: false,
   cloud: {
     key: '',
     path: '',

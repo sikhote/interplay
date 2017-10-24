@@ -1,13 +1,13 @@
+import { mergeDeepRight } from 'ramda';
+
 const initialState = {
-  audio: [],
-  video: [],
+  hasCloudStore: false,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'FILES_SYNC_SUCCESS': {
-      const { files } = action.payload;
-      return files || state;
+    case 'CLOUD_GET_SUCCESS': {
+      return mergeDeepRight(state, { hasCloudStore: true });
     }
     default:
       return state;

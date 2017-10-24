@@ -6,12 +6,14 @@ import moment from 'moment';
 import inject from '../lib/inject';
 import Page from '../components/Page';
 import { settingsUpdate, settingsCloudDelete } from '../actions/settings';
-import { filesCloudSync } from '../actions/files';
+import { filesSync } from '../actions/files';
+import { cloudSave } from '../actions/cloud';
 
 const Settings = ({
   settingsUpdate,
   settingsCloudDelete,
-  filesCloudSync,
+  filesSync,
+  cloudSave,
   cloud,
 }) => (
   <Page>
@@ -74,7 +76,7 @@ const Settings = ({
                       icon="retweet"
                       style={{ marginLeft: 10 }}
                       loading={cloud.status === 'syncing'}
-                      onClick={() => filesCloudSync()}
+                      onClick={() => filesSync()}
                     />
                   </Tooltip>
                   {cloud.status === 'syncing' ? (
@@ -97,9 +99,7 @@ const Settings = ({
                       }
                     >
                       <Button
-                        type={
-                          cloud.status === 'success' ? 'default' : 'danger'
-                        }
+                        type={cloud.status === 'success' ? 'default' : 'danger'}
                         shape="circle"
                         icon={
                           cloud.status === 'success' ? 'check' : 'exclamation'
@@ -108,6 +108,18 @@ const Settings = ({
                       />
                     </Tooltip>
                   )}
+                  {cloud.key &&
+                    cloud.path && (
+                      <Tooltip placement="top" title="Save state to cloud">
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon="save"
+                          style={{ marginLeft: 10 }}
+                          onClick={() => cloudSave()}
+                        />
+                      </Tooltip>
+                    )}
                 </td>
               </tr>
             </tbody>
@@ -122,7 +134,8 @@ Settings.propTypes = {
   cloud: PropTypes.object.isRequired,
   settingsUpdate: PropTypes.func.isRequired,
   settingsCloudDelete: PropTypes.func.isRequired,
-  filesCloudSync: PropTypes.func.isRequired,
+  filesSync: PropTypes.func.isRequired,
+  cloudSave: PropTypes.func.isRequired,
 };
 
 export default inject(
@@ -131,7 +144,8 @@ export default inject(
     dispatch => ({
       settingsUpdate: settings => dispatch(settingsUpdate(settings)),
       settingsCloudDelete: () => dispatch(settingsCloudDelete()),
-      filesCloudSync: () => dispatch(filesCloudSync()),
+      filesSync: () => dispatch(filesSync()),
+      cloudSave: () => dispatch(cloudSave()),
     }),
   )(Settings),
 );

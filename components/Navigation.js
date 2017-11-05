@@ -8,7 +8,6 @@ const Navigation = ({ router }) => (
     onClick={({ key }) => router.push(key)}
     selectedKeys={[router.pathname]}
     mode="inline"
-    style={{ height: '100vh', width: 200 }}
     theme="dark"
   >
     {[

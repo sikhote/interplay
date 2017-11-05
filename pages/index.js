@@ -1,30 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import inject from '../lib/inject';
 import Page from '../components/Page';
 
-const Para = ({ text }) => (
-  <div>
-    <style jsx>{`
-      p {
-        color: blue;
-      }
-    `}</style>
-    <p>{text}</p>
-  </div>
-);
+const Player = () => <Page>Hello there</Page>;
 
-Para.propTypes = {
-  text: PropTypes.string.isRequired,
-};
-
-export default () => (
-  <Page>
-    <style jsx>{`
-      div {
-        color: green;
-      }
-    `}</style>
-    Hello world
-    <Para text="hiii" />
-  </Page>
-);
+export default inject(Player);

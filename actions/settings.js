@@ -1,5 +1,5 @@
-export const settingsUpdate = settings => ({
-  type: 'SETTINGS_UPDATE',
+export const settingsReplace = settings => ({
+  type: 'SETTINGS_REPLACE',
   payload: { settings },
 });
 

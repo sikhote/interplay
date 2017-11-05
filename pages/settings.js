@@ -3,18 +3,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Input, Button, Tooltip } from 'antd';
 import moment from 'moment';
+import { lensPath, set } from 'ramda';
 import inject from '../lib/inject';
 import Page from '../components/Page';
-import { settingsUpdate, settingsCloudDelete } from '../actions/settings';
+import { settingsReplace, settingsCloudDelete } from '../actions/settings';
 import { filesSync } from '../actions/files';
 import { cloudSave } from '../actions/cloud';
 
 const Settings = ({
-  settingsUpdate,
+  settingsReplace,
   settingsCloudDelete,
   filesSync,
   cloudSave,
-  cloud,
+  settings,
 }) => (
   <Page>
     <div className="ant-table ant-table-middle">
@@ -34,9 +35,11 @@ const Settings = ({
                   <Input
                     placeholder="ABCD1234"
                     style={{ border: 0 }}
-                    value={cloud.key}
+                    value={settings.cloud.key}
                     onChange={({ target: { value } }) =>
-                      settingsUpdate({ cloud: { key: value } })}
+                      settingsReplace(
+                        set(lensPath(['cloud', 'key']), value, settings),
+                      )}
                   />
                 </td>
               </tr>
@@ -46,9 +49,11 @@ const Settings = ({
                   <Input
                     placeholder="iTunes/iTunes Music"
                     style={{ border: 0 }}
-                    value={cloud.path}
+                    value={settings.cloud.path}
                     onChange={({ target: { value } }) =>
-                      settingsUpdate({ cloud: { path: value } })}
+                      settingsReplace(
+                        set(lensPath(['cloud', 'path']), value, settings),
+                      )}
                   />
                 </td>
               </tr>
@@ -67,7 +72,9 @@ const Settings = ({
                   <Tooltip
                     placement="top"
                     title={
-                      cloud.status === 'syncing' ? 'Syncing' : 'Start sync'
+                      settings.cloud.status === 'syncing'
+                        ? 'Syncing'
+                        : 'Start sync'
                     }
                   >
                     <Button
@@ -75,41 +82,54 @@ const Settings = ({
                       shape="circle"
                       icon="retweet"
                       style={{ marginLeft: 10 }}
-                      loading={cloud.status === 'syncing'}
+                      loading={settings.cloud.status === 'syncing'}
                       onClick={() => filesSync()}
                     />
                   </Tooltip>
-                  {cloud.status === 'syncing' ? (
+                  {settings.cloud.status === 'syncing' ? (
                     <Tooltip placement="top" title="Cancel sync">
                       <Button
                         type="danger"
                         shape="circle"
                         icon="close"
                         style={{ marginLeft: 10 }}
-                        onChange={() => settingsUpdate({ status: 'cancelled' })}
+                        onChange={() =>
+                          settingsReplace(
+                            set(
+                              lensPath(['cloud', 'status']),
+                              'cancelled',
+                              settings,
+                            ),
+                          )}
                       />
                     </Tooltip>
                   ) : (
                     <Tooltip
                       placement="top"
                       title={
-                        cloud.date
-                          ? `Synced ${moment(cloud.date).fromNow()}`
+                        settings.cloud.date
+                          ? `Synced ${moment(settings.cloud.date).fromNow()}`
                           : 'Never synced'
                       }
                     >
                       <Button
-                        type={cloud.status === 'success' ? 'default' : 'danger'}
+                        type={
+                          settings.cloud.status === 'success'
+                            ? 'default'
+                            : 'danger'
+                        }
                         shape="circle"
                         icon={
-                          cloud.status === 'success' ? 'check' : 'exclamation'
+                          settings.cloud.status === 'success'
+                            ? 'check'
+                            : 'exclamation'
                         }
                         style={{ marginLeft: 10 }}
                       />
                     </Tooltip>
                   )}
-                  {cloud.key &&
-                    cloud.path && (
+                  {settings.cloud.key &&
+                    settings.cloud.path && (
                       <Tooltip placement="top" title="Save state to cloud">
                         <Button
                           type="primary"
@@ -131,8 +151,8 @@ const Settings = ({
 );
 
 Settings.propTypes = {
-  cloud: PropTypes.object.isRequired,
-  settingsUpdate: PropTypes.func.isRequired,
+  settings: PropTypes.object.isRequired,
+  settingsReplace: PropTypes.func.isRequired,
   settingsCloudDelete: PropTypes.func.isRequired,
   filesSync: PropTypes.func.isRequired,
   cloudSave: PropTypes.func.isRequired,
@@ -140,9 +160,9 @@ Settings.propTypes = {
 
 export default inject(
   connect(
-    state => ({ cloud: state.settings.cloud }),
+    state => ({ settings: state.settings }),
     dispatch => ({
-      settingsUpdate: settings => dispatch(settingsUpdate(settings)),
+      settingsReplace: settings => dispatch(settingsReplace(settings)),
       settingsCloudDelete: () => dispatch(settingsCloudDelete()),
       filesSync: () => dispatch(filesSync()),
       cloudSave: () => dispatch(cloudSave()),

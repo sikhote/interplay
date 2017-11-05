@@ -3,8 +3,9 @@ import { startCase } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import Promise from 'bluebird';
+import { lensPath, set } from 'ramda';
 import extensions from '../lib/extensions';
-import { settingsUpdate } from './settings';
+import { settingsReplace } from './settings';
 import { cloudSave } from './cloud';
 
 export const filesSync = () => ({
@@ -24,7 +25,13 @@ const filesSyncEpic = (action$, { getState }) =>
     const dropbox = new Dropbox({ accessToken });
 
     const syncStart = Observable.of(
-      settingsUpdate({ cloud: { date: Date.now(), status: 'syncing' } }),
+      settingsReplace(
+        set(
+          lensPath(['cloud']),
+          { ...settingsCloud, date: Date.now(), status: 'syncing' },
+          getState().settings,
+        ),
+      ),
     );
 
     const getFiles = Observable.from(
@@ -94,10 +101,16 @@ const filesSyncEpic = (action$, { getState }) =>
     );
 
     const syncSuccess = () =>
-      settingsUpdate({ cloud: { date: Date.now(), status: 'success' } });
+      settingsReplace(
+        set(
+          lensPath(['cloud']),
+          { ...settingsCloud, date: Date.now(), status: 'success' },
+          getState().settings,
+        ),
+      );
 
     const syncFail = error => {
-      const cloud = { date: Date.now(), status: 'error' };
+      const cloud = { ...settingsCloud, date: Date.now(), status: 'error' };
 
       if (error.message === 'cancelled') {
         cloud.status = 'cancelled';
@@ -109,7 +122,9 @@ const filesSyncEpic = (action$, { getState }) =>
         notifier.error(errorMessage);
       }
 
-      return Observable.of(settingsUpdate({ cloud }));
+      return Observable.of(
+        settingsReplace(set(lensPath(['cloud']), cloud, getState().settings)),
+      );
     };
 
     return syncStart.concat(

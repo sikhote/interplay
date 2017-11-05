@@ -1,4 +1,4 @@
-import { mergeDeepRight } from 'ramda';
+import { lensPath, set } from 'ramda';
 
 const initialState = {
   cloud: {
@@ -21,12 +21,12 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SETTINGS_UPDATE': {
+    case 'SETTINGS_REPLACE': {
       const { settings } = action.payload;
-      return settings ? mergeDeepRight(state, settings) : state;
+      return settings || state;
     }
     case 'SETTINGS_CLOUD_DELETE': {
-      return mergeDeepRight(state, { cloud: initialState.cloud });
+      return set(lensPath(['cloud']), initialState.cloud, state);
     }
     default:
       return state;

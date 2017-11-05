@@ -13,7 +13,7 @@ const Navigation = ({ router }) => (
     {[
       { key: '/', icon: 'caret-right', message: 'Player' },
       { key: '/audio', icon: 'notification', message: 'Audio' },
-      // { key: '/video', icon: 'video-camera', message: 'Video' },
+      { key: '/video', icon: 'video-camera', message: 'Video' },
       { key: '/settings', icon: 'setting', message: 'Settings' },
     ].map(({ key, icon, message }) => (
       <Menu.Item key={key}>

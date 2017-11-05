@@ -6,24 +6,19 @@ import Page from '../components/Page';
 import { settingsReplace } from '../actions/settings';
 import FileTable from '../components/FileTable';
 
-const Audio = ({ audio, settings, settingsReplace }) => (
+const Video = ({ video, settings, settingsReplace }) => (
   <Page>
     <FileTable
-      columns={[
-        { title: '#', dataKey: 'track', width: 40 },
-        { title: 'Name', dataKey: 'name' },
-        { title: 'Artist', dataKey: 'artist' },
-        { title: 'Album', dataKey: 'album' },
-      ]}
-      data={audio}
-      settings={settings.audio}
-      saveSettings={audio => settingsReplace({ ...settings, audio })}
+      columns={[{ title: 'Name', dataKey: 'name' }]}
+      data={video}
+      settings={settings.video}
+      saveSettings={video => settingsReplace({ ...settings, video })}
     />
   </Page>
 );
 
-Audio.propTypes = {
-  audio: PropTypes.array.isRequired,
+Video.propTypes = {
+  video: PropTypes.array.isRequired,
   settingsReplace: PropTypes.func.isRequired,
   settings: PropTypes.object.isRequired,
 };
@@ -31,11 +26,11 @@ Audio.propTypes = {
 export default inject(
   connect(
     state => ({
-      audio: state.files.audio,
+      video: state.files.video,
       settings: state.settings,
     }),
     dispatch => ({
       settingsReplace: settings => dispatch(settingsReplace(settings)),
     }),
-  )(Audio),
+  )(Video),
 );

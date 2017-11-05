@@ -163,9 +163,9 @@ ansi-styles@^3.1.0:
   dependencies:
     color-convert "^1.9.0"
 
-antd@2.13.4:
-  version "2.13.4"
-  resolved "https://registry.yarnpkg.com/antd/-/antd-2.13.4.tgz#8c1ccd3622eb36677e68889899342508de96ef05"
+antd@2.13.8:
+  version "2.13.8"
+  resolved "https://registry.yarnpkg.com/antd/-/antd-2.13.8.tgz#8aa3e8562a91e775a908dc303cd689d178dc0c07"
   dependencies:
     array-tree-filter "~1.0.0"
     babel-runtime "6.x"
@@ -204,8 +204,8 @@ antd@2.13.4:
     rc-tree-select "~1.10.2"
     rc-upload "~2.4.0"
     rc-util "^4.0.4"
-    react-lazy-load "^3.0.10"
-    react-slick "~0.15.0"
+    react-lazy-load "^3.0.12"
+    react-slick "~0.15.4"
     shallowequal "^1.0.1"
     warning "~3.0.0"
 
@@ -5101,7 +5101,7 @@ react-hot-loader@^3.0.0:
     redbox-react "^1.3.6"
     source-map "^0.6.1"
 
-react-lazy-load@^3.0.10:
+react-lazy-load@^3.0.12:
   version "3.0.12"
   resolved "https://registry.yarnpkg.com/react-lazy-load/-/react-lazy-load-3.0.12.tgz#2b841dfc3227e8119d033189d2c960ce384d0cb9"
   dependencies:
@@ -5127,7 +5127,7 @@ react-redux@5.0.6:
     loose-envify "^1.1.0"
     prop-types "^15.5.10"
 
-react-slick@~0.15.0:
+react-slick@~0.15.4:
   version "0.15.4"
   resolved "https://registry.yarnpkg.com/react-slick/-/react-slick-0.15.4.tgz#6709c87b06e7640feeacc06711be42cc2066aabe"
   dependencies:

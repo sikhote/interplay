@@ -16,7 +16,7 @@
 				"sync": "serverless sync"
 		},
 		"dependencies": {
-				"antd": "2.13.4",
+				"antd": "2.13.8",
 				"babel-eslint": "8.0.1",
 				"bluebird": "3.5.0",
 				"dropbox": "2.5.9",

@@ -20,11 +20,14 @@ const cloudGetEpic = (action$, { getState }) =>
     const getCloudState = Observable.from(
       dropbox
         .filesDownload({ path: `${path}/clairic.json` })
-        .then(({ fileBlob }) => new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = event => resolve(JSON.parse(event.target.result));
-          reader.readAsText(fileBlob);
-        }))
+        .then(
+          ({ fileBlob }) =>
+            new Promise(resolve => {
+              const reader = new FileReader();
+              reader.onload = event => resolve(JSON.parse(event.target.result));
+              reader.readAsText(fileBlob);
+            }),
+        )
         .catch(() => state),
     );
 

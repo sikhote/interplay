@@ -14,7 +14,7 @@ class Page extends PureComponent {
     return (
       <div>
         <style jsx>{`
-          .main  {
+          .main {
             display: grid;
             grid: 1fr / 200px 1fr;
             height: 100vh;

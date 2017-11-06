@@ -11,11 +11,17 @@ export default class extends Document {
   }
 
   render() {
+    const { __NEXT_DATA__ } = this.props;
+
     return (
       <html lang="en">
         <Head>
           <title>clairic</title>
-          <style dangerouslySetInnerHTML={{ __html: antd }} />
+          <link
+            rel="stylesheet"
+            type="text/css"
+            href={`/static/app.css?${__NEXT_DATA__.buildId}`}
+          />
         </Head>
         <body>
           <Main />

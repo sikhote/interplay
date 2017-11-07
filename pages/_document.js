@@ -1,5 +1,5 @@
 import React from 'react';
-import antd from 'antd/dist/antd.min.css';
+import 'antd/dist/antd.css';
 import Document, { Head, Main, NextScript } from 'next/document';
 import flush from 'styled-jsx/server';
 
@@ -11,17 +11,12 @@ export default class extends Document {
   }
 
   render() {
-    const { __NEXT_DATA__ } = this.props;
-
+    console.log(this.props.__NEXT_DATA);
     return (
       <html lang="en">
         <Head>
           <title>clairic</title>
-          <link
-            rel="stylesheet"
-            type="text/css"
-            href={`/static/app.css?${__NEXT_DATA__.buildId}`}
-          />
+          <link rel="stylesheet" href={'/static/app.css'} />
         </Head>
         <body>
           <Main />

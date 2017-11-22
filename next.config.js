@@ -11,12 +11,8 @@ module.exports = {
     config.module.rules.push({
       test: /\.css$/,
       use: ExtractTextPlugin.extract({
-        use: [
-          {
-            loader: 'style-loader!css-loader',
-            options: {},
-          },
-        ],
+        fallback: 'style-loader',
+        use: 'css-loader',
       }),
     });
 

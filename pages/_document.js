@@ -1,5 +1,5 @@
 import React from 'react';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css';
 import Document, { Head, Main, NextScript } from 'next/document';
 import flush from 'styled-jsx/server';
 

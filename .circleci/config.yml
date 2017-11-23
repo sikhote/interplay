@@ -10,9 +10,9 @@ jobs:
     steps:
       - checkout
       - run: yarn
-      - run: yarn export
       - run: yarn eslint
       - run: yarn prettier -l
+      - run: yarn export
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then

@@ -1,7 +1,7 @@
 import React from 'react';
-import 'antd/dist/antd.min.css';
 import Document, { Head, Main, NextScript } from 'next/document';
 import flush from 'styled-jsx/server';
+import antd from 'antd/dist/antd.min.css';
 
 export default class extends Document {
   static getInitialProps({ renderPage }) {
@@ -11,12 +11,11 @@ export default class extends Document {
   }
 
   render() {
-    console.log(this.props.__NEXT_DATA);
     return (
       <html lang="en">
         <Head>
           <title>clairic</title>
-          <link rel="stylesheet" href={'/static/app.css'} />
+          <style jsx global>{antd}</style>
         </Head>
         <body>
           <Main />

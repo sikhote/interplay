@@ -1,0 +1,5 @@
+{
+  "plugins": [["inline-import", { "extensions": [".css"] }]],
+  "presets": ["next/babel"],
+  "ignore": []
+}

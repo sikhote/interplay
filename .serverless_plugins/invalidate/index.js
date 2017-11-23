@@ -34,7 +34,7 @@ class ServerlessPlugin {
     const item = listResult.DistributionList.Items.find(listItem => {
       return listItem.Aliases.Items.find(aliasItem => aliasItem === alias)
     });
-
+console.log(item);
     const invalidateJson = `{
       "DistributionId": "${item.Id}",
       "InvalidationBatch": {

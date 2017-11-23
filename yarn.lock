@@ -628,7 +628,7 @@ babel-plugin-check-es2015-constants@^6.22.0:
   dependencies:
     babel-runtime "^6.22.0"
 
-babel-plugin-inline-import@^2.0.6:
+babel-plugin-inline-import@2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/babel-plugin-inline-import/-/babel-plugin-inline-import-2.0.6.tgz#8a3c179561b503bf4af319f3cad435e6b7b2863c"
   dependencies:
@@ -5155,7 +5155,7 @@ react-transition-group@^1.1.2:
     prop-types "^15.5.6"
     warning "^3.0.0"
 
-react-virtualized@^9.12.0:
+react-virtualized@9.12.0:
   version "9.12.0"
   resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.12.0.tgz#1b4d3e5ab197ed1d832df8e6688b1b18f725b6c5"
   dependencies:
@@ -6122,7 +6122,7 @@ text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
-thenby@^1.2.3:
+thenby@1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/thenby/-/thenby-1.2.3.tgz#62465b07e3d8b9466f01026df837f738e0faaa69"
 

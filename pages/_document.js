@@ -15,7 +15,9 @@ export default class extends Document {
       <html lang="en">
         <Head>
           <title>clairic</title>
-          <style jsx global>{antd}</style>
+          <style jsx global>
+            {antd}
+          </style>
         </Head>
         <body>
           <Main />

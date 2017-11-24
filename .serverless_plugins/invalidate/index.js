@@ -35,24 +35,15 @@ class ServerlessPlugin {
       return listItem.Aliases.Items.find(aliasItem => aliasItem === alias)
     });
 
-    const invalidate = {
-      DistributionId: item.Id,
-      InvalidationBatch: {
-        Paths: {
-          Quantity: 1,
-          Items: ['/']
-        },
-        CallerReference: Date.now()
-      }
-    };
-
     const invalidateArgs = [
       'cloudfront',
       'create-invalidation',
-      '--cli-input-json',
-      JSON.stringify(invalidate)
+      '--distribution-id',
+      item.Id,
+      '--paths',
+      '/'
     ];
-console.log(invalidateArgs);
+
     const invalidateResult = spawnSync('aws', invalidateArgs);
     const stdout = invalidateResult.stdout.toString();
     const sterr = invalidateResult.stderr.toString();

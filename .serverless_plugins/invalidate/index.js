@@ -36,23 +36,20 @@ class ServerlessPlugin {
     });
 
     const invalidateJson = `{
-      "DistributionId": "${item.Id}",
-      "InvalidationBatch": {
-        "Paths": {
-          "Quantity": 1,
-          "Items": ["/"]
-        },
-        "CallerReference": "${Date.now()}"
-      }
+      "Paths": {
+        "Quantity": 1,
+        "Items": ["/"]
+      },
+      "CallerReference": "${Date.now()}"
     }`;
 
     const invalidateArgs = [
       'cloudfront',
       'create-invalidation',
-      '--cli-input-json',
+      '--invalidation-batch',
       invalidateJson
+      '--distribution-id'
     ];
-    console.log(invalidateJson);
 
     const invalidateResult = spawnSync('aws', invalidateArgs);
     const stdout = invalidateResult.stdout.toString();

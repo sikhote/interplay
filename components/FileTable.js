@@ -70,7 +70,8 @@ const FileTable = ({ columns, data, settings, saveSettings }) => {
                 ...settings,
                 sortBy,
                 sortDirection: sortDirection === SortDirection.ASC,
-              })}
+              })
+            }
             sortBy={sortBy}
             sortDirection={
               sortDirection ? SortDirection.ASC : SortDirection.DESC

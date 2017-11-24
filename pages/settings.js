@@ -39,7 +39,8 @@ const Settings = ({
                     onChange={({ target: { value } }) =>
                       settingsReplace(
                         set(lensPath(['cloud', 'key']), value, settings),
-                      )}
+                      )
+                    }
                   />
                 </td>
               </tr>
@@ -53,7 +54,8 @@ const Settings = ({
                     onChange={({ target: { value } }) =>
                       settingsReplace(
                         set(lensPath(['cloud', 'path']), value, settings),
-                      )}
+                      )
+                    }
                   />
                 </td>
               </tr>
@@ -100,7 +102,8 @@ const Settings = ({
                               'cancelled',
                               settings,
                             ),
-                          )}
+                          )
+                        }
                       />
                     </Tooltip>
                   ) : (

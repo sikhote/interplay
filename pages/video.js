@@ -23,12 +23,14 @@ Video.propTypes = {
   settings: PropTypes.object.isRequired,
 };
 
-export default inject(connect(
-  state => ({
-    video: state.files.video,
-    settings: state.settings,
-  }),
-  dispatch => ({
-    settingsReplace: settings => dispatch(settingsReplace(settings)),
-  }),
-)(Video));
+export default inject(
+  connect(
+    state => ({
+      video: state.files.video,
+      settings: state.settings,
+    }),
+    dispatch => ({
+      settingsReplace: settings => dispatch(settingsReplace(settings)),
+    }),
+  )(Video),
+);

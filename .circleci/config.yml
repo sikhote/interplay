@@ -16,6 +16,9 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              curl -O https://bootstrap.pypa.io/get-pip.py
+              python get-pip.py --user
+              pip --version
               pip install awscli --upgrade --user
               aws --version
               yarn sync

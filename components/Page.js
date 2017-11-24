@@ -13,13 +13,15 @@ class Page extends PureComponent {
   render() {
     return (
       <div>
-        <style jsx>{`
-          .main {
-            display: grid;
-            grid: 1fr / 200px 1fr;
-            height: 100vh;
-          }
-        `}</style>
+        <style jsx>
+          {`
+            .main {
+              display: grid;
+              grid: 1fr / 200px 1fr;
+              height: 100vh;
+            }
+          `}
+        </style>
         <div className="main">
           <Navigation />
           {this.props.children}

@@ -55,8 +55,8 @@ class ServerlessPlugin {
     if (!sterr) {
       this.serverless.cli.log('Successfully invalidated');
     } else {
-      process.exit(1);
       this.serverless.cli.log(sterr);
+      process.exit(1);
     }
   }
 }

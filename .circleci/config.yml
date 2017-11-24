@@ -17,9 +17,10 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               curl -O https://bootstrap.pypa.io/get-pip.py
-              python get-pip.py
+              python get-pip.py --user
+              export PATH=~/.local/bin:$PATH
               pip --version
-              pip install awscli --upgrade
+              pip install awscli --upgrade --user
               aws --version
               yarn sync
               yarn invalidate

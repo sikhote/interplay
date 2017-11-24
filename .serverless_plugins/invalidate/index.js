@@ -50,7 +50,7 @@ class ServerlessPlugin {
       'cloudfront',
       'create-invalidation',
       '--cli-input-json',
-      JSON.stringfy(invalidate)
+      JSON.stringify(invalidate)
     ];
 console.log(invalidateArgs);
     const invalidateResult = spawnSync('aws', invalidateArgs);

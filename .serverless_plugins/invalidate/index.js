@@ -34,7 +34,7 @@ class ServerlessPlugin {
     const item = listResult.DistributionList.Items.find(listItem => {
       return listItem.Aliases.Items.find(aliasItem => aliasItem === alias)
     });
-console.log(item);
+
     const invalidateJson = `{
       "DistributionId": "${item.Id}",
       "InvalidationBatch": {
@@ -52,6 +52,7 @@ console.log(item);
       '--cli-input-json',
       invalidateJson
     ];
+    console.log(invalidateJson);
 
     const invalidateResult = spawnSync('aws', invalidateArgs);
     const stdout = invalidateResult.stdout.toString();
@@ -60,11 +61,12 @@ console.log(item);
     if (stdout) {
       this.serverless.cli.log(stdout);
     }
-    if (sterr) {
-      this.serverless.cli.log(sterr);
-    }
+
     if (!sterr) {
       this.serverless.cli.log('Successfully invalidated');
+    } else {
+      process.exit(1);
+      this.serverless.cli.log(sterr);
     }
   }
 }

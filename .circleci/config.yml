@@ -16,7 +16,7 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              apt install python-pip python-dev
+              sudo apt-get update && sudo apt-get install -y python-pip python-dev
               pip install awscli
               yarn sync
               yarn invalidate

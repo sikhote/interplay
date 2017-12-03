@@ -24,7 +24,7 @@ const Settings = ({
           <table>
             <thead className="ant-table-thead">
               <tr>
-                <th>Dropbox</th>
+                <th width={140}>Dropbox</th>
                 <th />
               </tr>
             </thead>

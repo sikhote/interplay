@@ -1,7 +1,6 @@
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import flush from 'styled-jsx/server';
-import antd from 'antd/dist/antd.min.css';
 
 export default class extends Document {
   static getInitialProps({ renderPage }) {
@@ -15,9 +14,10 @@ export default class extends Document {
       <html lang="en">
         <Head>
           <title>clairic</title>
-          <style jsx global>
-            {antd}
-          </style>
+          <link
+            rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/antd/2.13.8/antd.min.css"
+          />
         </Head>
         <body>
           <Main />

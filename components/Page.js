@@ -24,7 +24,7 @@ class Page extends PureComponent {
         </style>
         <div className="main">
           <Navigation />
-          {this.props.children}
+          <div>{this.props.children}</div>
         </div>
       </div>
     );

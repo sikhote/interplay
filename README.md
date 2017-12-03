@@ -1,3 +1,6 @@
+[![Circle CI](https://img.shields.io/circleci/project/sikhote/clairic/master.svg)](https://circleci.com/gh/sikhote/clairic)
+[![Dependency Status](https://david-dm.org/sikhote/clairic.svg)](https://david-dm.org/sikhote/clairic)
+
 # clairic
 Play media from Dropbox on a browser
 

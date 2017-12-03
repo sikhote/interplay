@@ -16,7 +16,7 @@ export default class extends Document {
           <title>clairic</title>
           <link
             rel="stylesheet"
-            href="//cdnjs.cloudflare.com/ajax/libs/antd/2.13.8/antd.min.css"
+            href="//cdnjs.cloudflare.com/ajax/libs/antd/2.13.11/antd.min.css"
           />
         </Head>
         <body>

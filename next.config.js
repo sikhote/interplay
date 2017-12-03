@@ -4,5 +4,5 @@ module.exports = {
     '/audio': { page: '/audio' },
     '/video': { page: '/video' },
     '/settings': { page: '/settings' },
-  })
+  }),
 };

@@ -11,10 +11,11 @@ class Page extends Component {
     console.log(window.location);
     console.log(window.location.pathname);
     const currentPath = window.location.pathname.replace(/\/$/, '');
-
-    if (Router.route !== currentPath) {
+    console.log('made it');
+    if (currentPath && Router.route !== currentPath) {
       Router.push(currentPath);
     }
+    console.log('done');
   }
   componentWillReceiveProps({ hasCloudStore, cloud, cloudGet }) {
     if (!hasCloudStore && cloud.key && cloud.path) {

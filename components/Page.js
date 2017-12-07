@@ -11,7 +11,6 @@ class Page extends Component {
     super(props);
     console.log('---------------');
     console.log(Router.route);
-    console.log(location);
     // Router.push('/about')
   }
   componentWillReceiveProps({ hasCloudStore, cloud, cloudGet }) {

@@ -8,11 +8,8 @@ import Navigation from './Navigation';
 class Page extends Component {
   componentDidMount() {
     const currentPath = window.location.pathname.replace(/\/$/, '');
-    console.log('-----------');
-    console.log(window.location.pathname);
-    console.log(currentPath);
+
     if (currentPath && Router.route !== currentPath) {
-      console.log('here we go!');
       Router.push(currentPath);
     }
   }

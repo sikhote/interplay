@@ -7,15 +7,14 @@ import Navigation from './Navigation';
 
 class Page extends Component {
   componentDidMount() {
-    console.log(window);
-    console.log(window.location);
-    console.log(window.location.pathname);
     const currentPath = window.location.pathname.replace(/\/$/, '');
-    console.log('made it');
+    console.log('-----------');
+    console.log(window.location.pathname);
+    console.log(currentPath);
     if (currentPath && Router.route !== currentPath) {
+      console.log('here we go!');
       Router.push(currentPath);
     }
-    console.log('done');
   }
   componentWillReceiveProps({ hasCloudStore, cloud, cloudGet }) {
     if (!hasCloudStore && cloud.key && cloud.path) {

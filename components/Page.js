@@ -1,10 +1,19 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Router from 'next/router';
 import { cloudGet } from '../actions/cloud';
 import Navigation from './Navigation';
+// import routes from '../lib/routes';
 
-class Page extends PureComponent {
+class Page extends Component {
+  constructor(props) {
+    super(props);
+    console.log('---------------');
+    console.log(Router.route);
+    console.log(location);
+    // Router.push('/about')
+  }
   componentWillReceiveProps({ hasCloudStore, cloud, cloudGet }) {
     if (!hasCloudStore && cloud.key && cloud.path) {
       cloudGet();
@@ -15,11 +24,10 @@ class Page extends PureComponent {
       <div>
         <style jsx>
           {`
-            .main {
-              display: grid;
-              grid: 1fr / 200px 1fr;
-              height: 100vh;
-            }
+            .main
+              display grid
+              grid 1fr / 200px 1fr
+              height 100vh
           `}
         </style>
         <div className="main">

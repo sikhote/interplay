@@ -46,6 +46,8 @@
 				"rxjs": "5.4.3",
 				"serverless": "1.11.0",
 				"styled-jsx": "2.2.1",
+				"styled-jsx-plugin-stylus": "0.0.3",
+				"stylus": "0.54.5",
 				"thenby": "1.2.3"
 		}
 }

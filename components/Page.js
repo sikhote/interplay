@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import Router from 'next/router';
 import { cloudGet } from '../actions/cloud';
 import Navigation from './Navigation';
-// import routes from '../lib/routes';
 
 class Page extends Component {
   componentDidMount() {
-    console.log('---------------');
-    console.log(Router.route);
-    // Router.push('/about')
+    const currentPath = window.location.pathname.replace(/\/$/, '');
+
+    if (Router.route !== currentPath) {
+      Router.push(currentPath);
+    }
   }
   componentWillReceiveProps({ hasCloudStore, cloud, cloudGet }) {
     if (!hasCloudStore && cloud.key && cloud.path) {

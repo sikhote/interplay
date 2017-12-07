@@ -7,8 +7,7 @@ import Navigation from './Navigation';
 // import routes from '../lib/routes';
 
 class Page extends Component {
-  constructor(props) {
-    super(props);
+  componentDidMount() {
     console.log('---------------');
     console.log(Router.route);
     // Router.push('/about')

@@ -23,10 +23,7 @@ class Page extends Component {
       <div>
         <style jsx>
           {`
-            .main
-              display grid
-              grid 1fr / 200px 1fr
-              height 100vh
+            .main display grid grid 1fr / 200px 1fr height 100vh;
           `}
         </style>
         <div className="main">

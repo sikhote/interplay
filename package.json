@@ -31,6 +31,7 @@
 				"material-ui": "0.19.3",
 				"moment": "2.19.3",
 				"next": "4.1.4",
+				"node-sass": "^4.7.2",
 				"polished": "1.7.0",
 				"prettier": "1.8.2",
 				"prop-types": "15.6.0",
@@ -46,8 +47,7 @@
 				"rxjs": "5.4.3",
 				"serverless": "1.11.0",
 				"styled-jsx": "2.2.1",
-				"styled-jsx-plugin-stylus": "0.0.3",
-				"stylus": "0.54.5",
+				"styled-jsx-plugin-sass": "^0.2.2",
 				"thenby": "1.2.3"
 		}
 }

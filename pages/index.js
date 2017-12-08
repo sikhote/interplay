@@ -1,7 +1,8 @@
 import React from 'react';
-import inject from '../lib/inject';
+import withRedux from 'next-redux-wrapper';
+import initStore from '../lib/initStore';
 import Page from '../components/Page';
 
 const Player = () => <Page>Player goes here</Page>;
 
-export default inject(Player);
+export default withRedux(initStore, null, null)(Player);

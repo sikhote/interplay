@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import inject from '../lib/inject';
+import withRedux from 'next-redux-wrapper';
+import initStore from '../lib/initStore';
 import Page from '../components/Page';
 import { settingsReplace } from '../actions/settings';
 import FileTable from '../components/FileTable';
@@ -28,14 +28,13 @@ Audio.propTypes = {
   settings: PropTypes.object.isRequired,
 };
 
-export default inject(
-  connect(
-    state => ({
-      audio: state.files.audio,
-      settings: state.settings,
-    }),
-    dispatch => ({
-      settingsReplace: settings => dispatch(settingsReplace(settings)),
-    }),
-  )(Audio),
-);
+export default withRedux(
+  initStore,
+  state => ({
+    audio: state.files.audio,
+    settings: state.settings,
+  }),
+  dispatch => ({
+    settingsReplace: settings => dispatch(settingsReplace(settings)),
+  }),
+)(Audio);

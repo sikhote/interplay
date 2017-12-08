@@ -7,10 +7,17 @@ import enUS from 'antd/lib/locale-provider/en_US';
 import { cloudGet } from '../actions/cloud';
 import Navigation from './Navigation';
 
+const tryCloudGet = ({ hasCloudStore, cloud: { key, path }, cloudGet }) => {
+  if (!hasCloudStore && key && path) {
+    cloudGet();
+  }
+};
+
 class Page extends Component {
   constructor(props) {
     super(props);
-    this.tryCloudGet(props);
+    const { hasCloudStore, cloud, cloudGet } = props;
+    tryCloudGet({ hasCloudStore, cloud, cloudGet });
   }
   componentDidMount() {
     const currentPath = window.location.pathname.replace(/\/$/, '');
@@ -20,14 +27,8 @@ class Page extends Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    this.tryCloudGet(nextProps);
-  }
-  tryCloudGet(props) {
-    const { hasCloudStore, cloud: { key, path }, cloudGet } = props;
-
-    if (!hasCloudStore && key && path) {
-      cloudGet();
-    }
+    const { hasCloudStore, cloud, cloudGet } = nextProps;
+    tryCloudGet({ hasCloudStore, cloud, cloudGet });
   }
   render() {
     return (

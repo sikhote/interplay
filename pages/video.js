@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import inject from '../lib/inject';
+import withRedux from 'next-redux-wrapper';
+import initStore from '../lib/initStore';
 import Page from '../components/Page';
 import { settingsReplace } from '../actions/settings';
 import FileTable from '../components/FileTable';
@@ -23,14 +23,13 @@ Video.propTypes = {
   settings: PropTypes.object.isRequired,
 };
 
-export default inject(
-  connect(
-    state => ({
-      video: state.files.video,
-      settings: state.settings,
-    }),
-    dispatch => ({
-      settingsReplace: settings => dispatch(settingsReplace(settings)),
-    }),
-  )(Video),
-);
+export default withRedux(
+  initStore,
+  state => ({
+    video: state.files.video,
+    settings: state.settings,
+  }),
+  dispatch => ({
+    settingsReplace: settings => dispatch(settingsReplace(settings)),
+  }),
+)(Video);

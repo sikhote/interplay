@@ -1,9 +1,13 @@
 import { lensPath, set } from 'ramda';
 
+const ls = typeof window !== 'undefined' && window.localStorage;
+const key = (ls && ls.getItem('key')) || '';
+const path = (ls && ls.getItem('path')) || '';
+
 const initialState = {
   cloud: {
-    key: '',
-    path: '',
+    key,
+    path,
     date: null,
     status: null,
   },

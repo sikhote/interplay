@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Input, Button, Tooltip } from 'antd';
 import moment from 'moment';
 import { lensPath, set } from 'ramda';
-import inject from '../lib/inject';
+import withRedux from 'next-redux-wrapper';
+import initStore from '../lib/initStore';
 import Page from '../components/Page';
 import { settingsReplace, settingsCloudDelete } from '../actions/settings';
 import { filesSync } from '../actions/files';
@@ -36,11 +36,12 @@ const Settings = ({
                     placeholder="ABCD1234"
                     style={{ border: 0 }}
                     value={settings.cloud.key}
-                    onChange={({ target: { value } }) =>
+                    onChange={({ target: { value } }) => {
+                      window.localStorage.setItem('key', value);
                       settingsReplace(
                         set(lensPath(['cloud', 'key']), value, settings),
-                      )
-                    }
+                      );
+                    }}
                   />
                 </td>
               </tr>
@@ -51,11 +52,12 @@ const Settings = ({
                     placeholder="iTunes/iTunes Music"
                     style={{ border: 0 }}
                     value={settings.cloud.path}
-                    onChange={({ target: { value } }) =>
+                    onChange={({ target: { value } }) => {
+                      window.localStorage.setItem('path', value);
                       settingsReplace(
                         set(lensPath(['cloud', 'path']), value, settings),
-                      )
-                    }
+                      );
+                    }}
                   />
                 </td>
               </tr>
@@ -161,14 +163,13 @@ Settings.propTypes = {
   cloudSave: PropTypes.func.isRequired,
 };
 
-export default inject(
-  connect(
-    state => ({ settings: state.settings }),
-    dispatch => ({
-      settingsReplace: settings => dispatch(settingsReplace(settings)),
-      settingsCloudDelete: () => dispatch(settingsCloudDelete()),
-      filesSync: () => dispatch(filesSync()),
-      cloudSave: () => dispatch(cloudSave()),
-    }),
-  )(Settings),
-);
+export default withRedux(
+  initStore,
+  state => ({ settings: state.settings }),
+  dispatch => ({
+    settingsReplace: settings => dispatch(settingsReplace(settings)),
+    settingsCloudDelete: () => dispatch(settingsCloudDelete()),
+    filesSync: () => dispatch(filesSync()),
+    cloudSave: () => dispatch(cloudSave()),
+  }),
+)(Settings);

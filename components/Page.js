@@ -30,17 +30,17 @@ class Page extends Component {
   }
   render() {
     return (
-      <div>
+      <div className="root">
         <style jsx>
           {`
-            .main {
+            .root {
               display: grid;
               height: 100vh;
 
               @media (max-width: 799px) {
                 grid-template-areas: 'children' 'navigation';
                 grid-template-columns: 1fr;
-                grid-template-rows: 1fr auto;
+                grid-template-rows: 1fr 55px;
               }
 
               @media (min-width: 800px) {
@@ -51,10 +51,8 @@ class Page extends Component {
             }
           `}
         </style>
-        <div className="main">
-          <div style={{ gridArea: 'navigation' }}><Navigation /></div>
-          <div style={{ gridArea: 'children' }}>{this.props.children}</div>
-        </div>
+        <div style={{ gridArea: 'navigation' }}><Navigation /></div>
+        <div style={{ gridArea: 'children' }}>{this.props.children}</div>
       </div>
     );
   }

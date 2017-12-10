@@ -29,9 +29,6 @@ const reducer = (state = initialState, action) => {
       const { settings } = action.payload;
       return settings || state;
     }
-    case 'SETTINGS_CLOUD_DELETE': {
-      return set(lensPath(['cloud']), initialState.cloud, state);
-    }
     default:
       return state;
   }

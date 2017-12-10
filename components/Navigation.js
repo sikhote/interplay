@@ -32,12 +32,23 @@ class Navigation extends Component {
                   flex: 1 1 auto;
                   line-height: 1em;
                   padding: 10px;
+                  height: 100%;
+                  display: flex;
+                  justify-content: center;
+                  flex-direction: column;
+                  align-items: center;
                 }
 
                 :global(.anticon) {
                   display: block;
                   margin-right: 0;
-                  margin-bottom: 5px;
+                  margin-bottom: 10px;
+                }
+              }
+
+              @media (min-width: 800px) {
+                :global(.ant-menu-item) {
+                  margin-top: 0;
                 }
               }
             }

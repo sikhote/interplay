@@ -23,6 +23,10 @@ class Navigation extends Component {
             .root {
               height: 100%;
 
+              :global(.ant-menu) {
+                height: 100%;
+              }
+
               @media (max-width: ${bps.medium - 1}px) {
                 :global(.ant-menu) {
                   display: flex;
@@ -61,7 +65,6 @@ class Navigation extends Component {
           onResize={({ windowWidth: width }) => this.setState({ width })}
         />
         <Menu
-          style={{ height: '100%' }}
           onClick={({ key }) => router.push(key)}
           selectedKeys={[router.pathname]}
           mode={width < 800 ? 'horizontal' : 'inline'}

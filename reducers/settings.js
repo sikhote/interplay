@@ -1,5 +1,3 @@
-import { lensPath, set } from 'ramda';
-
 const ls = typeof window !== 'undefined' && window.localStorage;
 const key = (ls && ls.getItem('key')) || '';
 const path = (ls && ls.getItem('path')) || '';
@@ -28,9 +26,6 @@ const reducer = (state = initialState, action) => {
     case 'SETTINGS_REPLACE': {
       const { settings } = action.payload;
       return settings || state;
-    }
-    case 'SETTINGS_CLOUD_DELETE': {
-      return set(lensPath(['cloud']), initialState.cloud, state);
     }
     default:
       return state;

@@ -6,17 +6,11 @@ import { lensPath, set } from 'ramda';
 import withRedux from 'next-redux-wrapper';
 import initStore from '../lib/initStore';
 import Page from '../components/Page';
-import { settingsReplace, settingsCloudDelete } from '../actions/settings';
+import { settingsReplace } from '../actions/settings';
 import { filesSync } from '../actions/files';
 import { cloudSave } from '../actions/cloud';
 
-const Settings = ({
-  settingsReplace,
-  settingsCloudDelete,
-  filesSync,
-  cloudSave,
-  settings,
-}) => (
+const Settings = ({ settingsReplace, filesSync, cloudSave, settings }) => (
   <Page>
     <div className="ant-table ant-table-middle">
       <div className="ant-table-content">
@@ -24,14 +18,15 @@ const Settings = ({
           <table>
             <thead className="ant-table-thead">
               <tr>
-                <th width={140}>Dropbox</th>
-                <th />
+                <th width={140} colSpan={2} style={{ textAlign: 'left' }}>
+                  Dropbox
+                </th>
               </tr>
             </thead>
             <tbody className="ant-table-tbody">
               <tr className="ant-table-row ant-table-row-level-0">
                 <td>Key</td>
-                <td>
+                <td style={{ paddingLeft: 0 }}>
                   <Input
                     placeholder="ABCD1234"
                     style={{ border: 0 }}
@@ -47,7 +42,7 @@ const Settings = ({
               </tr>
               <tr className="ant-table-row ant-table-row-level-0">
                 <td>Path</td>
-                <td>
+                <td style={{ paddingLeft: 0 }}>
                   <Input
                     placeholder="iTunes/iTunes Music"
                     style={{ border: 0 }}
@@ -63,17 +58,9 @@ const Settings = ({
               </tr>
               <tr className="ant-table-row ant-table-row-level-0">
                 <td>Actions</td>
-                <td>
-                  <Tooltip placement="top" title="Delete">
-                    <Button
-                      type="primary"
-                      shape="circle"
-                      icon="delete"
-                      style={{ marginLeft: 10 }}
-                      onClick={() => settingsCloudDelete()}
-                    />
-                  </Tooltip>
+                <td style={{ paddingLeft: 0 }}>
                   <Tooltip
+                    style={{ marginLeft: 10 }}
                     placement="top"
                     title={
                       settings.cloud.status === 'syncing'
@@ -158,7 +145,6 @@ const Settings = ({
 Settings.propTypes = {
   settings: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
-  settingsCloudDelete: PropTypes.func.isRequired,
   filesSync: PropTypes.func.isRequired,
   cloudSave: PropTypes.func.isRequired,
 };
@@ -168,7 +154,6 @@ export default withRedux(
   state => ({ settings: state.settings }),
   dispatch => ({
     settingsReplace: settings => dispatch(settingsReplace(settings)),
-    settingsCloudDelete: () => dispatch(settingsCloudDelete()),
     filesSync: () => dispatch(filesSync()),
     cloudSave: () => dispatch(cloudSave()),
   }),

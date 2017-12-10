@@ -51,7 +51,9 @@ class Page extends Component {
             }
           `}
         </style>
-        <div style={{ gridArea: 'navigation' }}><Navigation /></div>
+        <div style={{ gridArea: 'navigation' }}>
+          <Navigation />
+        </div>
         <div style={{ gridArea: 'children' }}>{this.props.children}</div>
       </div>
     );

@@ -7,6 +7,10 @@ export default class extends Document {
       <html lang="en">
         <Head>
           <title>clairic</title>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          />
           <link
             rel="stylesheet"
             href="//cdnjs.cloudflare.com/ajax/libs/antd/3.0.0/antd.min.css"

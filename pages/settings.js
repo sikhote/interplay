@@ -154,7 +154,6 @@ export default withRedux(
   state => ({ settings: state.settings }),
   dispatch => ({
     settingsReplace: settings => dispatch(settingsReplace(settings)),
-    settingsCloudDelete: () => dispatch(settingsCloudDelete()),
     filesSync: () => dispatch(filesSync()),
     cloudSave: () => dispatch(cloudSave()),
   }),

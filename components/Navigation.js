@@ -3,12 +3,13 @@ import { Menu, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import WindowSizeListener from 'react-window-size-listener';
+import { bps } from '../lib/styles';
 
 class Navigation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: typeof window !== 'undefined' ? window.innerWidth : 800,
+      width: typeof window !== 'undefined' ? window.innerWidth : bps.medium,
     };
   }
   render() {
@@ -16,11 +17,13 @@ class Navigation extends Component {
     const { width } = this.state;
 
     return (
-      <div className="root" style={{ height: '100%' }}>
+      <div className="root">
         <style jsx>
           {`
             .root {
-              @media (max-width: 799px) {
+              height: 100%;
+
+              @media (max-width: ${bps.medium - 1}px) {
                 :global(.ant-menu) {
                   display: flex;
                   align-items: center;
@@ -46,7 +49,7 @@ class Navigation extends Component {
                 }
               }
 
-              @media (min-width: 800px) {
+              @media (min-width: ${bps.medium}px) {
                 :global(.ant-menu-item) {
                   margin-top: 0;
                 }

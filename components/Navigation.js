@@ -3,7 +3,7 @@ import { Menu, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import WindowSizeListener from 'react-window-size-listener';
-import { bps } from '../lib/styles';
+import { bps, colors } from '../lib/styles';
 
 class Navigation extends Component {
   constructor(props) {
@@ -31,19 +31,23 @@ class Navigation extends Component {
                 :global(.ant-menu) {
                   display: flex;
                   align-items: center;
+                  border: 0;
+                  line-height: 1em;
                 }
 
                 :global(.ant-menu-item) {
+                  top: auto;
                   float: none;
                   text-align: center;
                   flex: 1 1 auto;
                   line-height: 1em;
-                  padding: 10px;
                   height: 100%;
                   display: flex;
                   justify-content: center;
                   flex-direction: column;
                   align-items: center;
+                  margin: 0 !important;
+                  box-shadow: inset 0 1px 0 0 ${colors.darkBlue};
                 }
 
                 :global(.anticon) {

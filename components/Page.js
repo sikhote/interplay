@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Router from 'next/router';
 import { cloudGet } from '../actions/cloud';
 import Navigation from './Navigation';
+import LoadingBar from './LoadingBar';
 import { bps } from '../lib/styles';
 
 const tryCloudGet = ({ hasCloudStore, cloud: { key, path }, cloudGet }) => {
@@ -52,6 +53,7 @@ class Page extends Component {
             }
           `}
         </style>
+        <LoadingBar />
         <div style={{ gridArea: 'navigation' }}>
           <Navigation />
         </div>

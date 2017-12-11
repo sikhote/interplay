@@ -59,24 +59,6 @@ const Settings = ({ settingsReplace, filesSync, cloudSave, settings }) => (
               <tr className="ant-table-row ant-table-row-level-0">
                 <td>Actions</td>
                 <td style={{ paddingLeft: 0 }}>
-                  <Tooltip
-                    style={{ marginLeft: 10 }}
-                    placement="top"
-                    title={
-                      settings.cloud.status === 'syncing'
-                        ? 'Syncing'
-                        : 'Start sync'
-                    }
-                  >
-                    <Button
-                      type="primary"
-                      shape="circle"
-                      icon="retweet"
-                      style={{ marginLeft: 10 }}
-                      loading={settings.cloud.status === 'syncing'}
-                      onClick={() => filesSync()}
-                    />
-                  </Tooltip>
                   {settings.cloud.status === 'syncing' ? (
                     <Tooltip placement="top" title="Cancel sync">
                       <Button
@@ -120,6 +102,27 @@ const Settings = ({ settingsReplace, filesSync, cloudSave, settings }) => (
                       />
                     </Tooltip>
                   )}
+                  {settings.cloud.key &&
+                    settings.cloud.path && (
+                      <Tooltip
+                        style={{ marginLeft: 10 }}
+                        placement="top"
+                        title={
+                          settings.cloud.status === 'syncing'
+                            ? 'Syncing'
+                            : 'Start sync'
+                        }
+                      >
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon="retweet"
+                          style={{ marginLeft: 10 }}
+                          loading={settings.cloud.status === 'syncing'}
+                          onClick={() => filesSync()}
+                        />
+                      </Tooltip>
+                    )}
                   {settings.cloud.key &&
                     settings.cloud.path && (
                       <Tooltip placement="top" title="Save state to cloud">

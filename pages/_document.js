@@ -40,7 +40,7 @@ export default class extends Document {
             rel="shortcut icon"
             href="/static/images/favicons/favicon.ico"
           />
-          <meta name="msapplication-TileColor" content="#da532c" />
+          <meta name="msapplication-TileColor" content="#00aba9" />
           <meta
             name="msapplication-config"
             content="/static/images/favicons/browserconfig.xml"

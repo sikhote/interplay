@@ -18,11 +18,7 @@ export const spacing = {
 export const colors = {
   blue: '#1890ff',
   darkBlue: '#001529',
-  primary: '#0ca678',
-  text: '#343A42',
-  divider: '#343A42',
-  codeBg: '#c3fae8',
-  feed: '#868e96',
+  primary: '#fa45ff',
 };
 
 export const fontSizes = {

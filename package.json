@@ -12,13 +12,13 @@
 				"eslint": "eslint \"./**/*.js\"",
 				"export": "next build && next export -o build",
 				"invalidate": "serverless invalidate",
-				"next": "node server.js",
+				"next": "next",
 				"prettier": "prettier --write \"./**/*.js\"",
 				"server": "cd build && python -m SimpleHTTPServer",
 				"sync": "serverless sync"
 		},
 		"dependencies": {
-				"antd": "3.0.0",
+				"antd": "3.4.0",
 				"babel-eslint": "8.0.1",
 				"bluebird": "3.5.0",
 				"dropbox": "2.5.9",

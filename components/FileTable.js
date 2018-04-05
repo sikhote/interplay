@@ -2,6 +2,7 @@ import React from 'react';
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import firstBy from 'thenby';
 import PropTypes from 'prop-types';
+import style from '../styles/file-table';
 
 const songsSorter = (data, sortBy, sortDirection) => {
   const options = { ignoreCase: true, direction: sortDirection ? 1 : -1 };
@@ -35,19 +36,14 @@ const FileTable = ({ columns, data, settings, saveSettings }) => {
   const sortedData = songsSorter(data, sortBy, sortDirection);
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div className="root">
+      <style jsx>{style}</style>
       <AutoSizer>
         {({ height, width }) => (
           <Table
             onRowClick={({ event, index, rowData }) => {
               // eslint-disable-next-line
               console.log(event, index, rowData);
-            }}
-            headerHeight={30}
-            headerStyle={{
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
             }}
             height={height}
             noRowsRenderer={() => <div>No rows</div>}
@@ -57,7 +53,6 @@ const FileTable = ({ columns, data, settings, saveSettings }) => {
             scrollToIndex={position}
             width={width}
             rowStyle={{
-              display: 'grid',
               // prettier-ignore
               grid: `none / ${
                 columns.reduce(
@@ -83,11 +78,6 @@ const FileTable = ({ columns, data, settings, saveSettings }) => {
                 label={title}
                 dataKey={dataKey}
                 width={width || 100}
-                style={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
               />
             ))}
           </Table>

@@ -1,5 +1,5 @@
 const spawnSync = require('child_process').spawnSync;
-const { name } = require('../../package.json');
+const { aws } = require('../../package.json');
 
 class ServerlessPlugin {
   constructor(serverless, options) {
@@ -28,7 +28,7 @@ class ServerlessPlugin {
       's3',
       'rm',
       '--recursive',
-      `s3://${name}/`
+      `s3://${aws}/`
     ];
     result = spawnSync('aws', args);
     stdout = result.stdout.toString();
@@ -48,7 +48,7 @@ class ServerlessPlugin {
       's3',
       'sync',
       'build/',
-      `s3://${name}/`
+      `s3://${aws}/`
     ];
     result = spawnSync('aws', args);
     stdout = result.stdout.toString();

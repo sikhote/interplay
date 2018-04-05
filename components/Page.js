@@ -1,29 +1,41 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Router from 'next/router';
-import { cloudGet } from '../actions/cloud';
+import { connect } from 'react-redux';
+import Head from 'next/head';
+import qp from 'query-parse';
 import Navigation from './Navigation';
 import LoadingBar from './LoadingBar';
-import { bps } from '../lib/styles';
+import { cloudGet } from '../actions/cloud';
+import content from '../lib/content';
+import { match } from '../lib/routing';
+import pageStyle from '../styles/page';
+import globalStyle from '../styles/global';
 
+const isWeb = typeof window !== 'undefined';
+const getCurrentPath = () => {
+  const path = isWeb && window.location.pathname.replace(/\/$/, '');
+  return isWeb ? path || '/' : '';
+};
+const getPage = currentPath => currentPath.replace(/^\//, '');
 const tryCloudGet = ({ hasCloudStore, cloud: { key, path }, cloudGet }) => {
   if (!hasCloudStore && key && path) {
     cloudGet();
   }
 };
 
-class Page extends Component {
+class Page extends React.Component {
   constructor(props) {
     super(props);
     const { hasCloudStore, cloud, cloudGet } = props;
     tryCloudGet({ hasCloudStore, cloud, cloudGet });
   }
   componentDidMount() {
-    const currentPath = window.location.pathname.replace(/\/$/, '');
+    const currentPath = getCurrentPath();
+    const { page = getPage(currentPath), ...params } = match(currentPath);
 
-    if (currentPath && Router.route !== currentPath) {
-      Router.push(currentPath);
+    if (Router.route !== `/${page}`) {
+      Router.push(`/${page}?${qp.toString(params)}`, currentPath);
     }
   }
   componentWillReceiveProps(nextProps) {
@@ -31,43 +43,47 @@ class Page extends Component {
     tryCloudGet({ hasCloudStore, cloud, cloudGet });
   }
   render() {
+    const { title, children, className } = this.props;
+    const currentPath = getCurrentPath();
+    const { page = getPage(currentPath) } = match(currentPath);
+
     return (
-      <div className="root">
-        <style jsx>
-          {`
-            .root {
-              display: grid;
-              height: 100vh;
-
-              @media (max-width: ${bps.medium - 1}px) {
-                grid-template-areas: 'children' 'navigation';
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr 55px;
-              }
-
-              @media (min-width: ${bps.medium}px) {
-                grid-template-areas: 'navigation children';
-                grid-template-columns: 200px 1fr;
-                grid-template-rows: 1fr;
-              }
-            }
-          `}
+      <div className={className}>
+        <Head>
+          <title>
+            {content.name}
+            {title ? `${content.divider}${title}` : ''}
+          </title>
+        </Head>
+        <style jsx global>
+          {globalStyle}
         </style>
+        <style jsx>{pageStyle}</style>
         <LoadingBar />
         <div style={{ gridArea: 'navigation' }}>
           <Navigation />
         </div>
-        <div style={{ gridArea: 'children' }}>{this.props.children}</div>
+        <div style={{ gridArea: 'children' }}>
+          {isWeb && Router.route === `/${page}` && children}
+        </div>
       </div>
     );
   }
 }
 
 Page.propTypes = {
-  children: PropTypes.any.isRequired,
+  children: PropTypes.any,
+  title: PropTypes.string,
+  className: PropTypes.string,
   cloudGet: PropTypes.func.isRequired,
   cloud: PropTypes.object.isRequired,
   hasCloudStore: PropTypes.bool.isRequired,
+};
+
+Page.defaultProps = {
+  children: null,
+  title: '',
+  className: 'root',
 };
 
 export default connect(

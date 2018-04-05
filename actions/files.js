@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs/Observable';
-import { startCase } from 'lodash';
+import { startCase, set } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import Promise from 'bluebird';
-import { lensPath, set } from 'ramda';
 import extensions from '../lib/extensions';
 import { settingsReplace } from './settings';
 import { cloudSave } from './cloud';
@@ -26,11 +25,11 @@ const filesSyncEpic = (action$, { getState }) =>
 
     const syncStart = Observable.of(
       settingsReplace(
-        set(
-          lensPath(['cloud']),
-          { ...settingsCloud, date: Date.now(), status: 'syncing' },
-          getState().settings,
-        ),
+        set({ ...getState().settings }, 'cloud', {
+          ...settingsCloud,
+          date: Date.now(),
+          status: 'syncing',
+        }),
       ),
     );
 
@@ -102,11 +101,11 @@ const filesSyncEpic = (action$, { getState }) =>
 
     const syncSuccess = () =>
       settingsReplace(
-        set(
-          lensPath(['cloud']),
-          { ...settingsCloud, date: Date.now(), status: 'success' },
-          getState().settings,
-        ),
+        set({ ...getState().settings }, 'cloud', {
+          ...settingsCloud,
+          date: Date.now(),
+          status: 'success',
+        }),
       );
 
     const syncFail = error => {
@@ -123,7 +122,7 @@ const filesSyncEpic = (action$, { getState }) =>
       }
 
       return Observable.of(
-        settingsReplace(set(lensPath(['cloud']), cloud, getState().settings)),
+        settingsReplace(set({ ...getState().settings }, 'cloud', cloud)),
       );
     };
 

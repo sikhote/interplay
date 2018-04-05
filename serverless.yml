@@ -1,4 +1,4 @@
-service: ${file(./package.json):name}
+service: ${file(./package.json):aws}
 custom: ${file(./package.json)}
 frameworkVersion: ">=1.2.0 <2.0.0"
 
@@ -30,7 +30,7 @@ resources:
     WebAppS3Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:custom.name}
+        BucketName: ${self:custom.aws}
         AccessControl: PublicRead
         WebsiteConfiguration:
           IndexDocument: index.html
@@ -48,14 +48,14 @@ resources:
               Principal: "*"
               Action:
               - s3:GetObject
-              Resource: arn:aws:s3:::${self:custom.name}/*
+              Resource: arn:aws:s3:::${self:custom.aws}/*
     ## Specifying the CloudFront Distribution to server your Web Application
     WebAppCloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       Properties:
         DistributionConfig:
           Origins:
-            - DomainName: ${self:custom.name}.s3.amazonaws.com
+            - DomainName: ${self:custom.aws}.s3.amazonaws.com
               ## An identifier for the origin which must be unique within the distribution
               Id: WebApp
               CustomOriginConfig:

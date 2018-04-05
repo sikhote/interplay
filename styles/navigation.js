@@ -1,8 +1,6 @@
 import css from 'styled-jsx/css';
 import { colors, bps } from './base';
 
-console.log('make global?');
-
 // prettier-ignore
 export default css`
   .root {

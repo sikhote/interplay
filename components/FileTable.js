@@ -63,7 +63,7 @@ const FileTable = ({ columns, data, settings, saveSettings }) => {
                 columns.reduce(
                   (a, v) => a + (v.width ? ` ${v.width}px` : ' 1fr'),
                   '',
-                )}`,
+                )}`
             }}
             sort={({ sortBy, sortDirection }) =>
               saveSettings({

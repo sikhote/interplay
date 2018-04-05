@@ -1,4 +1,4 @@
-import { lensPath, set } from 'ramda';
+import { set } from 'lodash';
 
 const initialState = {
   hasCloudStore: false,
@@ -7,7 +7,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'CLOUD_GET_SUCCESS': {
-      return set(lensPath(['hasCloudStore']), true, state);
+      return set({ ...state }, 'hasCloudStore', true);
     }
     default:
       return state;

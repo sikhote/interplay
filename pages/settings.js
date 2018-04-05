@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Button, Tooltip } from 'antd';
 import moment from 'moment';
-import { lensPath, set } from 'ramda';
+import { set } from 'lodash';
 import withRedux from 'next-redux-wrapper';
 import initStore from '../lib/initStore';
 import Page from '../components/Page';
@@ -33,9 +33,7 @@ const Settings = ({ settingsReplace, filesSync, cloudSave, settings }) => (
                     value={settings.cloud.key}
                     onChange={({ target: { value } }) => {
                       window.localStorage.setItem('key', value);
-                      settingsReplace(
-                        set(lensPath(['cloud', 'key']), value, settings),
-                      );
+                      settingsReplace(set({ ...settings }, 'cloud.key', value));
                     }}
                   />
                 </td>
@@ -50,7 +48,7 @@ const Settings = ({ settingsReplace, filesSync, cloudSave, settings }) => (
                     onChange={({ target: { value } }) => {
                       window.localStorage.setItem('path', value);
                       settingsReplace(
-                        set(lensPath(['cloud', 'path']), value, settings),
+                        set({ ...settings }, 'cloud.path', value),
                       );
                     }}
                   />
@@ -68,11 +66,7 @@ const Settings = ({ settingsReplace, filesSync, cloudSave, settings }) => (
                         style={{ marginLeft: 10 }}
                         onChange={() =>
                           settingsReplace(
-                            set(
-                              lensPath(['cloud', 'status']),
-                              'cancelled',
-                              settings,
-                            ),
+                            set({ ...settings }, 'cloud.status', 'cancelled'),
                           )
                         }
                       />

@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/clairic
+    working_directory: ~/build
     docker:
       - image: circleci/node:8
         environment:

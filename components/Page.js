@@ -38,8 +38,8 @@ class Page extends React.Component {
       Router.push(`/${page}?${qp.toString(params)}`, currentPath);
     }
   }
-  componentWillReceiveProps(nextProps) {
-    const { hasCloudStore, cloud, cloudGet } = nextProps;
+  componentDidUpdate() {
+    const { hasCloudStore, cloud, cloudGet } = this.props;
     tryCloudGet({ hasCloudStore, cloud, cloudGet });
   }
   render() {

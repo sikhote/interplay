@@ -2,7 +2,7 @@ const ls = typeof window !== 'undefined' && window.localStorage;
 const key = (ls && ls.getItem('key')) || '';
 const path = (ls && ls.getItem('path')) || '';
 
-const initialState = {
+export const initialState = {
   cloud: {
     key,
     path,
@@ -19,6 +19,13 @@ const initialState = {
     sortBy: 'name',
     sortDirection: true,
   },
+  player: {
+    source: null,
+    path: null,
+    volume: 0.5,
+    position: null,
+    playing: false,
+  }
 };
 
 const reducer = (state = initialState, action) => {

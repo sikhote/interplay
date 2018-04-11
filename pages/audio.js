@@ -6,7 +6,7 @@ import Page from '../components/Page';
 import { settingsReplace } from '../actions/settings';
 import FileTable from '../components/FileTable';
 
-const Audio = ({ audio, settings, settingsReplace }) => (
+const Audio = ({ files, settings, settingsReplace }) => (
   <Page>
     <FileTable
       columns={[
@@ -15,24 +15,34 @@ const Audio = ({ audio, settings, settingsReplace }) => (
         { title: 'Artist', dataKey: 'artist' },
         { title: 'Album', dataKey: 'album' },
       ]}
-      data={audio}
+      data={files}
       settings={settings.audio}
       saveSettings={audio => settingsReplace({ ...settings, audio })}
+      onRowClick={({ path }) => settingsReplace({
+        ...settings,
+        player: {
+          ...settings.player,
+          source: 'audio',
+          path,
+          position: 0,
+          playing: true,
+        }
+      })}
     />
   </Page>
 );
 
 Audio.propTypes = {
-  audio: PropTypes.array.isRequired,
+  files: PropTypes.array.isRequired,
   settingsReplace: PropTypes.func.isRequired,
   settings: PropTypes.object.isRequired,
 };
 
 export default withRedux(
   initStore,
-  state => ({
-    audio: state.files.audio,
-    settings: state.settings,
+  ({ files, settings }) => ({
+    files: files.audio,
+    settings,
   }),
   dispatch => ({
     settingsReplace: settings => dispatch(settingsReplace(settings)),

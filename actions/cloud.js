@@ -19,7 +19,7 @@ const cloudGetEpic = (action$, { getState }) =>
     const dropbox = new Dropbox({ accessToken });
     const getCloudState = Observable.from(
       dropbox
-        .filesDownload({ path: `${path}/clairic.json` })
+        .filesDownload({ path: `${path}/mediafurry.json` })
         .then(
           ({ fileBlob }) =>
             new Promise(resolve => {
@@ -48,7 +48,7 @@ const cloudSaveEpic = (action$, { getState }) =>
     const saveCloudState = Observable.from(
       dropbox.filesUpload({
         contents: JSON.stringify(state),
-        path: `${path}/clairic.json`,
+        path: `${path}/mediafurry.json`,
         mode: { '.tag': 'overwrite' },
         mute: true,
       }),

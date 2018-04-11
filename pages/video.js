@@ -6,11 +6,11 @@ import Page from '../components/Page';
 import { settingsReplace } from '../actions/settings';
 import FileTable from '../components/FileTable';
 
-const Video = ({ video, settings, settingsReplace }) => (
+const Video = ({ files, settings, settingsReplace }) => (
   <Page>
     <FileTable
       columns={[{ title: 'Name', dataKey: 'name' }]}
-      data={video}
+      data={files}
       settings={settings.video}
       saveSettings={video => settingsReplace({ ...settings, video })}
     />
@@ -18,16 +18,16 @@ const Video = ({ video, settings, settingsReplace }) => (
 );
 
 Video.propTypes = {
-  video: PropTypes.array.isRequired,
+  files: PropTypes.array.isRequired,
   settingsReplace: PropTypes.func.isRequired,
   settings: PropTypes.object.isRequired,
 };
 
 export default withRedux(
   initStore,
-  state => ({
-    video: state.files.video,
-    settings: state.settings,
+  ({ files, settings }) => ({
+    files: files.video,
+    settings,
   }),
   dispatch => ({
     settingsReplace: settings => dispatch(settingsReplace(settings)),

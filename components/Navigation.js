@@ -30,14 +30,13 @@ class Navigation extends React.Component {
           theme="dark"
         >
           {[
-            { key: '/', icon: 'caret-right', message: 'Player' },
+            { key: '/', icon: 'setting', message: 'Settings' },
             { key: '/audio', icon: 'notification', message: 'Audio' },
             { key: '/video', icon: 'video-camera', message: 'Video' },
-            { key: '/settings', icon: 'setting', message: 'Settings' },
-          ].map(({ key, icon, message }) => (
-            <Menu.Item key={key}>
-              <Icon type={icon} /> {message}
-            </Menu.Item>
+            ].map(({ key, icon, message }) => (
+              <Menu.Item key={key}>
+                <Icon type={icon} /> {message}
+              </Menu.Item>
           ))}
         </Menu>
       </div>

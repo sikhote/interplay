@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { startCase, set } from 'lodash';
+import { startCase, set, get } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import Promise from 'bluebird';
@@ -7,8 +7,45 @@ import extensions from '../lib/extensions';
 import { settingsReplace } from './settings';
 import { cloudSave } from './cloud';
 
+export const filesGetLink = payload => ({
+  type: 'FILES_GET_LINK',
+  payload,
+});
+
+export const filesGetLinkSuccess = payload => ({
+  type: 'FILES_GET_LINK_SUCCESS',
+  payload,
+});
+
+const filesGetLinkEpic = (action$, { getState }) =>
+  action$.ofType('FILES_GET_LINK').mergeMap(action => {
+    const { source, path: filePath } = get(action, 'payload', {});
+    const state = getState();
+    const settingsCloud = state.settings.cloud;
+    const accessToken = settingsCloud.key;
+    const path = `/${settingsCloud.path}`;
+    const dropbox = new Dropbox({ accessToken });
+    const getLink = Observable.from(
+      dropbox
+        .filesGetTemporaryLink({ path: `${path}/${filePath}` })
+        .then(({ metadata, link }) =>
+          Promise.resolve({
+            source,
+            path: filePath,
+            link,
+            linkDate: Date.now(),
+            metadata,
+          }),
+        )
+        .catch(() => state),
+    );
+// need to send this to settings too for easy playback
+    return getLink.map(newPayload => filesGetLinkSuccess(newPayload));
+  });
+
 export const filesSync = () => ({
   type: 'FILES_SYNC',
+  payload: { source: 'sdsdsd' },
 });
 
 export const filesSyncSuccess = files => ({
@@ -22,7 +59,6 @@ const filesSyncEpic = (action$, { getState }) =>
     const accessToken = settingsCloud.key;
     const path = `/${settingsCloud.path}`;
     const dropbox = new Dropbox({ accessToken });
-
     const syncStart = Observable.of(
       settingsReplace(
         set({ ...getState().settings }, 'cloud', {
@@ -83,11 +119,17 @@ const filesSyncEpic = (action$, { getState }) =>
                   name,
                   path: filePath,
                   track,
+                  link: null,
+                  linkDate: null,
+                  metadata: null,
                 });
               } else if (fileType === 'video') {
                 files.video.push({
                   name: startCase(fileName.join('.')),
                   path: filePath,
+                  link: null,
+                  linkDate: null,
+                  metadata: null,
                 });
               }
             }
@@ -137,4 +179,4 @@ const filesSyncEpic = (action$, { getState }) =>
     );
   });
 
-export const epics = [filesSyncEpic];
+export const epics = [filesSyncEpic, filesGetLinkEpic];

@@ -12,7 +12,7 @@
 				"eslint": "eslint \"./**/*.js\"",
 				"export": "next build && next export -o build",
 				"invalidate": "serverless invalidate",
-        "next": "node server.js",
+				"next": "node server.js",
 				"prettier": "prettier --write \"./**/*.js\"",
 				"server": "cd build && python -m SimpleHTTPServer",
 				"sync": "serverless sync"
@@ -41,6 +41,7 @@
 				"query-parse": "2.0.0",
 				"react": "16.3.1",
 				"react-dom": "16.3.1",
+				"react-player": "^1.4.0",
 				"react-redux": "5.0.7",
 				"react-virtualized": "9.18.5",
 				"react-window-size-listener": "1.2.1",

@@ -16,6 +16,7 @@ const FileTable = ({ columns, data, settings, saveSettings, onRowClick }) => {
           <Table
             onRowClick={({ rowData }) => onRowClick(rowData)}
             height={height}
+            headerHeight={30}
             noRowsRenderer={() => <div>No rows</div>}
             rowCount={sortedData.length}
             rowGetter={({ index }) => sortedData[index]}

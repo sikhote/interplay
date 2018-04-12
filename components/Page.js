@@ -6,11 +6,13 @@ import Head from 'next/head';
 import qp from 'query-parse';
 import Navigation from './Navigation';
 import LoadingBar from './LoadingBar';
+import Player from './Player';
 import { cloudGet } from '../actions/cloud';
 import content from '../lib/content';
 import { match } from '../lib/routing';
 import pageStyle from '../styles/page';
 import globalStyle from '../styles/global';
+import { settingsReplace } from '../actions/settings';
 
 const isWeb = typeof window !== 'undefined';
 const getCurrentPath = () => {
@@ -18,7 +20,11 @@ const getCurrentPath = () => {
   return isWeb ? path || '/' : '';
 };
 const getPage = currentPath => currentPath.replace(/^\//, '');
-const tryCloudGet = ({ hasCloudStore, cloud: { key, path }, cloudGet }) => {
+const tryCloudGet = ({
+  cloud: { hasCloudStore },
+  settings: { cloud: { key, path } },
+  cloudGet,
+}) => {
   if (!hasCloudStore && key && path) {
     cloudGet();
   }
@@ -27,8 +33,8 @@ const tryCloudGet = ({ hasCloudStore, cloud: { key, path }, cloudGet }) => {
 class Page extends React.Component {
   constructor(props) {
     super(props);
-    const { hasCloudStore, cloud, cloudGet } = props;
-    tryCloudGet({ hasCloudStore, cloud, cloudGet });
+    const { cloud, settings, cloudGet } = props;
+    tryCloudGet({ cloud, settings, cloudGet });
   }
   componentDidMount() {
     const currentPath = getCurrentPath();
@@ -39,11 +45,18 @@ class Page extends React.Component {
     }
   }
   componentDidUpdate() {
-    const { hasCloudStore, cloud, cloudGet } = this.props;
-    tryCloudGet({ hasCloudStore, cloud, cloudGet });
+    const { cloud, settings, cloudGet } = this.props;
+    tryCloudGet({ cloud, settings, cloudGet });
   }
   render() {
-    const { title, children, className } = this.props;
+    const {
+      title,
+      children,
+      className,
+      files,
+      settings,
+      settingsReplace,
+    } = this.props;
     const currentPath = getCurrentPath();
     const { page = getPage(currentPath) } = match(currentPath);
 
@@ -60,10 +73,11 @@ class Page extends React.Component {
         </style>
         <style jsx>{pageStyle}</style>
         <LoadingBar />
-        <div style={{ gridArea: 'navigation' }}>
+        <div className="navigation">
           <Navigation />
         </div>
-        <div style={{ gridArea: 'children' }}>
+        <div className="main">
+          <Player {...{ files, settings, settingsReplace }} />
           {isWeb && Router.route === `/${page}` && children}
         </div>
       </div>
@@ -76,8 +90,10 @@ Page.propTypes = {
   title: PropTypes.string,
   className: PropTypes.string,
   cloudGet: PropTypes.func.isRequired,
+  settingsReplace: PropTypes.func.isRequired,
   cloud: PropTypes.object.isRequired,
-  hasCloudStore: PropTypes.bool.isRequired,
+  files: PropTypes.object.isRequired,
+  settings: PropTypes.object.isRequired,
 };
 
 Page.defaultProps = {
@@ -87,11 +103,9 @@ Page.defaultProps = {
 };
 
 export default connect(
-  state => ({
-    cloud: state.settings.cloud,
-    hasCloudStore: state.cloud.hasCloudStore,
-  }),
+  ({ cloud, files, settings }) => ({ cloud, files, settings }),
   dispatch => ({
     cloudGet: () => dispatch(cloudGet()),
+    settingsReplace: settings => dispatch(settingsReplace(settings)),
   }),
 )(Page);

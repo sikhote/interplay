@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import withRedux from 'next-redux-wrapper';
-import initStore from '../lib/initStore';
-import { settingsReplace } from '../actions/settings';
+import ReactPlayer from 'react-player';
 
 const Player = ({ settings }) => {
   const { player } = settings;
@@ -14,6 +12,9 @@ const Player = ({ settings }) => {
       <div>{path || '-'}</div>
       <div>{position || '-'}</div>
       <div>{playing ? 'playing' : 'pause'}</div>
+      <ReactPlayer
+        url=""
+      />
     </div>
   );
 };
@@ -24,10 +25,4 @@ Player.propTypes = {
   settings: PropTypes.object.isRequired,
 };
 
-export default withRedux(
-  initStore,
-  ({ files, settings }) => ({ files, settings }),
-  dispatch => ({
-    settingsReplace: settings => dispatch(settingsReplace(settings)),
-  }),
-)(Player);
+export default Player;

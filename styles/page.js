@@ -7,14 +7,25 @@ export default css`
     display: grid;
     height: 100vh;
 
+    .navigation {
+      grid-area: navigation;
+    }
+
+    .main {
+      grid-area: main;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 120px 1fr;
+    }
+
     @media (max-width: ${bps.medium - 1}px) {
-      grid-template-areas: 'children' 'navigation';
+      grid-template-areas: "main navigation";
       grid-template-columns: 1fr;
       grid-template-rows: 1fr 55px;
     }
 
     @media (min-width: ${bps.medium}px) {
-      grid-template-areas: 'navigation children';
+      grid-template-areas: "navigation main";
       grid-template-columns: 200px 1fr;
       grid-template-rows: 1fr;
     }

@@ -7,7 +7,6 @@ export default css`
     height: 100%;
 
     :global(.ReactVirtualized__Table__headerRow) {
-      height: 30px !important;
       display: grid;
     }
 

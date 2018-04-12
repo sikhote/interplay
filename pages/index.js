@@ -158,7 +158,7 @@ Settings.propTypes = {
 
 export default withRedux(
   initStore,
-  state => ({ settings: state.settings }),
+  ({ settings }) => ({ settings }),
   dispatch => ({
     settingsReplace: settings => dispatch(settingsReplace(settings)),
     filesSync: () => dispatch(filesSync()),

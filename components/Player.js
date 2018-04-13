@@ -4,14 +4,23 @@ import ReactPlayer from 'react-player';
 
 const Player = ({ settings }) => {
   const { player } = settings;
-  const {
-    source,
-    path,
+  const { source, path, volume, position, playing, link } = player;
+
+  const config = {
+    loop: true,
+    muted: false,
+    width: '100%',
+    height: '100%',
+    progressInterval: 2000,
+    // full screen
+    playsinline: false,
     volume,
-    position,
     playing,
-    link,
-  } = player;
+    url: link,
+    ref: ref => {
+      this.player = ref;
+    },
+  };
 
   return (
     <div>
@@ -19,13 +28,7 @@ const Player = ({ settings }) => {
       <div>{path || '-'}</div>
       <div>{position || '-'}</div>
       <div>{playing ? 'playing' : 'pause'}</div>
-      <ReactPlayer
-        url={link}
-        width='200px'
-        height='200px'
-        volume={volume}
-        playing={playing}
-      />
+      <ReactPlayer {...config} />
     </div>
   );
 };

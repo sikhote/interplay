@@ -21,26 +21,35 @@ const filesGetLinkEpic = (action$, { getState }) =>
   action$.ofType('FILES_GET_LINK').mergeMap(action => {
     const { source, path: filePath } = get(action, 'payload', {});
     const state = getState();
-    const settingsCloud = state.settings.cloud;
-    const accessToken = settingsCloud.key;
-    const path = `/${settingsCloud.path}`;
+    const { settings } = state;
+    const accessToken = settings.cloud.key;
+    const path = `/${settings.cloud.path}`;
     const dropbox = new Dropbox({ accessToken });
     const getLink = Observable.from(
       dropbox
         .filesGetTemporaryLink({ path: `${path}/${filePath}` })
-        .then(({ metadata, link }) =>
+        .then(({ link }) =>
           Promise.resolve({
             source,
             path: filePath,
             link,
             linkDate: Date.now(),
-            metadata,
           }),
         )
         .catch(() => state),
     );
-// need to send this to settings too for easy playback
-    return getLink.map(newPayload => filesGetLinkSuccess(newPayload));
+
+    return getLink
+      .mergeMap(filePayload => [
+        filesGetLinkSuccess(filePayload),
+        settingsReplace({
+          ...settings,
+          player: {
+            ...settings.player,
+            ...filePayload,
+          },
+        }),
+      ]);
   });
 
 export const filesSync = () => ({
@@ -121,7 +130,6 @@ const filesSyncEpic = (action$, { getState }) =>
                   track,
                   link: null,
                   linkDate: null,
-                  metadata: null,
                 });
               } else if (fileType === 'video') {
                 files.video.push({
@@ -129,7 +137,6 @@ const filesSyncEpic = (action$, { getState }) =>
                   path: filePath,
                   link: null,
                   linkDate: null,
-                  metadata: null,
                 });
               }
             }

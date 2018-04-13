@@ -4,7 +4,14 @@ import ReactPlayer from 'react-player';
 
 const Player = ({ settings }) => {
   const { player } = settings;
-  const { source, path, position, playing } = player;
+  const {
+    source,
+    path,
+    volume,
+    position,
+    playing,
+    link,
+  } = player;
 
   return (
     <div>
@@ -13,7 +20,11 @@ const Player = ({ settings }) => {
       <div>{position || '-'}</div>
       <div>{playing ? 'playing' : 'pause'}</div>
       <ReactPlayer
-        url=""
+        url={link}
+        width='200px'
+        height='200px'
+        volume={volume}
+        playing={playing}
       />
     </div>
   );

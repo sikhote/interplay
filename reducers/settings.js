@@ -25,6 +25,8 @@ export const initialState = {
     volume: 0.5,
     position: null,
     playing: false,
+    link: null,
+    linkDate: null,
   }
 };
 

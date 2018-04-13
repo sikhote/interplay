@@ -11,13 +11,11 @@ const reducer = (state = initialState, action) => {
         path,
         link,
         linkDate,
-        metadata,
       } = action.payload;
 
       const newState = { ...state };
       const file = newState[source].find((file) => file.path === path);
-      console.log('file:');
-      console.log(file);
+      Object.assign(file, { link, linkDate });
 
       return newState;
     }

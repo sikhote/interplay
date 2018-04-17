@@ -14,7 +14,7 @@
 				"invalidate": "serverless invalidate",
 				"next": "node server.js",
 				"prettier": "prettier --write \"./**/*.js\"",
-				"server": "cd build && python -m SimpleHTTPServer",
+				"server": "yarn export; cd build && python -m SimpleHTTPServer",
 				"sync": "serverless sync"
 		},
 		"dependencies": {

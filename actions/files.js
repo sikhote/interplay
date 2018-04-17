@@ -1,8 +1,9 @@
 import { Observable } from 'rxjs/Observable';
-import { startCase, set, get } from 'lodash';
+import { startCase, set, get, has } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import Promise from 'bluebird';
+import moment from 'moment';
 import extensions from '../lib/extensions';
 import { settingsReplace } from './settings';
 import { cloudSave } from './cloud';
@@ -21,7 +22,25 @@ const filesGetLinkEpic = (action$, { getState }) =>
   action$.ofType('FILES_GET_LINK').mergeMap(action => {
     const { source, path: filePath } = get(action, 'payload', {});
     const state = getState();
-    const { settings } = state;
+    const { settings, files } = state;
+    const file = files[source].find(file => file.path === filePath);
+
+    // If the current linkDate is not too old
+    if (
+      has(file, 'linkDate') &&
+      moment(file.linkDate).isAfter(moment().subtract(3, 'hours'))
+    ) {
+      return Observable.of(file).mergeMap(file => [
+        settingsReplace({
+          ...settings,
+          player: {
+            ...settings.player,
+            file,
+          },
+        }),
+      ]);
+    }
+
     const accessToken = settings.cloud.key;
     const path = `/${settings.cloud.path}`;
     const dropbox = new Dropbox({ accessToken });
@@ -39,17 +58,16 @@ const filesGetLinkEpic = (action$, { getState }) =>
         .catch(() => state),
     );
 
-    return getLink
-      .mergeMap(filePayload => [
-        filesGetLinkSuccess(filePayload),
-        settingsReplace({
-          ...settings,
-          player: {
-            ...settings.player,
-            ...filePayload,
-          },
-        }),
-      ]);
+    return getLink.mergeMap(file => [
+      filesGetLinkSuccess(file),
+      settingsReplace({
+        ...settings,
+        player: {
+          ...settings.player,
+          file,
+        },
+      }),
+    ]);
   });
 
 export const filesSync = () => ({

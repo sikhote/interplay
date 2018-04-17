@@ -6,8 +6,8 @@ export const initialState = {
   cloud: {
     key,
     path,
-    date: null,
-    status: null,
+    date: undefined,
+    status: undefined,
   },
   audio: {
     position: 0,
@@ -20,13 +20,10 @@ export const initialState = {
     sortDirection: true,
   },
   player: {
-    source: null,
-    path: null,
     volume: 0.5,
-    position: null,
+    position: undefined,
     playing: false,
-    link: null,
-    linkDate: null,
+    file: undefined
   }
 };
 

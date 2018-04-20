@@ -20,7 +20,7 @@ export const initialState = {
     sortDirection: true,
   },
   player: {
-    volume: 0.5,
+    volume: 0.1,
     position: undefined,
     playing: false,
     file: undefined

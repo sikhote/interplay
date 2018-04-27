@@ -12,7 +12,7 @@
 				"eslint": "eslint \"./**/*.js\"",
 				"export": "next build && next export -o build",
 				"invalidate": "serverless invalidate",
-				"next": "node server.js",
+				"watch": "node server.js",
 				"prettier": "prettier --write \"./**/*.js\"",
 				"server": "yarn export; cd build && python -m SimpleHTTPServer",
 				"sync": "serverless sync"

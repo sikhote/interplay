@@ -30,6 +30,6 @@ export default withRedux(
     settings,
   }),
   dispatch => ({
-    settingsReplace: settings => dispatch(settingsReplace(settings)),
+    settingsReplace: payload => dispatch(settingsReplace(payload)),
   }),
 )(Video);

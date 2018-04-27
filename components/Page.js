@@ -13,6 +13,7 @@ import { match } from '../lib/routing';
 import pageStyle from '../styles/page';
 import globalStyle from '../styles/global';
 import { settingsReplace } from '../actions/settings';
+import { filesGetLinkAndPlay } from '../actions/files';
 
 const isWeb = typeof window !== 'undefined';
 const getCurrentPath = () => {
@@ -56,6 +57,7 @@ class Page extends React.Component {
       files,
       settings,
       settingsReplace,
+      filesGetLinkAndPlay,
     } = this.props;
     const currentPath = getCurrentPath();
     const { page = getPage(currentPath) } = match(currentPath);
@@ -77,7 +79,7 @@ class Page extends React.Component {
           <Navigation />
         </div>
         <div className="main">
-          <Player {...{ files, settings, settingsReplace }} />
+          <Player {...{ files, settings, settingsReplace, filesGetLinkAndPlay }} />
           {isWeb && Router.route === `/${page}` && children}
         </div>
       </div>
@@ -91,6 +93,7 @@ Page.propTypes = {
   className: PropTypes.string,
   cloudGet: PropTypes.func.isRequired,
   settingsReplace: PropTypes.func.isRequired,
+  filesGetLinkAndPlay: PropTypes.func.isRequired,
   cloud: PropTypes.object.isRequired,
   files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
@@ -106,6 +109,7 @@ export default connect(
   ({ cloud, files, settings }) => ({ cloud, files, settings }),
   dispatch => ({
     cloudGet: () => dispatch(cloudGet()),
-    settingsReplace: settings => dispatch(settingsReplace(settings)),
+    settingsReplace: payload => dispatch(settingsReplace(payload)),
+    filesGetLinkAndPlay: payload => dispatch(filesGetLinkAndPlay(payload)),
   }),
 )(Page);

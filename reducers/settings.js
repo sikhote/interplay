@@ -10,21 +10,24 @@ export const initialState = {
     status: undefined,
   },
   audio: {
-    position: 0,
+    scrollPosition: 0,
     sortBy: 'artist',
     sortDirection: true,
   },
   video: {
-    position: 0,
+    scrollPosition: 0,
     sortBy: 'name',
     sortDirection: true,
   },
   player: {
     volume: 0.1,
-    position: undefined,
+    muted: false,
+    position: 0,
     playing: false,
-    file: undefined
-  }
+    file: {},
+    played: 0,
+    playedSeconds: 0,
+  },
 };
 
 const reducer = (state = initialState, action) => {

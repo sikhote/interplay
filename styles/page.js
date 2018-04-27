@@ -15,7 +15,7 @@ export default css`
       grid-area: main;
       display: grid;
       grid-template-columns: 1fr;
-      grid-template-rows: 120px 1fr;
+      grid-template-rows: 200px 1fr;
     }
 
     @media (max-width: ${bps.medium - 1}px) {

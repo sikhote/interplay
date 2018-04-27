@@ -8,8 +8,8 @@ import extensions from '../lib/extensions';
 import { settingsReplace } from './settings';
 import { cloudSave } from './cloud';
 
-export const filesGetLink = payload => ({
-  type: 'FILES_GET_LINK',
+export const filesGetLinkAndPlay = payload => ({
+  type: 'FILES_GET_LINK_AND_PLAY',
   payload,
 });
 
@@ -18,26 +18,30 @@ export const filesGetLinkSuccess = payload => ({
   payload,
 });
 
-const filesGetLinkEpic = (action$, { getState }) =>
-  action$.ofType('FILES_GET_LINK').mergeMap(action => {
+const filesGetLinkAndPlayEpic = (action$, { getState }) =>
+  action$.ofType('FILES_GET_LINK_AND_PLAY').mergeMap(action => {
     const { source, path: filePath } = get(action, 'payload', {});
     const state = getState();
     const { settings, files } = state;
     const file = files[source].find(file => file.path === filePath);
+    const getNewSettings = (file) => ({
+      ...settings,
+      player: {
+        ...settings.player,
+        source,
+        file,
+        position: 0,
+        playing: true,
+      },
+    })
 
     // If the current linkDate is not too old
     if (
-      has(file, 'linkDate') &&
-      moment(file.linkDate).isAfter(moment().subtract(3, 'hours'))
+      has(file, 'urlDate') &&
+      moment(file.urlDate).isAfter(moment().subtract(3, 'hours'))
     ) {
       return Observable.of(file).mergeMap(file => [
-        settingsReplace({
-          ...settings,
-          player: {
-            ...settings.player,
-            file,
-          },
-        }),
+        settingsReplace(getNewSettings(file)),
       ]);
     }
 
@@ -47,12 +51,12 @@ const filesGetLinkEpic = (action$, { getState }) =>
     const getLink = Observable.from(
       dropbox
         .filesGetTemporaryLink({ path: `${path}/${filePath}` })
-        .then(({ link }) =>
+        .then(({ link: url }) =>
           Promise.resolve({
             source,
             path: filePath,
-            link,
-            linkDate: Date.now(),
+            url,
+            urlDate: Date.now(),
           }),
         )
         .catch(() => state),
@@ -60,13 +64,7 @@ const filesGetLinkEpic = (action$, { getState }) =>
 
     return getLink.mergeMap(file => [
       filesGetLinkSuccess(file),
-      settingsReplace({
-        ...settings,
-        player: {
-          ...settings.player,
-          file,
-        },
-      }),
+      settingsReplace(getNewSettings(file)),
     ]);
   });
 
@@ -204,4 +202,4 @@ const filesSyncEpic = (action$, { getState }) =>
     );
   });
 
-export const epics = [filesSyncEpic, filesGetLinkEpic];
+export const epics = [filesSyncEpic, filesGetLinkAndPlayEpic];

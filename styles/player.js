@@ -9,24 +9,35 @@ export default css`
     padding-top: ${spacing.medium}px;
     padding-bottom: ${spacing.medium}px;
 
-    .directions {
-      display: inline-grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-gap: ${spacing.medium}px;
-    }
-
-    .volume {
+    .easy-grid {
       display: grid;
-      grid-template-columns: 14px 28px 1fr;
-      grid-gap: ${spacing.medium}px;
+      grid-template-columns: auto;
+      grid-auto-columns: auto;
+      grid-auto-flow: column;
+      grid-gap: ${spacing.large}px;
       align-items: center;
     }
 
-    .progress {
-      display: grid;
-      grid-template-columns: 14px 1fr;
-      grid-gap: ${spacing.medium}px;
-      align-items: center;
+    .main {
+      grid-template-columns: auto 1fr;
+
+      .directions {
+        grid-gap: ${spacing.medium}px;
+      }
+
+      .controls {
+        grid-template-columns: 200px auto;
+
+        .control {
+          grid-template-columns: auto auto 1fr;
+          grid-gap: ${spacing.medium}px;
+          max-width: 400px;
+        }
+      }
+    }
+
+    .info {
+      padding-top: ${spacing.medium}px;
     }
   }
 `;

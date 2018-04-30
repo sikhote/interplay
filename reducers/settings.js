@@ -22,8 +22,8 @@ export const initialState = {
   player: {
     volume: 0.1,
     muted: false,
-    position: 0,
     playing: false,
+    loop: false,
     file: {},
     played: 0,
     playedSeconds: 0,

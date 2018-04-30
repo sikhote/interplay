@@ -8,6 +8,7 @@
     'arrow-parens': 0,
     'import/prefer-default-export': 0,
     'max-len': [2, 80],
+    'no-nested-ternary': 0,
     'no-shadow': 0,
     'react/forbid-prop-types': 0,
     'react/jsx-filename-extension': 0,

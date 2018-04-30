@@ -30,8 +30,9 @@ const filesGetLinkAndPlayEpic = (action$, { getState }) =>
         ...settings.player,
         source,
         file,
-        position: 0,
         playing: true,
+        played: 0,
+        playedSeconds: 0,
       },
     })
 

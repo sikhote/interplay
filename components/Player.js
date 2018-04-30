@@ -15,24 +15,20 @@ class Player extends React.Component {
       playedSeconds: 0,
     };
   }
+  goToFile(direction) {
+    const { settings, files, filesGetLinkAndPlay } = this.props;
+    const { path } = getFileInDirection(settings, files, direction);
+    filesGetLinkAndPlay({ source: 'audio', path });
+  }
   render() {
-    const {
-      settings,
-      settingsReplace,
-      files,
-      filesGetLinkAndPlay,
-    } = this.props;
+    const { settings, settingsReplace } = this.props;
     const { played, playedSeconds } = this.state;
     const { player } = settings;
-    const { volume, position, playing, muted, file = {} } = player;
-    const { url } = file;
-    const goToFile = direction => {
-      const { path } = getFileInDirection(settings, files, direction);
-      filesGetLinkAndPlay({ source: 'audio', path });
-    };
+    const { volume, playing, muted, file = {}, loop } = player;
+    const { url, path } = file;
 
     const config = {
-      loop: true,
+      loop,
       muted,
       width: '100%',
       height: '100%',
@@ -47,88 +43,101 @@ class Player extends React.Component {
       },
       onProgress: ({ played, playedSeconds }) =>
         this.setState({ played, playedSeconds }),
-      onEnded: () => goToFile('next'),
+      onEnded: () => this.goToFile('next'),
     };
 
     return (
       <div className="root">
         <style jsx>{style}</style>
-        <div className="directions">
-          <Button
-            disabled={!url}
-            type="primary"
-            shape="circle"
-            icon="backward"
-            size="large"
-            onClick={() => goToFile('previous')}
-          />
-          <Button
-            disabled={!url}
-            type="primary"
-            shape="circle"
-            icon={playing ? 'pause' : 'caret-right'}
-            size="large"
-            onClick={() =>
-              settingsReplace(
-                merge({}, settings, {
-                  player: { playing: !playing },
-                }),
-              )
-            }
-          />
-          <Button
-            disabled={!url}
-            type="primary"
-            shape="circle"
-            icon="forward"
-            size="large"
-            onClick={() => goToFile('next')}
-          />
+        <div className="easy-grid main">
+          <div className="easy-grid directions">
+            <Button
+              disabled={!url}
+              type="primary"
+              shape="circle"
+              icon="backward"
+              onClick={() => this.goToFile('previous')}
+            />
+            <Button
+              disabled={!url}
+              type="primary"
+              shape="circle"
+              icon={playing ? 'pause' : 'caret-right'}
+              onClick={() =>
+                settingsReplace(
+                  merge({}, settings, {
+                    player: { playing: !playing },
+                  }),
+                )
+              }
+            />
+            <Button
+              disabled={!url}
+              type="primary"
+              shape="circle"
+              icon="forward"
+              onClick={() => this.goToFile('next')}
+            />
+          </div>
+          <div className="easy-grid controls">
+            <div className="easy-grid control">
+              <Icon type="sound" />
+              <Switch
+                size="small"
+                checked={!muted}
+                onChange={() =>
+                  settingsReplace(
+                    merge({}, settings, {
+                      player: { muted: !muted },
+                    }),
+                  )
+                }
+              />
+              <Slider
+                value={volume}
+                min={0}
+                max={1}
+                step={0.01}
+                tipFormatter={volume => `${Math.round(volume * 100)}%`}
+                onChange={volume =>
+                  settingsReplace(
+                    merge({}, settings, {
+                      player: { volume },
+                    }),
+                  )
+                }
+              />
+            </div>
+            <div className="easy-grid control">
+              <Icon type="retweet" />
+              <Switch
+                size="small"
+                checked={loop}
+                onChange={() =>
+                  settingsReplace(
+                    merge({}, settings, {
+                      player: { loop: !loop },
+                    }),
+                  )
+                }
+              />
+              <Slider
+                value={played}
+                min={0}
+                max={1}
+                step={0.01}
+                tipFormatter={() =>
+                  moment(
+                    // eslint-disable-next-line no-underscore-dangle
+                    moment.duration(playedSeconds, 'seconds')._data,
+                  ).format('mm:ss')
+                }
+                onChange={progress => this.player.seekTo(progress)}
+              />
+            </div>
+          </div>
         </div>
-        <div className="volume">
-          <Icon type="sound" />
-          <Switch
-            size="small"
-            checked={!muted}
-            onChange={() =>
-              settingsReplace(
-                merge({}, settings, {
-                  player: { muted: !muted },
-                }),
-              )
-            }
-          />
-          <Slider
-            value={volume}
-            min={0}
-            max={1}
-            step={0.01}
-            tipFormatter={volume => `${Math.round(volume * 100)}%`}
-            onChange={volume =>
-              settingsReplace(
-                merge({}, settings, {
-                  player: { volume },
-                }),
-              )
-            }
-          />
-        </div>
-        <div className="progress">
-          <Icon type="hourglass" />
-          <Slider
-            value={played}
-            min={0}
-            max={1}
-            step={0.01}
-            tipFormatter={() =>
-              // eslint-disable-next-line no-underscore-dangle
-              moment(moment.duration(playedSeconds, 'seconds')._data).format(
-                'mm:ss',
-              )
-            }
-            onChange={progress => this.player.seekTo(progress)}
-          />
-        </div>
+        <div className="info">{path}</div>
         <ReactPlayer {...config} />
       </div>
     );

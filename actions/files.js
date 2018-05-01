@@ -6,15 +6,15 @@ import Promise from 'bluebird';
 import moment from 'moment';
 import extensions from '../lib/extensions';
 import { settingsReplace } from './settings';
-import { cloudSave } from './cloud';
+import { cloudSaveFiles, cloudSaveOther } from './cloud';
 
 export const filesGetLinkAndPlay = payload => ({
   type: 'FILES_GET_LINK_AND_PLAY',
   payload,
 });
 
-export const filesGetLinkSuccess = payload => ({
-  type: 'FILES_GET_LINK_SUCCESS',
+export const filesUpdate = payload => ({
+  type: 'FILES_UPDATE',
   payload,
 });
 
@@ -43,6 +43,7 @@ const filesGetLinkAndPlayEpic = (action$, { getState }) =>
     ) {
       return Observable.of(file).mergeMap(file => [
         settingsReplace(getNewSettings(file)),
+        cloudSaveOther(),
       ]);
     }
 
@@ -64,18 +65,18 @@ const filesGetLinkAndPlayEpic = (action$, { getState }) =>
     );
 
     return getLink.mergeMap(file => [
-      filesGetLinkSuccess(file),
+      filesUpdate(file),
       settingsReplace(getNewSettings(file)),
+      cloudSaveOther(),
     ]);
   });
 
 export const filesSync = () => ({
   type: 'FILES_SYNC',
-  payload: { source: 'sdsdsd' },
 });
 
-export const filesSyncSuccess = files => ({
-  type: 'FILES_SYNC_SUCCESS',
+export const filesReplace = files => ({
+  type: 'FILES_REPLACE',
   payload: { files },
 });
 
@@ -195,9 +196,10 @@ const filesSyncEpic = (action$, { getState }) =>
     return syncStart.concat(
       getFiles
         .mergeMap(files => [
-          filesSyncSuccess(files),
+          filesReplace(files),
           syncSuccess(),
-          cloudSave(),
+          cloudSaveOther(),
+          cloudSaveFiles(),
         ])
         .catch(syncFail),
     );

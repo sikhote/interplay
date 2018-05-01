@@ -4,13 +4,21 @@ import PropTypes from 'prop-types';
 import style from '../styles/file-table';
 import getSortedData from '../lib/getSortedData';
 
-const FileTable = ({ columns, data, settings, saveSettings, onRowClick }) => {
+const FileTable = ({
+  columns,
+  data,
+  settings,
+  settingsReplace,
+  settingsReplaceAndCloudSaveOther,
+  onRowClick,
+}) => {
   const { position, sortBy, sortDirection } = settings;
   const sortedData = getSortedData(data, sortBy, sortDirection);
 
   return (
     <div className="root">
       <style jsx>{style}</style>
+      Search goes here
       <AutoSizer>
         {({ height, width }) => (
           <Table
@@ -32,7 +40,7 @@ const FileTable = ({ columns, data, settings, saveSettings, onRowClick }) => {
                 )}`
             }}
             sort={({ sortBy, sortDirection }) =>
-              saveSettings({
+              settingsReplaceAndCloudSaveOther({
                 ...settings,
                 sortBy,
                 sortDirection: sortDirection === SortDirection.ASC,
@@ -62,7 +70,8 @@ FileTable.propTypes = {
   columns: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   settings: PropTypes.object.isRequired,
-  saveSettings: PropTypes.func.isRequired,
+  settingsReplace: PropTypes.func.isRequired,
+  settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
   onRowClick: PropTypes.func.isRequired,
 };
 

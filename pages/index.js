@@ -8,10 +8,15 @@ import initStore from '../lib/initStore';
 import Page from '../components/Page';
 import { settingsReplace } from '../actions/settings';
 import { filesSync } from '../actions/files';
-import { cloudSave } from '../actions/cloud';
+import { cloudSaveOther } from '../actions/cloud';
 import { initialState } from '../reducers/settings';
 
-const Settings = ({ settingsReplace, filesSync, cloudSave, settings }) => (
+const Settings = ({
+  settingsReplace,
+  filesSync,
+  cloudSaveOther,
+  settings,
+}) => (
   <Page>
     <div className="ant-table ant-table-middle">
       <div className="ant-table-content">
@@ -126,7 +131,7 @@ const Settings = ({ settingsReplace, filesSync, cloudSave, settings }) => (
                           shape="circle"
                           icon="save"
                           style={{ marginLeft: 10 }}
-                          onClick={() => cloudSave()}
+                          onClick={() => cloudSaveOther()}
                         />
                       </Tooltip>
                     )}
@@ -153,7 +158,7 @@ Settings.propTypes = {
   settings: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
   filesSync: PropTypes.func.isRequired,
-  cloudSave: PropTypes.func.isRequired,
+  cloudSaveOther: PropTypes.func.isRequired,
 };
 
 export default withRedux(
@@ -162,6 +167,6 @@ export default withRedux(
   dispatch => ({
     settingsReplace: settings => dispatch(settingsReplace(settings)),
     filesSync: () => dispatch(filesSync()),
-    cloudSave: () => dispatch(cloudSave()),
+    cloudSaveOther: () => dispatch(cloudSaveOther()),
   }),
 )(Settings);

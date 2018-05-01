@@ -7,7 +7,7 @@ import qp from 'query-parse';
 import Navigation from './Navigation';
 import LoadingBar from './LoadingBar';
 import Player from './Player';
-import { cloudGet } from '../actions/cloud';
+import { cloudGet, cloudSaveOther } from '../actions/cloud';
 import content from '../lib/content';
 import { match } from '../lib/routing';
 import pageStyle from '../styles/page';
@@ -57,6 +57,7 @@ class Page extends React.Component {
       files,
       settings,
       settingsReplace,
+      settingsReplaceAndCloudSaveOther,
       filesGetLinkAndPlay,
     } = this.props;
     const currentPath = getCurrentPath();
@@ -79,7 +80,15 @@ class Page extends React.Component {
           <Navigation />
         </div>
         <div className="main">
-          <Player {...{ files, settings, settingsReplace, filesGetLinkAndPlay }} />
+          <Player
+            {...{
+              files,
+              settings,
+              settingsReplace,
+              settingsReplaceAndCloudSaveOther,
+              filesGetLinkAndPlay,
+            }}
+          />
           {isWeb && Router.route === `/${page}` && children}
         </div>
       </div>
@@ -93,6 +102,7 @@ Page.propTypes = {
   className: PropTypes.string,
   cloudGet: PropTypes.func.isRequired,
   settingsReplace: PropTypes.func.isRequired,
+  settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
   filesGetLinkAndPlay: PropTypes.func.isRequired,
   cloud: PropTypes.object.isRequired,
   files: PropTypes.object.isRequired,
@@ -110,6 +120,10 @@ export default connect(
   dispatch => ({
     cloudGet: () => dispatch(cloudGet()),
     settingsReplace: payload => dispatch(settingsReplace(payload)),
+    settingsReplaceAndCloudSaveOther: payload => {
+      dispatch(settingsReplace(payload));
+      dispatch(cloudSaveOther());
+    },
     filesGetLinkAndPlay: payload => dispatch(filesGetLinkAndPlay(payload)),
   }),
 )(Page);

@@ -8,23 +8,27 @@ import style from '../styles/player';
 import getFileInDirection from '../lib/getFileInDirection';
 
 class Player extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      played: 0,
-      playedSeconds: 0,
-    };
-  }
   goToFile(direction) {
     const { settings, files, filesGetLinkAndPlay } = this.props;
     const { path } = getFileInDirection(settings, files, direction);
     filesGetLinkAndPlay({ source: 'audio', path });
   }
   render() {
-    const { settings, settingsReplace } = this.props;
-    const { played, playedSeconds } = this.state;
+    const {
+      settings,
+      settingsReplace,
+      settingsReplaceAndCloudSaveOther,
+    } = this.props;
     const { player } = settings;
-    const { volume, playing, muted, file = {}, loop } = player;
+    const {
+      volume,
+      playing,
+      muted,
+      file = {},
+      loop,
+      played,
+      playedSeconds,
+    } = player;
     const { url, path } = file;
 
     const config = {
@@ -41,8 +45,13 @@ class Player extends React.Component {
       ref: ref => {
         this.player = ref;
       },
+      onDuration: () => this.player.seekTo(played),
       onProgress: ({ played, playedSeconds }) =>
-        this.setState({ played, playedSeconds }),
+        settingsReplace(
+          merge({}, settings, {
+            player: { played, playedSeconds },
+          }),
+        ),
       onEnded: () => this.goToFile('next'),
     };
 
@@ -64,7 +73,7 @@ class Player extends React.Component {
               shape="circle"
               icon={playing ? 'pause' : 'caret-right'}
               onClick={() =>
-                settingsReplace(
+                settingsReplaceAndCloudSaveOther(
                   merge({}, settings, {
                     player: { playing: !playing },
                   }),
@@ -86,7 +95,7 @@ class Player extends React.Component {
                 size="small"
                 checked={!muted}
                 onChange={() =>
-                  settingsReplace(
+                  settingsReplaceAndCloudSaveOther(
                     merge({}, settings, {
                       player: { muted: !muted },
                     }),
@@ -100,7 +109,7 @@ class Player extends React.Component {
                 step={0.01}
                 tipFormatter={volume => `${Math.round(volume * 100)}%`}
                 onChange={volume =>
-                  settingsReplace(
+                  settingsReplaceAndCloudSaveOther(
                     merge({}, settings, {
                       player: { volume },
                     }),
@@ -114,7 +123,7 @@ class Player extends React.Component {
                 size="small"
                 checked={loop}
                 onChange={() =>
-                  settingsReplace(
+                  settingsReplaceAndCloudSaveOther(
                     merge({}, settings, {
                       player: { loop: !loop },
                     }),
@@ -137,7 +146,9 @@ class Player extends React.Component {
             </div>
           </div>
         </div>
-        <div className="info">{path}</div>
+        <div className="info">
+          {path || 'Add credentials and play some media'}
+        </div>
         <ReactPlayer {...config} />
       </div>
     );
@@ -147,6 +158,7 @@ class Player extends React.Component {
 Player.propTypes = {
   files: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
+  settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
   settings: PropTypes.object.isRequired,
   filesGetLinkAndPlay: PropTypes.func.isRequired,
 };

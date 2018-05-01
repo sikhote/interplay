@@ -3,11 +3,18 @@ import PropTypes from 'prop-types';
 import withRedux from 'next-redux-wrapper';
 import initStore from '../lib/initStore';
 import Page from '../components/Page';
+import { cloudSaveOther } from '../actions/cloud';
 import { settingsReplace } from '../actions/settings';
 import { filesGetLinkAndPlay } from '../actions/files';
 import FileTable from '../components/FileTable';
 
-const Audio = ({ files, settings, settingsReplace, filesGetLinkAndPlay }) => (
+const Audio = ({
+  files,
+  settings,
+  settingsReplace,
+  settingsReplaceAndCloudSaveOther,
+  filesGetLinkAndPlay,
+}) => (
   <Page>
     <FileTable
       columns={[
@@ -18,7 +25,12 @@ const Audio = ({ files, settings, settingsReplace, filesGetLinkAndPlay }) => (
       ]}
       data={files.audio}
       settings={settings.audio}
-      saveSettings={audio => settingsReplace({ ...settings, audio })}
+      settingsReplace={audio =>
+        settingsReplace({ ...settings, audio })
+      }
+      settingsReplaceAndCloudSaveOther={audio =>
+        settingsReplaceAndCloudSaveOther({ ...settings, audio })
+      }
       onRowClick={({ path }) => filesGetLinkAndPlay({ source: 'audio', path })}
     />
   </Page>
@@ -27,6 +39,7 @@ const Audio = ({ files, settings, settingsReplace, filesGetLinkAndPlay }) => (
 Audio.propTypes = {
   files: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
+  settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
   settings: PropTypes.object.isRequired,
   filesGetLinkAndPlay: PropTypes.func.isRequired,
 };
@@ -36,6 +49,10 @@ export default withRedux(
   ({ files, settings }) => ({ files, settings }),
   dispatch => ({
     settingsReplace: payload => dispatch(settingsReplace(payload)),
+    settingsReplaceAndCloudSaveOther: payload => {
+      dispatch(settingsReplace(payload));
+      dispatch(cloudSaveOther());
+    },
     filesGetLinkAndPlay: payload => dispatch(filesGetLinkAndPlay(payload)),
   }),
 )(Audio);

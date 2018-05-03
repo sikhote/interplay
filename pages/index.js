@@ -4,6 +4,7 @@ import { Input, Button, Tooltip } from 'antd';
 import moment from 'moment';
 import { set } from 'lodash';
 import withRedux from 'next-redux-wrapper';
+import Cookies from 'js-cookie';
 import initStore from '../lib/initStore';
 import Page from '../components/Page';
 import { settingsReplace } from '../actions/settings';
@@ -38,7 +39,7 @@ const Settings = ({
                     style={{ border: 0 }}
                     value={settings.cloud.key}
                     onChange={({ target: { value } }) => {
-                      window.localStorage.setItem('key', value);
+                      Cookies.set('key', value);
                       settingsReplace(set({ ...settings }, 'cloud.key', value));
                     }}
                   />
@@ -52,7 +53,7 @@ const Settings = ({
                     style={{ border: 0 }}
                     value={settings.cloud.path}
                     onChange={({ target: { value } }) => {
-                      window.localStorage.setItem('path', value);
+                      Cookies.set('path', value);
                       settingsReplace(
                         set({ ...settings }, 'cloud.path', value),
                       );

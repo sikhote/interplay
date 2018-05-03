@@ -8,6 +8,8 @@ export default css`
     padding-right: ${spacing.medium}px;
     padding-top: ${spacing.medium}px;
     padding-bottom: ${spacing.medium}px;
+    background:
+      linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.03) 100%);
 
     .easy-grid {
       display: grid;

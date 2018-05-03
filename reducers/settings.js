@@ -1,6 +1,8 @@
-const ls = typeof window !== 'undefined' && window.localStorage;
-const key = (ls && ls.getItem('key')) || '';
-const path = (ls && ls.getItem('path')) || '';
+import Cookies from 'js-cookie';
+
+const hasCookies = typeof window !== 'undefined';
+const key = (hasCookies && Cookies.get('key')) || '';
+const path = (hasCookies && Cookies.get('path')) || '';
 
 export const initialState = {
   cloud: {

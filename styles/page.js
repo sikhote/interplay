@@ -19,7 +19,7 @@ export default css`
     }
 
     @media (max-width: ${bps.medium - 1}px) {
-      grid-template-areas: "main navigation";
+      grid-template-areas: "main" "navigation";
       grid-template-columns: 1fr;
       grid-template-rows: 1fr 55px;
     }

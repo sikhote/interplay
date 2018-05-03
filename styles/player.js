@@ -1,5 +1,5 @@
 import css from 'styled-jsx/css';
-import { spacing } from './base';
+import { spacing, bps } from './base';
 
 // prettier-ignore
 export default css`
@@ -21,6 +21,7 @@ export default css`
     }
 
     .main {
+      // make it grid areas!
       grid-template-columns: auto 1fr;
 
       .directions {
@@ -40,6 +41,47 @@ export default css`
 
     .info {
       padding-top: ${spacing.medium}px;
+    }
+
+    @media (max-width: ${bps.medium - 1}px) {
+      .main {
+        grid-template-columns: 1fr;
+        grid-auto-flow: row;
+
+        .directions {
+          grid-gap: ${spacing.medium}px;
+        }
+
+        .controls {
+          grid-template-columns: 200px auto;
+
+          .control {
+            grid-template-columns: auto auto 1fr;
+            grid-gap: ${spacing.medium}px;
+            max-width: 400px;
+          }
+        }
+      }
+    }
+
+    @media (min-width: ${bps.medium}px) {
+      .main {
+        grid-template-columns: auto 1fr;
+
+        .directions {
+          grid-gap: ${spacing.medium}px;
+        }
+
+        .controls {
+          grid-template-columns: 200px auto;
+
+          .control {
+            grid-template-columns: auto auto 1fr;
+            grid-gap: ${spacing.medium}px;
+            max-width: 400px;
+          }
+        }
+      }
     }
   }
 `;

@@ -61,7 +61,6 @@ class Player extends React.Component {
         <div className="easy-grid main">
           <div className="easy-grid directions">
             <Button
-              size="small"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -69,7 +68,6 @@ class Player extends React.Component {
               onClick={() => this.goToFile('previous')}
             />
             <Button
-              size="small"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -83,7 +81,6 @@ class Player extends React.Component {
               }
             />
             <Button
-              size="small"
               disabled={!url}
               type="primary"
               shape="circle"

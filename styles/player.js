@@ -10,6 +10,7 @@ export default css`
     padding-bottom: ${spacing.medium}px;
     background:
       linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.03) 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
     .easy-grid {
       display: grid;
@@ -21,44 +22,54 @@ export default css`
     }
 
     .main {
-      // make it grid areas!
-      grid-template-columns: auto 1fr;
+      display: grid;
+      grid-column-gap: ${spacing.large}px;
+      grid-row-gap: ${spacing.medium}px;
+      grid-template-rows: auto;
 
       .directions {
+        grid-area: directions;
         grid-gap: ${spacing.medium}px;
       }
 
-      .controls {
-        grid-template-columns: 200px auto;
+      .control {
+        grid-template-columns: auto auto 1fr;
+        grid-gap: ${spacing.medium}px;
+        max-width: 400px;
 
-        .control {
-          grid-template-columns: auto auto 1fr;
-          grid-gap: ${spacing.medium}px;
-          max-width: 400px;
+        &.sound {
+          grid-area: sound;
+        }
+
+        &.progress {
+          grid-area: progress;
         }
       }
-    }
 
-    .info {
-      padding-top: ${spacing.medium}px;
+      .info {
+        grid-area: info;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
 
     @media (max-width: ${bps.medium - 1}px) {
       .main {
-        grid-template-columns: 1fr;
-        grid-auto-flow: row;
+        display: grid;
+        grid-column-gap: ${spacing.large}px;
+        grid-row-gap: ${spacing.medium}px;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto;
+        grid-template-areas:
+          "directions sound"
+          "progress progress"
+          "info info";
 
-        .directions {
-          grid-gap: ${spacing.medium}px;
-        }
-
-        .controls {
-          grid-template-columns: 200px auto;
-
-          .control {
-            grid-template-columns: auto auto 1fr;
-            grid-gap: ${spacing.medium}px;
-            max-width: 400px;
+        .control {
+          &.sound {
+            max-width: 272px;
           }
         }
       }
@@ -66,21 +77,10 @@ export default css`
 
     @media (min-width: ${bps.medium}px) {
       .main {
-        grid-template-columns: auto 1fr;
-
-        .directions {
-          grid-gap: ${spacing.medium}px;
-        }
-
-        .controls {
-          grid-template-columns: 200px auto;
-
-          .control {
-            grid-template-columns: auto auto 1fr;
-            grid-gap: ${spacing.medium}px;
-            max-width: 400px;
-          }
-        }
+        grid-template-columns: auto 200px 1fr;
+        grid-template-areas:
+          "directions sound progress"
+          "info info info";
       }
     }
   }

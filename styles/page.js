@@ -15,19 +15,26 @@ export default css`
       grid-area: main;
       display: grid;
       grid-template-columns: 1fr;
-      grid-template-rows: 80px 1fr;
     }
 
     @media (max-width: ${bps.medium - 1}px) {
       grid-template-areas: "main" "navigation";
       grid-template-columns: 1fr;
       grid-template-rows: 1fr 55px;
+
+      .main {
+        grid-template-rows: 122px 1fr;
+      }
     }
 
     @media (min-width: ${bps.medium}px) {
       grid-template-areas: "navigation main";
       grid-template-columns: 200px 1fr;
       grid-template-rows: 1fr;
+
+      .main {
+        grid-template-rows: 80px 1fr;
+      }
     }
   }
 `;

@@ -8,8 +8,8 @@ import extensions from '../lib/extensions';
 import { settingsReplace } from './settings';
 import { cloudSaveFiles, cloudSaveOther } from './cloud';
 
-export const filesGetLinkAndPlay = payload => ({
-  type: 'FILES_GET_LINK_AND_PLAY',
+export const filesGetUrlAndPlay = payload => ({
+  type: 'FILES_GET_URL_AND_PLAY',
   payload,
 });
 
@@ -18,8 +18,8 @@ export const filesUpdate = payload => ({
   payload,
 });
 
-const filesGetLinkAndPlayEpic = (action$, { getState }) =>
-  action$.ofType('FILES_GET_LINK_AND_PLAY').mergeMap(action => {
+const filesGetUrlAndPlayEpic = (action$, { getState }) =>
+  action$.ofType('FILES_GET_URL_AND_PLAY').mergeMap(action => {
     const { source, path: filePath } = get(action, 'payload', {});
     const state = getState();
     const { settings, files } = state;
@@ -50,7 +50,7 @@ const filesGetLinkAndPlayEpic = (action$, { getState }) =>
     const accessToken = settings.cloud.key;
     const path = `/${settings.cloud.path}`;
     const dropbox = new Dropbox({ accessToken });
-    const getLink = Observable.from(
+    const getUrl = Observable.from(
       dropbox
         .filesGetTemporaryLink({ path: `${path}/${filePath}` })
         .then(({ link: url }) =>
@@ -64,7 +64,7 @@ const filesGetLinkAndPlayEpic = (action$, { getState }) =>
         .catch(() => state),
     );
 
-    return getLink.mergeMap(file => [
+    return getUrl.mergeMap(file => [
       filesUpdate(file),
       settingsReplace(getNewSettings(file)),
       cloudSaveOther(),
@@ -205,4 +205,4 @@ const filesSyncEpic = (action$, { getState }) =>
     );
   });
 
-export const epics = [filesSyncEpic, filesGetLinkAndPlayEpic];
+export const epics = [filesSyncEpic, filesGetUrlAndPlayEpic];

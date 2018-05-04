@@ -13,7 +13,7 @@ import { match } from '../lib/routing';
 import pageStyle from '../styles/page';
 import globalStyle from '../styles/global';
 import { settingsReplace } from '../actions/settings';
-import { filesGetLinkAndPlay } from '../actions/files';
+import { filesGetUrlAndPlay } from '../actions/files';
 
 const isWeb = typeof window !== 'undefined';
 const getCurrentPath = () => {
@@ -58,7 +58,7 @@ class Page extends React.Component {
       settings,
       settingsReplace,
       settingsReplaceAndCloudSaveOther,
-      filesGetLinkAndPlay,
+      filesGetUrlAndPlay,
     } = this.props;
     const currentPath = getCurrentPath();
     const { page = getPage(currentPath) } = match(currentPath);
@@ -86,7 +86,7 @@ class Page extends React.Component {
               settings,
               settingsReplace,
               settingsReplaceAndCloudSaveOther,
-              filesGetLinkAndPlay,
+              filesGetUrlAndPlay,
             }}
           />
           {isWeb && Router.route === `/${page}` && children}
@@ -103,7 +103,7 @@ Page.propTypes = {
   cloudGet: PropTypes.func.isRequired,
   settingsReplace: PropTypes.func.isRequired,
   settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
-  filesGetLinkAndPlay: PropTypes.func.isRequired,
+  filesGetUrlAndPlay: PropTypes.func.isRequired,
   cloud: PropTypes.object.isRequired,
   files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
@@ -124,6 +124,6 @@ export default connect(
       dispatch(settingsReplace(payload));
       dispatch(cloudSaveOther());
     },
-    filesGetLinkAndPlay: payload => dispatch(filesGetLinkAndPlay(payload)),
+    filesGetUrlAndPlay: payload => dispatch(filesGetUrlAndPlay(payload)),
   }),
 )(Page);

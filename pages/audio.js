@@ -5,7 +5,7 @@ import initStore from '../lib/initStore';
 import Page from '../components/Page';
 import { cloudSaveOther } from '../actions/cloud';
 import { settingsReplace } from '../actions/settings';
-import { filesGetLinkAndPlay } from '../actions/files';
+import { filesGetUrlAndPlay } from '../actions/files';
 import FileTable from '../components/FileTable';
 
 const Audio = ({
@@ -13,7 +13,7 @@ const Audio = ({
   settings,
   settingsReplace,
   settingsReplaceAndCloudSaveOther,
-  filesGetLinkAndPlay,
+  filesGetUrlAndPlay,
 }) => (
   <Page>
     <FileTable
@@ -31,7 +31,7 @@ const Audio = ({
       settingsReplaceAndCloudSaveOther={audio =>
         settingsReplaceAndCloudSaveOther({ ...settings, audio })
       }
-      onRowClick={({ path }) => filesGetLinkAndPlay({ source: 'audio', path })}
+      onRowClick={({ path }) => filesGetUrlAndPlay({ source: 'audio', path })}
     />
   </Page>
 );
@@ -41,7 +41,7 @@ Audio.propTypes = {
   settingsReplace: PropTypes.func.isRequired,
   settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
   settings: PropTypes.object.isRequired,
-  filesGetLinkAndPlay: PropTypes.func.isRequired,
+  filesGetUrlAndPlay: PropTypes.func.isRequired,
 };
 
 export default withRedux(
@@ -53,6 +53,6 @@ export default withRedux(
       dispatch(settingsReplace(payload));
       dispatch(cloudSaveOther());
     },
-    filesGetLinkAndPlay: payload => dispatch(filesGetLinkAndPlay(payload)),
+    filesGetUrlAndPlay: payload => dispatch(filesGetUrlAndPlay(payload)),
   }),
 )(Audio);

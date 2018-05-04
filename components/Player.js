@@ -8,10 +8,20 @@ import style from '../styles/player';
 import getFileInDirection from '../lib/getFileInDirection';
 
 class Player extends React.Component {
+  componentDidMount() {
+    const { settings, filesGetUrlAndPlay } = this.props;
+    const { player } = settings;
+    const { path, file = {} } = player;
+    const { source } = file;
+
+    if (source && path) {
+      filesGetUrlAndPlay({ source, path });
+    }
+  }
   goToFile(direction) {
-    const { settings, files, filesGetLinkAndPlay } = this.props;
+    const { settings, files, filesGetUrlAndPlay } = this.props;
     const { path } = getFileInDirection(settings, files, direction);
-    filesGetLinkAndPlay({ source: 'audio', path });
+    filesGetUrlAndPlay({ source: 'audio', path });
   }
   render() {
     const {
@@ -58,9 +68,10 @@ class Player extends React.Component {
     return (
       <div className="root">
         <style jsx>{style}</style>
-        <div className="easy-grid main">
+        <div className="main">
           <div className="easy-grid directions">
             <Button
+              size="small"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -68,6 +79,7 @@ class Player extends React.Component {
               onClick={() => this.goToFile('previous')}
             />
             <Button
+              size="small"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -81,6 +93,7 @@ class Player extends React.Component {
               }
             />
             <Button
+              size="small"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -88,66 +101,64 @@ class Player extends React.Component {
               onClick={() => this.goToFile('next')}
             />
           </div>
-          <div className="easy-grid controls">
-            <div className="easy-grid control">
-              <Icon type="sound" />
-              <Switch
-                size="small"
-                checked={!muted}
-                onChange={() =>
-                  settingsReplaceAndCloudSaveOther(
-                    merge({}, settings, {
-                      player: { muted: !muted },
-                    }),
-                  )
-                }
-              />
-              <Slider
-                value={volume}
-                min={0}
-                max={1}
-                step={0.01}
-                tipFormatter={volume => `${Math.round(volume * 100)}%`}
-                onChange={volume =>
-                  settingsReplaceAndCloudSaveOther(
-                    merge({}, settings, {
-                      player: { volume },
-                    }),
-                  )
-                }
-              />
-            </div>
-            <div className="easy-grid control">
-              <Icon type="retweet" />
-              <Switch
-                size="small"
-                checked={loop}
-                onChange={() =>
-                  settingsReplaceAndCloudSaveOther(
-                    merge({}, settings, {
-                      player: { loop: !loop },
-                    }),
-                  )
-                }
-              />
-              <Slider
-                value={played}
-                min={0}
-                max={1}
-                step={0.01}
-                tipFormatter={() =>
-                  moment(
-                    // eslint-disable-next-line no-underscore-dangle
-                    moment.duration(playedSeconds, 'seconds')._data,
-                  ).format('mm:ss')
-                }
-                onChange={progress => this.player.seekTo(progress)}
-              />
-            </div>
+          <div className="easy-grid control sound">
+            <Icon type="sound" />
+            <Switch
+              size="small"
+              checked={!muted}
+              onChange={() =>
+                settingsReplaceAndCloudSaveOther(
+                  merge({}, settings, {
+                    player: { muted: !muted },
+                  }),
+                )
+              }
+            />
+            <Slider
+              value={volume}
+              min={0}
+              max={1}
+              step={0.01}
+              tipFormatter={volume => `${Math.round(volume * 100)}%`}
+              onChange={volume =>
+                settingsReplaceAndCloudSaveOther(
+                  merge({}, settings, {
+                    player: { volume },
+                  }),
+                )
+              }
+            />
           </div>
-        </div>
-        <div className="info">
-          {path || 'Add credentials and play some media'}
+          <div className="easy-grid control progress">
+            <Icon type="retweet" />
+            <Switch
+              size="small"
+              checked={loop}
+              onChange={() =>
+                settingsReplaceAndCloudSaveOther(
+                  merge({}, settings, {
+                    player: { loop: !loop },
+                  }),
+                )
+              }
+            />
+            <Slider
+              value={played}
+              min={0}
+              max={1}
+              step={0.01}
+              tipFormatter={() =>
+                moment(
+                  // eslint-disable-next-line no-underscore-dangle
+                  moment.duration(playedSeconds, 'seconds')._data,
+                ).format('mm:ss')
+              }
+              onChange={progress => this.player.seekTo(progress)}
+            />
+          </div>
+          <div className="info">
+            {path || 'Add credentials and play some media'}
+          </div>
         </div>
         <ReactPlayer {...config} />
       </div>
@@ -160,7 +171,7 @@ Player.propTypes = {
   settingsReplace: PropTypes.func.isRequired,
   settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
   settings: PropTypes.object.isRequired,
-  filesGetLinkAndPlay: PropTypes.func.isRequired,
+  filesGetUrlAndPlay: PropTypes.func.isRequired,
 };
 
 export default Player;

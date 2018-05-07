@@ -11,12 +11,7 @@ import { filesSync } from '../actions/files';
 import { cloudSaveOther } from '../actions/cloud';
 import { initialState } from '../reducers/settings';
 
-const Settings = ({
-  settingsReplace,
-  filesSync,
-  cloudSaveOther,
-  settings,
-}) => (
+const Settings = ({ settingsReplace, filesSync, cloudSaveOther, settings }) => (
   <div>
     <CustomHead />
     <div className="ant-table ant-table-middle">

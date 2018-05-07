@@ -64,9 +64,8 @@ class ReduxApp extends App {
           </div>
           <div className="main">
             <Player />
-            {isWeb && Router.route === `/${page}` && (
-              <Component {...pageProps} />
-            )}
+            {isWeb &&
+              Router.route === `/${page}` && <Component {...pageProps} />}
           </div>
         </div>
       </Container>

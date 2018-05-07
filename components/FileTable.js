@@ -27,7 +27,8 @@ const FileTable = ({
         {({ height, width }) => (
           <Table
             onRowClick={({ rowData: { path } }) =>
-              filesGetUrlAndPlay({ source: 'audio', path })}
+              filesGetUrlAndPlay({ source: 'audio', path })
+            }
             height={height}
             headerHeight={30}
             noRowsRenderer={() => <div>No rows</div>}
@@ -51,7 +52,7 @@ const FileTable = ({
                   ...settings[source],
                   sortBy,
                   sortDirection: sortDirection === SortDirection.ASC,
-                }
+                },
               })
             }
             sortBy={sortBy}

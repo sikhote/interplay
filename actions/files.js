@@ -24,7 +24,7 @@ const filesGetUrlAndPlayEpic = (action$, { getState }) =>
     const state = getState();
     const { settings, files } = state;
     const file = files[source].find(file => file.path === filePath);
-    const getNewSettings = (file) => ({
+    const getNewSettings = file => ({
       ...settings,
       player: {
         ...settings.player,
@@ -34,7 +34,7 @@ const filesGetUrlAndPlayEpic = (action$, { getState }) =>
         played: 0,
         playedSeconds: 0,
       },
-    })
+    });
 
     // If the current linkDate is not too old
     if (

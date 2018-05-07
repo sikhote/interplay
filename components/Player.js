@@ -4,8 +4,12 @@ import ReactPlayer from 'react-player';
 import { merge } from 'lodash';
 import { Button, Slider, Switch, Icon } from 'antd';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import style from '../styles/player';
 import getFileInDirection from '../lib/getFileInDirection';
+import { cloudSaveOther } from '../actions/cloud';
+import { settingsReplace } from '../actions/settings';
+import { filesGetUrlAndPlay } from '../actions/files';
 
 class Player extends React.Component {
   componentDidMount() {
@@ -168,10 +172,20 @@ class Player extends React.Component {
 
 Player.propTypes = {
   files: PropTypes.object.isRequired,
+  settings: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
   settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
-  settings: PropTypes.object.isRequired,
   filesGetUrlAndPlay: PropTypes.func.isRequired,
 };
 
-export default Player;
+export default connect(
+  ({ files, settings }) => ({ files, settings }),
+  dispatch => ({
+    settingsReplace: payload => dispatch(settingsReplace(payload)),
+    settingsReplaceAndCloudSaveOther: payload => {
+      dispatch(settingsReplace(payload));
+      dispatch(cloudSaveOther());
+    },
+    filesGetUrlAndPlay: payload => dispatch(filesGetUrlAndPlay(payload)),
+  }),
+)(Player);

@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { Input, Button, Tooltip } from 'antd';
 import moment from 'moment';
 import { set } from 'lodash';
-import withRedux from 'next-redux-wrapper';
+import { connect } from 'react-redux';
 import Cookies from 'js-cookie';
-import initStore from '../lib/initStore';
-import Page from '../components/Page';
+import CustomHead from '../components/CustomHead';
 import { settingsReplace } from '../actions/settings';
 import { filesSync } from '../actions/files';
 import { cloudSaveOther } from '../actions/cloud';
@@ -18,7 +17,8 @@ const Settings = ({
   cloudSaveOther,
   settings,
 }) => (
-  <Page>
+  <div>
+    <CustomHead />
     <div className="ant-table ant-table-middle">
       <div className="ant-table-content">
         <div className="ant-table-body">
@@ -152,7 +152,7 @@ const Settings = ({
         </div>
       </div>
     </div>
-  </Page>
+  </div>
 );
 
 Settings.propTypes = {
@@ -162,8 +162,7 @@ Settings.propTypes = {
   cloudSaveOther: PropTypes.func.isRequired,
 };
 
-export default withRedux(
-  initStore,
+export default connect(
   ({ settings }) => ({ settings }),
   dispatch => ({
     settingsReplace: settings => dispatch(settingsReplace(settings)),

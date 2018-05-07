@@ -1,19 +1,23 @@
 import React from 'react';
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import style from '../styles/file-table';
 import getSortedData from '../lib/getSortedData';
+import { cloudSaveOther } from '../actions/cloud';
+import { settingsReplace } from '../actions/settings';
+import { filesGetUrlAndPlay } from '../actions/files';
+import fileColumns from '../lib/fileColumns';
 
 const FileTable = ({
-  columns,
-  data,
+  source,
+  files,
   settings,
-  settingsReplace,
   settingsReplaceAndCloudSaveOther,
-  onRowClick,
+  filesGetUrlAndPlay,
 }) => {
-  const { position, sortBy, sortDirection } = settings;
-  const sortedData = getSortedData(data, sortBy, sortDirection);
+  const { position, sortBy, sortDirection } = settings[source];
+  const sortedData = getSortedData(files[source], sortBy, sortDirection);
 
   return (
     <div className="root">
@@ -22,7 +26,8 @@ const FileTable = ({
       <AutoSizer>
         {({ height, width }) => (
           <Table
-            onRowClick={({ rowData }) => onRowClick(rowData)}
+            onRowClick={({ rowData: { path } }) =>
+              filesGetUrlAndPlay({ source: 'audio', path })}
             height={height}
             headerHeight={30}
             noRowsRenderer={() => <div>No rows</div>}
@@ -34,7 +39,7 @@ const FileTable = ({
             rowStyle={{
               // prettier-ignore
               grid: `none / ${
-                columns.reduce(
+                fileColumns[source].reduce(
                   (a, v) => a + (v.width ? ` ${v.width}px` : ' 1fr'),
                   '',
                 )}`
@@ -42,8 +47,11 @@ const FileTable = ({
             sort={({ sortBy, sortDirection }) =>
               settingsReplaceAndCloudSaveOther({
                 ...settings,
-                sortBy,
-                sortDirection: sortDirection === SortDirection.ASC,
+                [source]: {
+                  ...settings[source],
+                  sortBy,
+                  sortDirection: sortDirection === SortDirection.ASC,
+                }
               })
             }
             sortBy={sortBy}
@@ -51,7 +59,7 @@ const FileTable = ({
               sortDirection ? SortDirection.ASC : SortDirection.DESC
             }
           >
-            {columns.map(({ title, dataKey, width }) => (
+            {fileColumns[source].map(({ title, dataKey, width }) => (
               <Column
                 key={title}
                 label={title}
@@ -67,12 +75,20 @@ const FileTable = ({
 };
 
 FileTable.propTypes = {
-  columns: PropTypes.array.isRequired,
-  data: PropTypes.array.isRequired,
+  source: PropTypes.string.isRequired,
+  files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
-  settingsReplace: PropTypes.func.isRequired,
   settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
-  onRowClick: PropTypes.func.isRequired,
+  filesGetUrlAndPlay: PropTypes.func.isRequired,
 };
 
-export default FileTable;
+export default connect(
+  ({ files, settings }) => ({ files, settings }),
+  dispatch => ({
+    settingsReplaceAndCloudSaveOther: payload => {
+      dispatch(settingsReplace(payload));
+      dispatch(cloudSaveOther());
+    },
+    filesGetUrlAndPlay: payload => dispatch(filesGetUrlAndPlay(payload)),
+  }),
+)(FileTable);

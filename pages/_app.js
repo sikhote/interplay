@@ -7,7 +7,7 @@ import Player from '../components/Player';
 import Navigation from '../components/Navigation';
 import LoadingBar from '../components/LoadingBar';
 import makeStore from '../lib/makeStore';
-import isWeb from '../lib/isWeb';
+import isBrowser from '../lib/isBrowser';
 import { match, getPage, getCurrentPath } from '../lib/routing';
 import appStyle from '../styles/app';
 import globalStyle from '../styles/global';
@@ -64,7 +64,7 @@ class ReduxApp extends App {
           </div>
           <div className="main">
             <Player />
-            {isWeb &&
+            {isBrowser &&
               Router.route === `/${page}` && <Component {...pageProps} />}
           </div>
         </div>

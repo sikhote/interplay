@@ -1,35 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import withRedux from 'next-redux-wrapper';
-import initStore from '../lib/initStore';
-import Page from '../components/Page';
-import { settingsReplace } from '../actions/settings';
+import CustomHead from '../components/CustomHead';
 import FileTable from '../components/FileTable';
 
-const Video = ({ video, settings, settingsReplace }) => (
-  <Page>
-    <FileTable
-      columns={[{ title: 'Name', dataKey: 'name' }]}
-      data={video}
-      settings={settings.video}
-      saveSettings={video => settingsReplace({ ...settings, video })}
-    />
-  </Page>
+export default () => (
+  <div>
+    <CustomHead title="video" />
+    <FileTable source="video" />
+  </div>
 );
-
-Video.propTypes = {
-  video: PropTypes.array.isRequired,
-  settingsReplace: PropTypes.func.isRequired,
-  settings: PropTypes.object.isRequired,
-};
-
-export default withRedux(
-  initStore,
-  state => ({
-    video: state.files.video,
-    settings: state.settings,
-  }),
-  dispatch => ({
-    settingsReplace: settings => dispatch(settingsReplace(settings)),
-  }),
-)(Video);

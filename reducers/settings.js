@@ -1,23 +1,34 @@
-const ls = typeof window !== 'undefined' && window.localStorage;
-const key = (ls && ls.getItem('key')) || '';
-const path = (ls && ls.getItem('path')) || '';
+import Cookies from 'js-cookie';
 
-const initialState = {
+const hasCookies = typeof window !== 'undefined';
+const key = (hasCookies && Cookies.get('key')) || '';
+const path = (hasCookies && Cookies.get('path')) || '';
+
+export const initialState = {
   cloud: {
     key,
     path,
-    date: null,
-    status: null,
+    date: undefined,
+    status: undefined,
   },
   audio: {
-    position: 0,
+    scrollPosition: 0,
     sortBy: 'artist',
     sortDirection: true,
   },
   video: {
-    position: 0,
+    scrollPosition: 0,
     sortBy: 'name',
     sortDirection: true,
+  },
+  player: {
+    volume: 0.1,
+    muted: false,
+    playing: false,
+    loop: false,
+    file: {},
+    played: 0,
+    playedSeconds: 0,
   },
 };
 

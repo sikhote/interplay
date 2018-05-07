@@ -1,97 +1,140 @@
 import React from 'react';
-import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
-import firstBy from 'thenby';
+import {
+  AutoSizer,
+  Column,
+  SortDirection,
+  Table,
+  defaultTableRowRenderer,
+} from 'react-virtualized';
+import { Input } from 'antd';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import style from '../styles/file-table';
+import getSortedData from '../lib/getSortedData';
+import { cloudSaveOther } from '../actions/cloud';
+import { settingsReplace } from '../actions/settings';
+import { filesGetUrlAndPlay } from '../actions/files';
+import fileColumns from '../lib/fileColumns';
+import fileSearchKeys from '../lib/fileSearchKeys';
 
-const songsSorter = (data, sortBy, sortDirection) => {
-  const options = { ignoreCase: true, direction: sortDirection ? 1 : -1 };
-
-  switch (sortBy) {
-    case 'track':
-      return data.sort(
-        firstBy(sortBy, options)
-          .thenBy('artist', options)
-          .thenBy('album', options),
-      );
-    case 'artist':
-      return data.sort(
-        firstBy(sortBy, options)
-          .thenBy('album', options)
-          .thenBy('track', options),
-      );
-    case 'album':
-      return data.sort(
-        firstBy(sortBy, options)
-          .thenBy('artist', options)
-          .thenBy('track', options),
-      );
-    default:
-      return data.sort(firstBy(sortBy, options));
+class FileTable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      search: '',
+    };
   }
-};
+  render() {
+    const {
+      source,
+      files,
+      settings,
+      settingsReplaceAndCloudSaveOther,
+      filesGetUrlAndPlay,
+    } = this.props;
+    const { position, sortBy, sortDirection } = settings[source];
+    const { search } = this.state;
+    const searchedData = search
+      ? files[source].filter(file =>
+          fileSearchKeys[source].find(
+            key => file[key].toLowerCase().indexOf(search.toLowerCase()) !== -1,
+          ),
+        )
+      : files[source];
+    const sortedData = getSortedData(searchedData, sortBy, sortDirection);
+    const { player: { file: { path: currentPath } } } = settings;
 
-const FileTable = ({ columns, data, settings, saveSettings }) => {
-  const { position, sortBy, sortDirection } = settings;
-  const sortedData = songsSorter(data, sortBy, sortDirection);
-
-  return (
-    <div className="root">
-      <style jsx>{style}</style>
-      <AutoSizer>
-        {({ height, width }) => (
-          <Table
-            onRowClick={({ event, index, rowData }) => {
-              // eslint-disable-next-line
-              console.log(event, index, rowData);
-            }}
-            height={height}
-            noRowsRenderer={() => <div>No rows</div>}
-            rowCount={sortedData.length}
-            rowGetter={({ index }) => sortedData[index]}
-            rowHeight={20}
-            scrollToIndex={position}
-            width={width}
-            rowStyle={{
-              // prettier-ignore
-              grid: `none / ${
-                columns.reduce(
-                  (a, v) => a + (v.width ? ` ${v.width}px` : ' 1fr'),
-                  '',
-                )}`
-            }}
-            sort={({ sortBy, sortDirection }) =>
-              saveSettings({
-                ...settings,
-                sortBy,
-                sortDirection: sortDirection === SortDirection.ASC,
-              })
-            }
-            sortBy={sortBy}
-            sortDirection={
-              sortDirection ? SortDirection.ASC : SortDirection.DESC
-            }
-          >
-            {columns.map(({ title, dataKey, width }) => (
-              <Column
-                key={title}
-                label={title}
-                dataKey={dataKey}
-                width={width || 100}
-              />
-            ))}
-          </Table>
-        )}
-      </AutoSizer>
-    </div>
-  );
-};
+    return (
+      <div className="root">
+        <style jsx>{style}</style>
+        <div className="search">
+          <Input
+            size="small"
+            placeholder="Search"
+            value={search}
+            onChange={e => this.setState({ search: e.target.value })}
+          />
+        </div>
+        <div>
+          <AutoSizer>
+            {({ height, width }) => (
+              <Table
+                onRowClick={({ rowData: { path } }) =>
+                  filesGetUrlAndPlay({ source: 'audio', path })
+                }
+                height={height}
+                headerHeight={30}
+                noRowsRenderer={() => <div>No rows</div>}
+                rowRenderer={arg => {
+                  const { rowData: { path }, className } = arg;
+                  const newClassName = `${className} ${
+                    path === currentPath ? 'active' : ''
+                  }`;
+                  return defaultTableRowRenderer({
+                    ...arg,
+                    className: newClassName,
+                  });
+                }}
+                rowCount={sortedData.length}
+                rowGetter={({ index }) => sortedData[index]}
+                rowHeight={20}
+                scrollToIndex={position}
+                width={width}
+                rowStyle={{
+                  // prettier-ignore
+                  grid: `none / ${
+                  fileColumns[source].reduce(
+                    (a, v) => a + (v.width ? ` ${v.width}px` : ' 1fr'),
+                    '',
+                  )}`
+                }}
+                sort={({ sortBy, sortDirection }) =>
+                  settingsReplaceAndCloudSaveOther({
+                    ...settings,
+                    [source]: {
+                      ...settings[source],
+                      sortBy,
+                      sortDirection: sortDirection === SortDirection.ASC,
+                    },
+                  })
+                }
+                sortBy={sortBy}
+                sortDirection={
+                  sortDirection ? SortDirection.ASC : SortDirection.DESC
+                }
+              >
+                {fileColumns[source].map(({ title, dataKey, width }) => (
+                  <Column
+                    key={title}
+                    label={title}
+                    dataKey={dataKey}
+                    width={width || 100}
+                  />
+                ))}
+              </Table>
+            )}
+          </AutoSizer>
+        </div>
+      </div>
+    );
+  }
+}
 
 FileTable.propTypes = {
-  columns: PropTypes.array.isRequired,
-  data: PropTypes.array.isRequired,
+  source: PropTypes.string.isRequired,
+  files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
-  saveSettings: PropTypes.func.isRequired,
+  settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
+  filesGetUrlAndPlay: PropTypes.func.isRequired,
 };
 
-export default FileTable;
+export default connect(
+  ({ files, settings }) => ({ files, settings }),
+  dispatch => ({
+    settingsReplaceAndCloudSaveOther: payload => {
+      dispatch(settingsReplace(payload));
+      dispatch(cloudSaveOther());
+    },
+    filesGetUrlAndPlay: payload => dispatch(filesGetUrlAndPlay(payload)),
+  }),
+)(FileTable);

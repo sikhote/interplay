@@ -1,18 +1,82 @@
 import { Observable } from 'rxjs/Observable';
-import { startCase, set } from 'lodash';
+import { startCase, set, get, has } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import Promise from 'bluebird';
+import moment from 'moment';
 import extensions from '../lib/extensions';
 import { settingsReplace } from './settings';
-import { cloudSave } from './cloud';
+import { cloudSaveFiles, cloudSaveOther } from './cloud';
+
+export const filesGetUrlAndPlay = payload => ({
+  type: 'FILES_GET_URL_AND_PLAY',
+  payload,
+});
+
+export const filesUpdate = payload => ({
+  type: 'FILES_UPDATE',
+  payload,
+});
+
+const filesGetUrlAndPlayEpic = (action$, { getState }) =>
+  action$.ofType('FILES_GET_URL_AND_PLAY').mergeMap(action => {
+    const { source, path: filePath } = get(action, 'payload', {});
+    const state = getState();
+    const { settings, files } = state;
+    const file = files[source].find(file => file.path === filePath);
+    const getNewSettings = file => ({
+      ...settings,
+      player: {
+        ...settings.player,
+        source,
+        file,
+        playing: true,
+        played: 0,
+        playedSeconds: 0,
+      },
+    });
+
+    // If the current linkDate is not too old
+    if (
+      has(file, 'urlDate') &&
+      moment(file.urlDate).isAfter(moment().subtract(3, 'hours'))
+    ) {
+      return Observable.of(file).mergeMap(file => [
+        settingsReplace(getNewSettings(file)),
+        cloudSaveOther(),
+      ]);
+    }
+
+    const accessToken = settings.cloud.key;
+    const path = `/${settings.cloud.path}`;
+    const dropbox = new Dropbox({ accessToken });
+    const getUrl = Observable.from(
+      dropbox
+        .filesGetTemporaryLink({ path: `${path}/${filePath}` })
+        .then(({ link: url }) =>
+          Promise.resolve({
+            source,
+            path: filePath,
+            url,
+            urlDate: Date.now(),
+          }),
+        )
+        .catch(() => state),
+    );
+
+    return getUrl.mergeMap(file => [
+      filesUpdate(file),
+      settingsReplace(getNewSettings(file)),
+      cloudSaveOther(),
+    ]);
+  });
 
 export const filesSync = () => ({
   type: 'FILES_SYNC',
 });
 
-export const filesSyncSuccess = files => ({
-  type: 'FILES_SYNC_SUCCESS',
+export const filesReplace = files => ({
+  type: 'FILES_REPLACE',
   payload: { files },
 });
 
@@ -22,7 +86,6 @@ const filesSyncEpic = (action$, { getState }) =>
     const accessToken = settingsCloud.key;
     const path = `/${settingsCloud.path}`;
     const dropbox = new Dropbox({ accessToken });
-
     const syncStart = Observable.of(
       settingsReplace(
         set({ ...getState().settings }, 'cloud', {
@@ -83,11 +146,15 @@ const filesSyncEpic = (action$, { getState }) =>
                   name,
                   path: filePath,
                   track,
+                  link: null,
+                  linkDate: null,
                 });
               } else if (fileType === 'video') {
                 files.video.push({
                   name: startCase(fileName.join('.')),
                   path: filePath,
+                  link: null,
+                  linkDate: null,
                 });
               }
             }
@@ -129,12 +196,13 @@ const filesSyncEpic = (action$, { getState }) =>
     return syncStart.concat(
       getFiles
         .mergeMap(files => [
-          filesSyncSuccess(files),
+          filesReplace(files),
           syncSuccess(),
-          cloudSave(),
+          cloudSaveOther(),
+          cloudSaveFiles(),
         ])
         .catch(syncFail),
     );
   });
 
-export const epics = [filesSyncEpic];
+export const epics = [filesSyncEpic, filesGetUrlAndPlayEpic];

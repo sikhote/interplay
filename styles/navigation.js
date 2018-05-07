@@ -36,13 +36,22 @@ export default css`
       :global(.anticon) {
         display: block;
         margin-right: 0;
-        margin-bottom: 10px;
+      }
+    }
+
+    @media (max-width: ${bps.medium - 1}px) {
+      :global(.ant-menu-item span) {
+        display: none;
       }
     }
 
     @media (min-width: ${bps.medium}px) {
       :global(.ant-menu-item) {
         margin-top: 0;
+      }
+
+      :global(.anticon) {
+        margin-bottom: 10px;
       }
     }
   }

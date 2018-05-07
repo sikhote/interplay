@@ -1,8 +1,167 @@
 import React from 'react';
-import withRedux from 'next-redux-wrapper';
-import initStore from '../lib/initStore';
-import Page from '../components/Page';
+import PropTypes from 'prop-types';
+import { Input, Button, Tooltip } from 'antd';
+import moment from 'moment';
+import { set } from 'lodash';
+import { connect } from 'react-redux';
+import Cookies from 'js-cookie';
+import CustomHead from '../components/CustomHead';
+import { settingsReplace } from '../actions/settings';
+import { filesSync } from '../actions/files';
+import { cloudSaveOther } from '../actions/cloud';
+import { initialState } from '../reducers/settings';
 
-const Player = () => <Page>Player goes here</Page>;
+const Settings = ({ settingsReplace, filesSync, cloudSaveOther, settings }) => (
+  <div>
+    <CustomHead />
+    <div className="ant-table ant-table-middle">
+      <div className="ant-table-content">
+        <div className="ant-table-body">
+          <table>
+            <thead className="ant-table-thead">
+              <tr>
+                <th width={140} colSpan={2} style={{ textAlign: 'left' }}>
+                  Dropbox
+                </th>
+              </tr>
+            </thead>
+            <tbody className="ant-table-tbody">
+              <tr className="ant-table-row ant-table-row-level-0">
+                <td>Key</td>
+                <td style={{ paddingLeft: 0 }}>
+                  <Input
+                    placeholder="ABCD1234"
+                    style={{ border: 0 }}
+                    value={settings.cloud.key}
+                    onChange={({ target: { value } }) => {
+                      Cookies.set('key', value);
+                      settingsReplace(set({ ...settings }, 'cloud.key', value));
+                    }}
+                  />
+                </td>
+              </tr>
+              <tr className="ant-table-row ant-table-row-level-0">
+                <td>Path</td>
+                <td style={{ paddingLeft: 0 }}>
+                  <Input
+                    placeholder="iTunes/iTunes Music"
+                    style={{ border: 0 }}
+                    value={settings.cloud.path}
+                    onChange={({ target: { value } }) => {
+                      Cookies.set('path', value);
+                      settingsReplace(
+                        set({ ...settings }, 'cloud.path', value),
+                      );
+                    }}
+                  />
+                </td>
+              </tr>
+              <tr className="ant-table-row ant-table-row-level-0">
+                <td>Actions</td>
+                <td style={{ paddingLeft: 0 }}>
+                  {settings.cloud.status === 'syncing' ? (
+                    <Tooltip placement="top" title="Cancel sync">
+                      <Button
+                        type="danger"
+                        shape="circle"
+                        icon="close"
+                        style={{ marginLeft: 10 }}
+                        onClick={() =>
+                          settingsReplace(
+                            set({ ...settings }, 'cloud.status', 'cancelled'),
+                          )
+                        }
+                      />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip
+                      placement="top"
+                      title={
+                        settings.cloud.date
+                          ? `Synced ${moment(settings.cloud.date).fromNow()}`
+                          : 'Never synced'
+                      }
+                    >
+                      <Button
+                        type={
+                          settings.cloud.status === 'success'
+                            ? 'default'
+                            : 'danger'
+                        }
+                        shape="circle"
+                        icon={
+                          settings.cloud.status === 'success'
+                            ? 'check'
+                            : 'exclamation'
+                        }
+                        style={{ marginLeft: 10 }}
+                      />
+                    </Tooltip>
+                  )}
+                  {settings.cloud.key &&
+                    settings.cloud.path && (
+                      <Tooltip
+                        style={{ marginLeft: 10 }}
+                        placement="top"
+                        title={
+                          settings.cloud.status === 'syncing'
+                            ? 'Syncing'
+                            : 'Start sync'
+                        }
+                      >
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon="retweet"
+                          style={{ marginLeft: 10 }}
+                          loading={settings.cloud.status === 'syncing'}
+                          onClick={() => filesSync()}
+                        />
+                      </Tooltip>
+                    )}
+                  {settings.cloud.key &&
+                    settings.cloud.path && (
+                      <Tooltip placement="top" title="Save state to cloud">
+                        <Button
+                          type="primary"
+                          shape="circle"
+                          icon="save"
+                          style={{ marginLeft: 10 }}
+                          onClick={() => cloudSaveOther()}
+                        />
+                      </Tooltip>
+                    )}
+                  <Tooltip placement="top" title="Delete settings">
+                    <Button
+                      type="primary"
+                      shape="circle"
+                      icon="delete"
+                      style={{ marginLeft: 10 }}
+                      onClick={() => settingsReplace(initialState)}
+                    />
+                  </Tooltip>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
-export default withRedux(initStore, null, null)(Player);
+Settings.propTypes = {
+  settings: PropTypes.object.isRequired,
+  settingsReplace: PropTypes.func.isRequired,
+  filesSync: PropTypes.func.isRequired,
+  cloudSaveOther: PropTypes.func.isRequired,
+};
+
+export default connect(
+  ({ settings }) => ({ settings }),
+  dispatch => ({
+    settingsReplace: settings => dispatch(settingsReplace(settings)),
+    filesSync: () => dispatch(filesSync()),
+    cloudSaveOther: () => dispatch(cloudSaveOther()),
+  }),
+)(Settings);

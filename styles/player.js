@@ -10,7 +10,6 @@ export default css`
     padding-bottom: ${spacing.medium}px;
     background:
       linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.03) 100%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
     .easy-grid {
       display: grid;
@@ -69,7 +68,7 @@ export default css`
 
         .control {
           &.sound {
-            max-width: 272px;
+            max-width: 295px;
           }
         }
       }

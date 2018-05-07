@@ -18,9 +18,11 @@ export default css`
     }
 
     @media (max-width: ${bps.medium - 1}px) {
-      grid-template-areas: "main" "navigation";
+      grid-template-areas:
+        "navigation"
+        "main";
       grid-template-columns: 1fr;
-      grid-template-rows: 1fr 55px;
+      grid-template-rows: 30px 1fr;
 
       .main {
         grid-template-rows: 122px 1fr;

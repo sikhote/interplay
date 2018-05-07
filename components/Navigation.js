@@ -33,10 +33,10 @@ class Navigation extends React.Component {
             { key: '/', icon: 'setting', message: 'Settings' },
             { key: '/audio', icon: 'sound', message: 'Audio' },
             { key: '/video', icon: 'video-camera', message: 'Video' },
-            ].map(({ key, icon, message }) => (
-              <Menu.Item key={key}>
-                <Icon type={icon} /> <span>{message}</span>
-              </Menu.Item>
+          ].map(({ key, icon, message }) => (
+            <Menu.Item key={key}>
+              <Icon type={icon} /> <span>{message}</span>
+            </Menu.Item>
           ))}
         </Menu>
       </div>

@@ -55,8 +55,7 @@ const filesGetUrlAndPlayEpic = (action$, { getState }) =>
         .filesGetTemporaryLink({ path: `${path}/${filePath}` })
         .then(({ link: url }) =>
           Promise.resolve({
-            source,
-            path: filePath,
+            ...file,
             url,
             urlDate: Date.now(),
           }),

@@ -29,6 +29,7 @@ export const fontSizes = {
   larger: 'font-size: 28px;',
   huge: 'font-size: 30px;',
   hugest: 'font-size: 36px;',
+  smallTitle: 'font-size: 12px;',
 };
 
 export const lineHeights = {

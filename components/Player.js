@@ -12,6 +12,13 @@ import { settingsReplace } from '../actions/settings';
 import { filesGetUrlAndPlay } from '../actions/files';
 
 class Player extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      played: 0,
+      playedSeconds: 0,
+    };
+  }
   componentDidMount() {
     const { settings, filesGetUrlAndPlay } = this.props;
     const { player } = settings;
@@ -28,22 +35,17 @@ class Player extends React.Component {
     filesGetUrlAndPlay({ source: 'audio', path });
   }
   render() {
-    const {
-      settings,
-      settingsReplace,
-      settingsReplaceAndCloudSaveOther,
-    } = this.props;
+    const { played, playedSeconds } = this.state;
+    const { settings, settingsReplaceAndCloudSaveOther } = this.props;
     const { player } = settings;
+    const { volume, playing, muted, file = {}, loop } = player;
     const {
-      volume,
-      playing,
-      muted,
-      file = {},
-      loop,
-      played,
-      playedSeconds,
-    } = player;
-    const { url, path } = file;
+      url,
+      path,
+      album = 'Unknown Album',
+      artist = 'Unknown Artist',
+      name = 'Unknown Name',
+    } = file;
 
     const config = {
       loop,
@@ -61,11 +63,7 @@ class Player extends React.Component {
       },
       onDuration: () => this.player.seekTo(played),
       onProgress: ({ played, playedSeconds }) =>
-        settingsReplace(
-          merge({}, settings, {
-            player: { played, playedSeconds },
-          }),
-        ),
+        this.setState({ played, playedSeconds }),
       onEnded: () => this.goToFile('next'),
     };
 
@@ -75,7 +73,6 @@ class Player extends React.Component {
         <div className="main">
           <div className="easy-grid directions">
             <Button
-              size="small"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -83,7 +80,6 @@ class Player extends React.Component {
               onClick={() => this.goToFile('previous')}
             />
             <Button
-              size="small"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -97,7 +93,6 @@ class Player extends React.Component {
               }
             />
             <Button
-              size="small"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -161,7 +156,9 @@ class Player extends React.Component {
             />
           </div>
           <div className="info">
-            {path || 'Add credentials and play some media'}
+            {path
+              ? `${artist} - ${album} - ${name}`
+              : 'Add credentials and play some media'}
           </div>
         </div>
         <ReactPlayer {...config} />
@@ -173,7 +170,6 @@ class Player extends React.Component {
 Player.propTypes = {
   files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
-  settingsReplace: PropTypes.func.isRequired,
   settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
   filesGetUrlAndPlay: PropTypes.func.isRequired,
 };
@@ -181,7 +177,6 @@ Player.propTypes = {
 export default connect(
   ({ files, settings }) => ({ files, settings }),
   dispatch => ({
-    settingsReplace: payload => dispatch(settingsReplace(payload)),
     settingsReplaceAndCloudSaveOther: payload => {
       dispatch(settingsReplace(payload));
       dispatch(cloudSaveOther());

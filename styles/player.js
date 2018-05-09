@@ -9,7 +9,7 @@ export default css`
     padding-top: ${spacing.medium}px;
     padding-bottom: ${spacing.medium}px;
     background:
-      linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.03) 100%);
+      linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.02) 100%);
 
     .easy-grid {
       display: grid;

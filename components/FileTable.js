@@ -6,7 +6,7 @@ import {
   Table,
   defaultTableRowRenderer,
 } from 'react-virtualized';
-import { Input } from 'antd';
+import { Input, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import style from '../styles/file-table';
@@ -50,6 +50,7 @@ class FileTable extends React.Component {
         <div className="search">
           <Input
             size="small"
+            addonBefore={<Icon type="search" />}
             placeholder="Search"
             value={search}
             onChange={e => this.setState({ search: e.target.value })}
@@ -77,7 +78,7 @@ class FileTable extends React.Component {
                 }}
                 rowCount={sortedData.length}
                 rowGetter={({ index }) => sortedData[index]}
-                rowHeight={20}
+                rowHeight={26}
                 scrollToIndex={position}
                 width={width}
                 rowStyle={{

@@ -31,8 +31,6 @@ const filesGetUrlAndPlayEpic = (action$, { getState }) =>
         source,
         file,
         playing: true,
-        played: 0,
-        playedSeconds: 0,
       },
     });
 
@@ -64,7 +62,7 @@ const filesGetUrlAndPlayEpic = (action$, { getState }) =>
     );
 
     return getUrl.mergeMap(file => [
-      filesUpdate(file),
+      filesUpdate({ file, source }),
       settingsReplace(getNewSettings(file)),
       cloudSaveOther(),
     ]);

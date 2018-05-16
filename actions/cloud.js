@@ -14,13 +14,16 @@ const cloudGetEpic = (action$, { getState }) =>
   action$.ofType('CLOUD_GET').mergeMap(() => {
     const state = getState();
     const settingsCloud = state.settings.cloud;
-    const accessToken = settingsCloud.key;
-    const path = `/${settingsCloud.path}`;
+    const { key: accessToken, path, profile } = settingsCloud;
     const dropbox = new Dropbox({ accessToken });
     const getCloudState = Observable.from(
       Promise.all([
-        dropbox.filesDownload({ path: `${path}/mediafurry-other.json` }),
-        dropbox.filesDownload({ path: `${path}/mediafurry-files.json` }),
+        dropbox.filesDownload({
+          path: `/${path}/interplay/${profile}/other.json`,
+        }),
+        dropbox.filesDownload({
+          path: `/${path}/interplay/${profile}/files.json`,
+        }),
       ])
         .then(values =>
           Promise.all(
@@ -50,13 +53,12 @@ const cloudSaveOtherEpic = (action$, { getState }) =>
   action$.ofType('CLOUD_SAVE_OTHER').mergeMap(() => {
     const { settings, cloud } = getState();
     const settingsCloud = settings.cloud;
-    const accessToken = settingsCloud.key;
-    const path = `/${settingsCloud.path}`;
+    const { key: accessToken, path, profile } = settingsCloud;
     const dropbox = new Dropbox({ accessToken });
     const saveCloudState = Observable.from(
       dropbox.filesUpload({
         contents: JSON.stringify({ settings, cloud }),
-        path: `${path}/mediafurry-other.json`,
+        path: `/${path}/interplay/${profile}/other.json`,
         mode: { '.tag': 'overwrite' },
         mute: true,
       }),
@@ -73,13 +75,12 @@ const cloudSaveFilesEpic = (action$, { getState }) =>
   action$.ofType('CLOUD_SAVE_FILES').mergeMap(() => {
     const { settings, files } = getState();
     const settingsCloud = settings.cloud;
-    const accessToken = settingsCloud.key;
-    const path = `/${settingsCloud.path}`;
+    const { key: accessToken, path, profile } = settingsCloud;
     const dropbox = new Dropbox({ accessToken });
     const saveCloudState = Observable.from(
       dropbox.filesUpload({
         contents: JSON.stringify(files),
-        path: `${path}/mediafurry-files.json`,
+        path: `/${path}/interplay/${profile}/files.json`,
         mode: { '.tag': 'overwrite' },
         mute: true,
       }),

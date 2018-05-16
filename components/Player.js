@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
-import { merge } from 'lodash';
+import { merge, get } from 'lodash';
 import { Button, Slider, Switch, Icon } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -12,18 +12,29 @@ import { settingsReplace } from '../actions/settings';
 import { filesGetUrlAndPlay } from '../actions/files';
 
 class Player extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      played: 0,
-      playedSeconds: 0,
-    };
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const oldPath = get(prevState, 'path');
+    const path = get(nextProps, 'settings.player.file.path');
+
+    if (oldPath !== path) {
+      return {
+        played: 0,
+        playedSeconds: 0,
+        path,
+      };
+    }
+
+    return null;
   }
+  state = {
+    path: undefined,
+    played: 0,
+    playedSeconds: 0,
+  };
   componentDidMount() {
     const { settings, filesGetUrlAndPlay } = this.props;
-    const { player } = settings;
-    const { path, file = {} } = player;
-    const { source } = file;
+    const { path } = this.state;
+    const source = get(settings, 'player.source');
 
     if (source && path) {
       filesGetUrlAndPlay({ source, path });
@@ -31,17 +42,17 @@ class Player extends React.Component {
   }
   goToFile(direction) {
     const { settings, files, filesGetUrlAndPlay } = this.props;
+    const source = get(settings, 'player.source');
     const { path } = getFileInDirection(settings, files, direction);
-    filesGetUrlAndPlay({ source: 'audio', path });
+    filesGetUrlAndPlay({ source, path });
   }
   render() {
-    const { played, playedSeconds } = this.state;
+    const { played, playedSeconds, path } = this.state;
     const { settings, settingsReplaceAndCloudSaveOther } = this.props;
     const { player } = settings;
     const { volume, playing, muted, file = {}, loop } = player;
     const {
       url,
-      path,
       album = 'Unknown Album',
       artist = 'Unknown Artist',
       name = 'Unknown Name',

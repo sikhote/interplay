@@ -61,7 +61,7 @@ class FileTable extends React.Component {
             {({ height, width }) => (
               <Table
                 onRowClick={({ rowData: { path } }) =>
-                  filesGetUrlAndPlay({ source: 'audio', path })
+                  filesGetUrlAndPlay({ source, path })
                 }
                 height={height}
                 headerHeight={30}

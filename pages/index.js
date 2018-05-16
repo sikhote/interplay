@@ -27,6 +27,22 @@ const Settings = ({ settingsReplace, filesSync, cloudSaveOther, settings }) => (
             </thead>
             <tbody className="ant-table-tbody">
               <tr className="ant-table-row ant-table-row-level-0">
+                <td>Profile</td>
+                <td style={{ paddingLeft: 0 }}>
+                  <Input
+                    placeholder="defult"
+                    style={{ border: 0 }}
+                    value={settings.cloud.profile}
+                    onChange={({ target: { value } }) => {
+                      Cookies.set('profile', value);
+                      settingsReplace(
+                        set({ ...settings }, 'cloud.profile', value),
+                      );
+                    }}
+                  />
+                </td>
+              </tr>
+              <tr className="ant-table-row ant-table-row-level-0">
                 <td>Key</td>
                 <td style={{ paddingLeft: 0 }}>
                   <Input
@@ -44,13 +60,13 @@ const Settings = ({ settingsReplace, filesSync, cloudSaveOther, settings }) => (
                 <td>Path</td>
                 <td style={{ paddingLeft: 0 }}>
                   <Input
-                    placeholder="iTunes/iTunes Music"
+                    placeholder="itunes/itunes music"
                     style={{ border: 0 }}
                     value={settings.cloud.path}
                     onChange={({ target: { value } }) => {
-                      Cookies.set('path', value);
+                      Cookies.set('path', value.toLowerCase());
                       settingsReplace(
-                        set({ ...settings }, 'cloud.path', value),
+                        set({ ...settings }, 'cloud.path', value.toLowerCase()),
                       );
                     }}
                   />

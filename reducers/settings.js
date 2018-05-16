@@ -3,11 +3,13 @@ import Cookies from 'js-cookie';
 const hasCookies = typeof window !== 'undefined';
 const key = (hasCookies && Cookies.get('key')) || '';
 const path = (hasCookies && Cookies.get('path')) || '';
+const profile = (hasCookies && Cookies.get('profile')) || 'default';
 
 export const initialState = {
   cloud: {
     key,
     path,
+    profile,
     date: undefined,
     status: undefined,
   },

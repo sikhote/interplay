@@ -7,12 +7,12 @@
 		"version": "0.0.1",
 		"private": true,
 		"scripts": {
-				"deploy": "./.env; serverless deploy",
-				"destroy": "./.env; serverless remove",
+				"deploy": "./.env.sh && serverless deploy",
+				"destroy": "./.env.sh && serverless remove",
 				"eslint": "eslint \"./**/*.js\"",
 				"export": "next build && next export -o build",
 				"invalidate": "serverless invalidate",
-				"watch": "./.env; node server.js",
+				"watch": "node server.js",
 				"prettier": "prettier --write \"./**/*.js\"",
 				"server": "yarn export; cd build && python -m SimpleHTTPServer",
 				"sync": "serverless sync"

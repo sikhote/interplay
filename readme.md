@@ -11,7 +11,7 @@ play media from the cloud on a browser
 - So far, only Dropbox is supported and it requires an access token
 
 ## commands
-- `yarn watch` to set environment and build and watch
+- `yarn watch` to build and watch
 - `yarn export` to build and export static files
 - `yarn prettier` to clean your code
 - `yarn eslint` to check your code is clean

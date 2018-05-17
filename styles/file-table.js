@@ -10,23 +10,32 @@ export default css`
     display: grid;
     grid-template-rows: auto 1fr;
 
-    .search {
+    .controls {
       background: linear-gradient(
         to bottom,
         rgba(0, 0, 0, 0.02) 0%,
         rgba(0, 0, 0, 0.03) 100%
       );
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-auto-columns: auto;
+      grid-auto-flow: column;
+      grid-gap: ${spacing.large}px;
+      align-items: center;
       padding-left: ${spacing.medium}px;
       padding-right: ${spacing.medium}px;
       padding-bottom: ${spacing.medium}px;
+      justify-content: start;
 
-      :global(.ant-input-group-wrapper) {
-        max-width: 200px;
-      }
+      .search {
+        :global(.ant-input-group-wrapper) {
+          max-width: 200px;
+        }
 
-      :global(.ant-input) {
-        box-shadow: none;
-        border-color: rgba(0, 0, 0, 0.1);
+        :global(.ant-input) {
+          box-shadow: none;
+          border-color: rgba(0, 0, 0, 0.1);
+        }
       }
     }
 
@@ -50,6 +59,10 @@ export default css`
       ${fontSizes.smallTitle}
       display: flex;
       align-items: center;
+    }
+
+    :global(.ReactVirtualized__Table__headerColumn:not([aria-sort])) {
+      color: rgba(0, 0, 0, 0.45);
     }
 
     :global(.ReactVirtualized__Table__headerColumn svg) {

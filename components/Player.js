@@ -129,7 +129,7 @@ class Player extends React.Component {
               min={0}
               max={1}
               step={0.01}
-              tipFormatter={volume => `${Math.round(volume * 100)}%`}
+              tipFormatter={volume => `Volume: ${Math.round(volume * 100)}%`}
               onChange={volume =>
                 settingsReplaceAndCloudSaveOther(
                   merge({}, settings, {

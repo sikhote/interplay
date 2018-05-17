@@ -6,9 +6,10 @@ import {
   Table,
   defaultTableRowRenderer,
 } from 'react-virtualized';
-import { Input, Icon } from 'antd';
+import { Input, Icon, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { get, isEqual } from 'lodash';
 import style from '../styles/file-table';
 import getSortedData from '../lib/getSortedData';
 import { cloudSaveOther } from '../actions/cloud';
@@ -18,11 +19,29 @@ import fileColumns from '../lib/fileColumns';
 import fileSearchKeys from '../lib/fileSearchKeys';
 
 class FileTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      search: '',
-    };
+  state = {
+    search: '',
+  };
+  componentDidUpdate(prevProps) {
+    const { source, files, settings } = this.props;
+    const playerSource = get(settings, 'player.source');
+
+    if (playerSource !== source) {
+      return;
+    }
+
+    if (!isEqual(files, prevProps.files)) {
+      this.goToCurrentPosition();
+    }
+  }
+  goToCurrentPosition() {
+    const { files, settings } = this.props;
+    const { player: { file, source } } = settings;
+    const { sortBy, sortDirection } = settings[source];
+    const data = files[source];
+    const sortedData = getSortedData(data, sortBy, sortDirection);
+    const currentIndex = sortedData.findIndex(({ path }) => path === file.path);
+    this.table.scrollToRow(currentIndex);
   }
   render() {
     const {
@@ -32,6 +51,7 @@ class FileTable extends React.Component {
       settingsReplaceAndCloudSaveOther,
       filesGetUrlAndPlay,
     } = this.props;
+    const playerSource = get(settings, 'player.source');
     const { position, sortBy, sortDirection } = settings[source];
     const { search } = this.state;
     const searchedData = search
@@ -47,19 +67,34 @@ class FileTable extends React.Component {
     return (
       <div className="root">
         <style jsx>{style}</style>
-        <div className="search">
-          <Input
-            size="small"
-            addonBefore={<Icon type="search" />}
-            placeholder="Search"
-            value={search}
-            onChange={e => this.setState({ search: e.target.value })}
-          />
+        <div className="controls">
+          <div className="search">
+            <Input
+              size="small"
+              addonBefore={<Icon type="search" />}
+              placeholder="Search"
+              value={search}
+              onChange={e => this.setState({ search: e.target.value })}
+            />
+          </div>
+          <div>
+            <Button
+              disabled={playerSource !== source}
+              icon="compass"
+              onClick={() => this.goToCurrentPosition()}
+              size="small"
+            >
+              Go to Current Position
+            </Button>
+          </div>
         </div>
         <div>
           <AutoSizer>
             {({ height, width }) => (
               <Table
+                ref={c => {
+                  this.table = c;
+                }}
                 onRowClick={({ rowData: { path } }) =>
                   filesGetUrlAndPlay({ source, path })
                 }

@@ -48,7 +48,11 @@ class Player extends React.Component {
   }
   render() {
     const { played, playedSeconds, path } = this.state;
-    const { settings, settingsReplaceAndCloudSaveOther } = this.props;
+    const {
+      settings,
+      settingsReplace,
+      settingsReplaceAndCloudSaveOther,
+    } = this.props;
     const { player } = settings;
     const { volume, playing, muted, file = {}, loop } = player;
     const {
@@ -131,7 +135,7 @@ class Player extends React.Component {
               step={0.01}
               tipFormatter={volume => `Volume: ${Math.round(volume * 100)}%`}
               onChange={volume =>
-                settingsReplaceAndCloudSaveOther(
+                settingsReplace(
                   merge({}, settings, {
                     player: { volume },
                   }),
@@ -181,6 +185,7 @@ class Player extends React.Component {
 Player.propTypes = {
   files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
+  settingsReplace: PropTypes.func.isRequired,
   settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
   filesGetUrlAndPlay: PropTypes.func.isRequired,
 };
@@ -192,6 +197,7 @@ export default connect(
       dispatch(settingsReplace(payload));
       dispatch(cloudSaveOther());
     },
+    settingsReplace: payload => dispatch(settingsReplace(payload)),
     filesGetUrlAndPlay: payload => dispatch(filesGetUrlAndPlay(payload)),
   }),
 )(Player);

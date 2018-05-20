@@ -26,11 +26,7 @@ class FileTable extends React.Component {
     const { source, files, settings } = this.props;
     const playerSource = get(settings, 'player.source');
 
-    if (playerSource !== source) {
-      return;
-    }
-
-    if (!isEqual(files, prevProps.files)) {
+    if (playerSource !== source && !isEqual(files, prevProps.files)) {
       this.goToCurrentPosition();
     }
   }

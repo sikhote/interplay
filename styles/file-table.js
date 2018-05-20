@@ -31,11 +31,6 @@ export default css`
         :global(.ant-input-group-wrapper) {
           max-width: 200px;
         }
-
-        :global(.ant-input) {
-          box-shadow: none;
-          border-color: rgba(0, 0, 0, 0.1);
-        }
       }
     }
 

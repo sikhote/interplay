@@ -27,8 +27,6 @@ export default css`
 
     .actions {
       display: grid;
-      place-items: start;
-      place-content: start;
       grid-template-columns: auto;
       grid-template-rows: 1fr;
       grid-auto-flow: column;

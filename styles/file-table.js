@@ -34,6 +34,10 @@ export default css`
       }
     }
 
+    :global(.ReactVirtualized__Grid) {
+      outline: none;
+    }
+
     :global(.ReactVirtualized__Table__headerRow) {
       display: grid;
     }

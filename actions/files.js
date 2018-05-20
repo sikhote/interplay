@@ -4,7 +4,7 @@ import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import Promise from 'bluebird';
 import moment from 'moment';
-import extensions from '../lib/extensions';
+import { getFileType } from '../lib/files';
 import { settingsReplace } from './settings';
 import { cloudSaveFiles, cloudSaveOther } from './cloud';
 
@@ -125,9 +125,7 @@ const filesSyncEpic = (action$, { getState }) =>
               const parts = filePath.split('/');
               const fileName = parts.pop().split('.');
               const fileExt = fileName.pop();
-              const fileType = Object.keys(extensions).find(exts =>
-                extensions[exts].find(ext => ext === fileExt),
-              );
+              const type = getFileType(fileExt);
               let name = startCase(fileName.join('.'));
               let track = null;
 
@@ -136,7 +134,7 @@ const filesSyncEpic = (action$, { getState }) =>
                 name = name.substring(3);
               }
 
-              if (fileType === 'audio') {
+              if (type === 'audio') {
                 files.audio.push({
                   album: startCase(parts.pop()),
                   artist: startCase(parts.pop()),
@@ -145,13 +143,15 @@ const filesSyncEpic = (action$, { getState }) =>
                   track,
                   link: null,
                   linkDate: null,
+                  type,
                 });
-              } else if (fileType === 'video') {
+              } else if (type === 'video') {
                 files.video.push({
                   name: startCase(fileName.join('.')),
                   path: filePath,
                   link: null,
                   linkDate: null,
+                  type,
                 });
               }
             }

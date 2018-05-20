@@ -10,14 +10,37 @@ export default css`
     padding-bottom: ${spacing.medium}px;
     background:
       linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.02) 100%);
+    display: grid;
+    grid-template-columns: 0px 1fr;
 
-    .easy-grid {
-      display: grid;
-      grid-template-columns: auto;
-      grid-auto-columns: auto;
-      grid-auto-flow: column;
+    &.video {
       grid-gap: ${spacing.large}px;
-      align-items: center;
+      grid-template-columns: 120px 1fr;
+
+      &.is-full-screen {
+        :global(.player) {
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 9;
+          width: 100% !important;
+          height: 100% !important;
+          text-align: center;
+          max-width: 100%;
+        }
+      }
+    }
+
+    :global(.player) {
+      overflow: hidden;
+      cursor: pointer;
+      background: black;
+    }
+
+    :global(.player video) {
+      object-fit: contain;
+      width: 100% !important;
+      height: 100% !important;
     }
 
     .main {
@@ -27,11 +50,18 @@ export default css`
       grid-template-rows: auto;
 
       .directions {
+        display: grid;
+        grid-template-columns: auto;
+        grid-auto-columns: auto;
+        grid-auto-flow: column;
+        align-items: center;
         grid-area: directions;
-        grid-gap: ${spacing.medium}px;
+        grid-gap: ${spacing.small}px;
       }
 
       .control {
+        display: grid;
+        align-items: center;
         grid-template-columns: auto auto 1fr;
         grid-gap: ${spacing.medium}px;
         max-width: 400px;
@@ -68,7 +98,7 @@ export default css`
 
         .control {
           &.sound {
-            max-width: 295px;
+            max-width: 280px;
           }
         }
       }

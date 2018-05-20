@@ -30,6 +30,7 @@ class Player extends React.Component {
     path: undefined,
     played: 0,
     playedSeconds: 0,
+    isFullScreen: true,
   };
   componentDidMount() {
     const { settings, filesGetUrlAndPlay } = this.props;
@@ -47,7 +48,7 @@ class Player extends React.Component {
     filesGetUrlAndPlay({ source, path });
   }
   render() {
-    const { played, playedSeconds, path } = this.state;
+    const { played, playedSeconds, path, isFullScreen } = this.state;
     const {
       settings,
       settingsReplace,
@@ -60,16 +61,18 @@ class Player extends React.Component {
       album = 'Unknown Album',
       artist = 'Unknown Artist',
       name = 'Unknown Name',
+      type,
     } = file;
 
     const config = {
+      className: 'player',
       loop,
       muted,
-      width: '100%',
-      height: '100%',
+      width: 'auto',
+      height: 'auto',
       progressInterval: 1000,
-      // full screen
-      playsinline: false,
+      playsinline: !isFullScreen,
+      controls: isFullScreen,
       volume,
       playing,
       url,
@@ -80,13 +83,15 @@ class Player extends React.Component {
       onProgress: ({ played, playedSeconds }) =>
         this.setState({ played, playedSeconds }),
       onEnded: () => this.goToFile('next'),
+      onClick: () => this.setState({ isFullScreen: !isFullScreen }),
     };
 
     return (
-      <div className="root">
+      <div className={`root ${type} ${isFullScreen ? 'is-full-screen' : ''}`}>
         <style jsx>{style}</style>
+        <ReactPlayer {...config} />
         <div className="main">
-          <div className="easy-grid directions">
+          <div className="directions">
             <Button
               disabled={!url}
               type="primary"
@@ -115,7 +120,7 @@ class Player extends React.Component {
               onClick={() => this.goToFile('next')}
             />
           </div>
-          <div className="easy-grid control sound">
+          <div className="control sound">
             <Icon type="sound" />
             <Switch
               size="small"
@@ -143,7 +148,7 @@ class Player extends React.Component {
               }
             />
           </div>
-          <div className="easy-grid control progress">
+          <div className="control progress">
             <Icon type="retweet" />
             <Switch
               size="small"
@@ -176,7 +181,6 @@ class Player extends React.Component {
               : 'Add credentials and play some media'}
           </div>
         </div>
-        <ReactPlayer {...config} />
       </div>
     );
   }

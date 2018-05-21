@@ -46,10 +46,7 @@ export default class extends Document {
             content="/static/images/favicons/browserconfig.xml"
           />
           <meta name="theme-color" content="#ffffff" />
-          <link
-            rel="stylesheet"
-            href="/static/css/antd.min.css"
-          />
+          <link rel="stylesheet" href="/static/css/antd.min.css" />
         </Head>
         <body>
           <Main />

@@ -48,7 +48,7 @@ export default class extends Document {
           <meta name="theme-color" content="#ffffff" />
           <link
             rel="stylesheet"
-            href="//cdnjs.cloudflare.com/ajax/libs/antd/3.0.0/antd.min.css"
+            href="/static/css/antd.min.css"
           />
         </Head>
         <body>

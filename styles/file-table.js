@@ -74,7 +74,6 @@ export default css`
     :global(.ReactVirtualized__Table__row) {
       display: grid;
       align-items: center;
-
     }
 
     :global(.ReactVirtualized__Table__headerRow) {
@@ -97,6 +96,13 @@ export default css`
 
     :global(.ReactVirtualized__Table__row.active) {
       background: ${transparentize(0.8, colors.blue)};
+    }
+
+    :global(.no-files) {
+      padding-left: ${spacing.medium}px;
+      padding-right: ${spacing.medium}px;
+      padding-bottom: ${spacing.small}px;
+      padding-top: ${spacing.small}px;
     }
   }
 `;

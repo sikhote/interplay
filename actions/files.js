@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { startCase, set, get, has } from 'lodash';
+import { startCase, set, get, has, last } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import Promise from 'bluebird';
@@ -8,8 +8,8 @@ import { getFileType } from '../lib/files';
 import { settingsReplace } from './settings';
 import { cloudSaveFiles, cloudSaveOther } from './cloud';
 
-export const filesGetUrlAndPlay = payload => ({
-  type: 'FILES_GET_URL_AND_PLAY',
+export const filesGetUrl = payload => ({
+  type: 'FILES_GET_URL',
   payload,
 });
 
@@ -18,9 +18,9 @@ export const filesUpdate = payload => ({
   payload,
 });
 
-const filesGetUrlAndPlayEpic = (action$, { getState }) =>
-  action$.ofType('FILES_GET_URL_AND_PLAY').mergeMap(action => {
-    const { source, path: filePath } = get(action, 'payload', {});
+const filesGetUrlEpic = (action$, { getState }) =>
+  action$.ofType('FILES_GET_URL').mergeMap(action => {
+    const { source, path: filePath, shouldPlay } = get(action, 'payload', {});
     const state = getState();
     const { settings, files } = state;
     const file = files[source].find(file => file.path === filePath);
@@ -39,10 +39,12 @@ const filesGetUrlAndPlayEpic = (action$, { getState }) =>
       has(file, 'urlDate') &&
       moment(file.urlDate).isAfter(moment().subtract(3, 'hours'))
     ) {
-      return Observable.of(file).mergeMap(file => [
-        settingsReplace(getNewSettings(file)),
-        cloudSaveOther(),
-      ]);
+      return shouldPlay
+        ? Observable.of(file).mergeMap(file => [
+            settingsReplace(getNewSettings(file)),
+            cloudSaveOther(),
+          ])
+        : Observable.of();
     }
 
     const accessToken = settings.cloud.key;
@@ -63,8 +65,9 @@ const filesGetUrlAndPlayEpic = (action$, { getState }) =>
 
     return getUrl.mergeMap(file => [
       filesUpdate({ file, source }),
-      settingsReplace(getNewSettings(file)),
-      cloudSaveOther(),
+      ...(shouldPlay
+        ? [settingsReplace(getNewSettings(file)), cloudSaveOther()]
+        : []),
     ]);
   });
 
@@ -125,7 +128,8 @@ const filesSyncEpic = (action$, { getState }) =>
               const parts = filePath.split('/');
               const fileName = parts.pop().split('.');
               const fileExt = fileName.pop();
-              const type = getFileType(fileExt);
+              const type =
+                parts[0] === 'videos' ? 'video' : getFileType(fileExt);
               let name = startCase(fileName.join('.'));
               let track = null;
 
@@ -148,6 +152,7 @@ const filesSyncEpic = (action$, { getState }) =>
               } else if (type === 'video') {
                 files.video.push({
                   name: startCase(fileName.join('.')),
+                  category: parts.length > 1 ? startCase(last(parts)) : '',
                   path: filePath,
                   link: null,
                   linkDate: null,
@@ -202,4 +207,4 @@ const filesSyncEpic = (action$, { getState }) =>
     );
   });
 
-export const epics = [filesSyncEpic, filesGetUrlAndPlayEpic];
+export const epics = [filesSyncEpic, filesGetUrlEpic];

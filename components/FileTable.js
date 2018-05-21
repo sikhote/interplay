@@ -14,7 +14,7 @@ import style from '../styles/file-table';
 import getSortedData from '../lib/getSortedData';
 import { cloudSaveOther } from '../actions/cloud';
 import { settingsReplace } from '../actions/settings';
-import { filesGetUrlAndPlay } from '../actions/files';
+import { filesGetUrl } from '../actions/files';
 import fileColumns from '../lib/fileColumns';
 import fileSearchKeys from '../lib/fileSearchKeys';
 
@@ -45,7 +45,7 @@ class FileTable extends React.Component {
       files,
       settings,
       settingsReplaceAndCloudSaveOther,
-      filesGetUrlAndPlay,
+      filesGetUrl,
     } = this.props;
     const playerSource = get(settings, 'player.source');
     const { position, sortBy, sortDirection } = settings[source];
@@ -92,11 +92,11 @@ class FileTable extends React.Component {
                   this.table = c;
                 }}
                 onRowClick={({ rowData: { path } }) =>
-                  filesGetUrlAndPlay({ source, path })
+                  filesGetUrl({ source, path, shouldPlay: true })
                 }
                 height={height}
                 headerHeight={30}
-                noRowsRenderer={() => <div>No rows</div>}
+                noRowsRenderer={() => <div className="no-files">No files</div>}
                 rowRenderer={arg => {
                   const { rowData: { path }, className } = arg;
                   const newClassName = `${className} ${
@@ -157,7 +157,7 @@ FileTable.propTypes = {
   files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
-  filesGetUrlAndPlay: PropTypes.func.isRequired,
+  filesGetUrl: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -167,6 +167,6 @@ export default connect(
       dispatch(settingsReplace(payload));
       dispatch(cloudSaveOther());
     },
-    filesGetUrlAndPlay: payload => dispatch(filesGetUrlAndPlay(payload)),
+    filesGetUrl: payload => dispatch(filesGetUrl(payload)),
   }),
 )(FileTable);

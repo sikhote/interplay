@@ -4,21 +4,26 @@ import { spacing } from './base';
 // prettier-ignore
 export default css`
   .root {
-    display: grid;
-    place-items: start;
-    place-content: start;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    grid-auto-rows: auto;
-    grid-auto-flow: row;
-    grid-gap: ${spacing.medium}px;
+    padding-top: ${spacing.small}px;
     padding-left: ${spacing.medium}px;
     padding-right: ${spacing.medium}px;
     padding-bottom: ${spacing.medium}px;
-    padding-top: ${spacing.medium}px;
 
     :global(.alert) {
-      width: auto;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .inputs {
+      padding-top: ${spacing.large}px;
+      display: grid;
+      place-items: start;
+      place-content: start;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      grid-auto-rows: auto;
+      grid-auto-flow: row;
+      grid-gap: ${spacing.medium}px;
     }
 
     :global(.input) {

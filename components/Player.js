@@ -91,12 +91,15 @@ class Player extends React.Component {
     };
 
     return (
-      <div className={`root ${type} ${isFullScreen ? 'is-full-screen' : ''}`}>
+      <div
+        className={`root ${type || ''} ${isFullScreen ? 'is-full-screen' : ''}`}
+      >
         <style jsx>{style}</style>
         <ReactPlayer {...config} />
         <div className="main">
           <div className="directions">
             <Button
+              size="large"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -109,6 +112,7 @@ class Player extends React.Component {
               }
             />
             <Button
+              size="large"
               disabled={!url}
               type="primary"
               shape="circle"
@@ -122,6 +126,7 @@ class Player extends React.Component {
               }
             />
             <Button
+              size="large"
               disabled={!url}
               type="primary"
               shape="circle"

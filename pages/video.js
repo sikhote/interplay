@@ -1,10 +1,6 @@
 import React from 'react';
-import CustomHead from '../components/CustomHead';
-import FileTable from '../components/FileTable';
+import List from '../components/List';
 
 export default () => (
-  <div>
-    <CustomHead title="video" />
-    <FileTable source="video" />
-  </div>
+  <List key="video" title="video" header="Video" source="video" />
 );

@@ -1,10 +1,6 @@
 import React from 'react';
-import CustomHead from '../components/CustomHead';
-import FileTable from '../components/FileTable';
+import List from '../components/List';
 
 export default () => (
-  <div>
-    <CustomHead title="audio" />
-    <FileTable source="audio" />
-  </div>
+  <List key="audio" title="audio" header="Audio" source="audio" />
 );

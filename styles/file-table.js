@@ -11,16 +11,11 @@ export default css`
     grid-template-rows: auto 1fr;
 
     .controls {
-      background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.02) 0%,
-        rgba(0, 0, 0, 0.03) 100%
-      );
       display: grid;
       grid-template-columns: auto auto;
       grid-auto-columns: auto;
       grid-auto-flow: column;
-      grid-gap: ${spacing.large}px;
+      grid-gap: ${spacing.medium}px;
       align-items: center;
       padding-left: ${spacing.medium}px;
       padding-right: ${spacing.medium}px;

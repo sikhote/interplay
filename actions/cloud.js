@@ -14,15 +14,15 @@ const cloudGetEpic = (action$, { getState }) =>
   action$.ofType('CLOUD_GET').mergeMap(() => {
     const state = getState();
     const settingsCloud = state.settings.cloud;
-    const { key: accessToken, path, profile } = settingsCloud;
+    const { key: accessToken, path, user } = settingsCloud;
     const dropbox = new Dropbox({ accessToken });
     const getCloudState = Observable.from(
       Promise.all([
         dropbox.filesDownload({
-          path: `/${path}/interplay/${profile}/other.json`,
+          path: `/${path}/interplay/${user}/other.json`,
         }),
         dropbox.filesDownload({
-          path: `/${path}/interplay/${profile}/files.json`,
+          path: `/${path}/interplay/${user}/files.json`,
         }),
       ])
         .then(values =>
@@ -53,12 +53,12 @@ const cloudSaveOtherEpic = (action$, { getState }) =>
   action$.ofType('CLOUD_SAVE_OTHER').mergeMap(() => {
     const { settings, cloud } = getState();
     const settingsCloud = settings.cloud;
-    const { key: accessToken, path, profile } = settingsCloud;
+    const { key: accessToken, path, user } = settingsCloud;
     const dropbox = new Dropbox({ accessToken });
     const saveCloudState = Observable.from(
       dropbox.filesUpload({
         contents: JSON.stringify({ settings, cloud }),
-        path: `/${path}/interplay/${profile}/other.json`,
+        path: `/${path}/interplay/${user}/other.json`,
         mode: { '.tag': 'overwrite' },
         mute: true,
       }),
@@ -75,12 +75,12 @@ const cloudSaveFilesEpic = (action$, { getState }) =>
   action$.ofType('CLOUD_SAVE_FILES').mergeMap(() => {
     const { settings, files } = getState();
     const settingsCloud = settings.cloud;
-    const { key: accessToken, path, profile } = settingsCloud;
+    const { key: accessToken, path, user } = settingsCloud;
     const dropbox = new Dropbox({ accessToken });
     const saveCloudState = Observable.from(
       dropbox.filesUpload({
         contents: JSON.stringify(files),
-        path: `/${path}/interplay/${profile}/files.json`,
+        path: `/${path}/interplay/${user}/files.json`,
         mode: { '.tag': 'overwrite' },
         mute: true,
       }),

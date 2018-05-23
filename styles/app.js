@@ -35,7 +35,7 @@ export default css`
       grid-template-rows: 1fr;
 
       .main {
-        grid-template-rows: 80px 1fr;
+        grid-template-rows: auto 1fr;
       }
     }
   }

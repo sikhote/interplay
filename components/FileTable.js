@@ -80,7 +80,7 @@ class FileTable extends React.Component {
               onClick={() => this.goToCurrentPosition()}
               size="small"
             >
-              Go to Current Position
+              Current
             </Button>
           </div>
         </div>

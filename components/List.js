@@ -48,7 +48,7 @@ class List extends React.Component {
       settingsReplaceAndCloudSaveOther,
       filesGetUrl,
       title,
-      header
+      header,
     } = this.props;
     const playerSource = get(settings, 'player.source');
     const { position, sortBy, sortDirection } = settings[source];

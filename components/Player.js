@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import { merge, get, throttle } from 'lodash';
-import { Button, Slider, Switch, Icon } from 'antd';
+import { Button, Slider, Switch, Icon, Tooltip } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import style from '../styles/player';
@@ -58,7 +58,7 @@ class Player extends React.Component {
       filesGetUrl,
     } = this.props;
     const { player } = settings;
-    const { volume, playing, muted, file = {}, loop } = player;
+    const { volume, playing, muted, random, file = {}, loop } = player;
     const { url, album, artist, name, type, category } = file;
 
     const config = {
@@ -86,7 +86,10 @@ class Player extends React.Component {
         }
       },
       onEnded: () =>
-        filesGetUrl({ ...this.getFileInDirection('next'), shouldPlay: true }),
+        filesGetUrl({
+          ...this.getFileInDirection(random ? 'random' : 'next'),
+          shouldPlay: true,
+        }),
       onClick: () => this.setState({ isFullScreen: !isFullScreen }),
     };
 
@@ -106,7 +109,7 @@ class Player extends React.Component {
               icon="backward"
               onClick={() =>
                 filesGetUrl({
-                  ...this.getFileInDirection('previous'),
+                  ...this.getFileInDirection(random ? 'random' : 'previous'),
                   shouldPlay: true,
                 })
               }
@@ -133,25 +136,27 @@ class Player extends React.Component {
               icon="forward"
               onClick={() =>
                 filesGetUrl({
-                  ...this.getFileInDirection('next'),
+                  ...this.getFileInDirection(random ? 'random' : 'next'),
                   shouldPlay: true,
                 })
               }
             />
           </div>
           <div className="control sound">
-            <Icon type="sound" />
-            <Switch
-              size="small"
-              checked={!muted}
-              onChange={() =>
-                settingsReplaceAndCloudSaveOther(
-                  merge({}, settings, {
-                    player: { muted: !muted },
-                  }),
-                )
-              }
-            />
+            <Tooltip placement="top" title="Mute">
+              <Switch
+                checkedChildren={<Icon type="sound" />}
+                unCheckedChildren={<Icon type="sound" />}
+                checked={!muted}
+                onChange={() =>
+                  settingsReplaceAndCloudSaveOther(
+                    merge({}, settings, {
+                      player: { muted: !muted },
+                    }),
+                  )
+                }
+              />
+            </Tooltip>
             <Slider
               value={volume}
               min={0}
@@ -168,18 +173,34 @@ class Player extends React.Component {
             />
           </div>
           <div className="control progress">
-            <Icon type="retweet" />
-            <Switch
-              size="small"
-              checked={loop}
-              onChange={() =>
-                settingsReplaceAndCloudSaveOther(
-                  merge({}, settings, {
-                    player: { loop: !loop },
-                  }),
-                )
-              }
-            />
+            <Tooltip placement="top" title="Loop">
+              <Switch
+                checkedChildren={<Icon type="retweet" />}
+                unCheckedChildren={<Icon type="retweet" />}
+                checked={loop}
+                onChange={() =>
+                  settingsReplaceAndCloudSaveOther(
+                    merge({}, settings, {
+                      player: { loop: !loop },
+                    }),
+                  )
+                }
+              />
+            </Tooltip>
+            <Tooltip placement="top" title="Random">
+              <Switch
+                checkedChildren={<Icon type="question" />}
+                unCheckedChildren={<Icon type="question" />}
+                checked={random}
+                onChange={() =>
+                  settingsReplaceAndCloudSaveOther(
+                    merge({}, settings, {
+                      player: { random: !random },
+                    }),
+                  )
+                }
+              />
+            </Tooltip>
             <Slider
               value={played}
               min={0}
@@ -196,9 +217,9 @@ class Player extends React.Component {
           </div>
           <div className="info">
             {path
-              ? (category ? `${category} - ` : '') +
-                (artist ? `${artist} - ` : '') +
-                (album ? `${album} - ` : '') +
+              ? (category ? `${category} — ` : '') +
+                (artist ? `${artist} — ` : '') +
+                (album ? `${album} — ` : '') +
                 name
               : 'Add credentials and play some media'}
           </div>

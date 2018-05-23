@@ -28,6 +28,7 @@ export const initialState = {
     muted: false,
     playing: false,
     loop: false,
+    random: false,
     file: {},
     played: 0,
     playedSeconds: 0,

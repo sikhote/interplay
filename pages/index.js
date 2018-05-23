@@ -107,7 +107,7 @@ const Settings = ({
               <Button
                 type="primary"
                 shape="circle"
-                icon="retweet"
+                icon="sync"
                 loading={settings.cloud.status === 'syncing'}
                 onClick={() => filesSync()}
               />

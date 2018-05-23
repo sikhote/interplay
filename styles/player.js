@@ -63,16 +63,17 @@ export default css`
       .control {
         display: grid;
         align-items: center;
-        grid-template-columns: auto auto 1fr;
-        grid-gap: ${spacing.medium}px;
+        grid-gap: ${spacing.small}px;
         max-width: 400px;
 
         &.sound {
           grid-area: sound;
+          grid-template-columns: auto 1fr;
         }
 
         &.progress {
           grid-area: progress;
+          grid-template-columns: auto auto 1fr;
         }
       }
 
@@ -99,7 +100,7 @@ export default css`
 
         .control {
           &.sound {
-            max-width: 280px;
+            max-width: 253px;
           }
         }
       }

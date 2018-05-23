@@ -4,7 +4,6 @@ import { spacing } from './base';
 // prettier-ignore
 export default css`
   .root {
-    padding-top: ${spacing.small}px;
     padding-left: ${spacing.medium}px;
     padding-right: ${spacing.medium}px;
     padding-bottom: ${spacing.medium}px;

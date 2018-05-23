@@ -25,7 +25,7 @@ export default css`
       grid-template-rows: 30px 1fr;
 
       .main {
-        grid-template-rows: 122px 1fr;
+        grid-template-rows: auto 1fr;
       }
     }
 

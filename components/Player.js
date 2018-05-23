@@ -103,7 +103,6 @@ class Player extends React.Component {
           <div className="directions">
             <Button
               size="large"
-              disabled={!url}
               type="primary"
               shape="circle"
               icon="backward"
@@ -130,7 +129,6 @@ class Player extends React.Component {
             />
             <Button
               size="large"
-              disabled={!url}
               type="primary"
               shape="circle"
               icon="forward"

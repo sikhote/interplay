@@ -1,92 +1,72 @@
-import { Observable } from 'rxjs/Observable';
 import Dropbox from 'dropbox';
-
-export const cloudGet = () => ({
-  type: 'CLOUD_GET',
-});
+import { message as notifier } from 'antd';
 
 export const cloudGetSuccess = cloudState => ({
   type: 'CLOUD_GET_SUCCESS',
   payload: { cloudState },
 });
 
-const cloudGetEpic = (action$, { getState }) =>
-  action$.ofType('CLOUD_GET').mergeMap(() => {
-    const state = getState();
-    const settingsCloud = state.settings.cloud;
-    const { key: accessToken, path, user } = settingsCloud;
-    const dropbox = new Dropbox({ accessToken });
-    const getCloudState = Observable.from(
-      Promise.all([
-        dropbox.filesDownload({
-          path: `/${path}/interplay/${user}/other.json`,
-        }),
-        dropbox.filesDownload({
-          path: `/${path}/interplay/${user}/files.json`,
-        }),
-      ])
-        .then(values =>
-          Promise.all(
-            values.map(
-              ({ fileBlob }) =>
-                new Promise(resolve => {
-                  const reader = new FileReader();
-                  reader.onload = event =>
-                    resolve(JSON.parse(event.target.result));
-                  reader.readAsText(fileBlob);
-                }),
-            ),
-          ),
-        )
-        .then(values => Promise.resolve({ ...values[0], files: values[1] }))
-        .catch(() => state),
-    );
+export const cloudGet = () => (dispatch, getState) => {
+  const { settings: { cloud: { key: accessToken, path, user } } } = getState();
+  const dropbox = new Dropbox({ accessToken });
 
-    return getCloudState.map(cloudState => cloudGetSuccess(cloudState));
-  });
+  return Promise.all([
+    dropbox.filesDownload({
+      path: `/${path}/interplay/${user}/other.json`,
+    }),
+    dropbox.filesDownload({
+      path: `/${path}/interplay/${user}/files.json`,
+    }),
+  ])
+    .then(values =>
+      Promise.all(
+        values.map(
+          ({ fileBlob }) =>
+            new Promise(resolve => {
+              const reader = new FileReader();
+              reader.onload = event => resolve(JSON.parse(event.target.result));
+              reader.readAsText(fileBlob);
+            }),
+        ),
+      ),
+    )
+    .then(values => Promise.resolve({ ...values[0], files: values[1] }))
+    .then(cloudState => {
+      dispatch(cloudGetSuccess(cloudState));
+      notifier.success('Successfully downloaded from cloud');
+    })
+    .catch(() => notifier.error('Failed to download from cloud'));
+};
 
-export const cloudSaveOther = () => ({
-  type: 'CLOUD_SAVE_OTHER',
-});
+export const cloudSaveOther = () => (dispatch, getState) => {
+  const { settings, cloud } = getState();
+  const { key: accessToken, path, user } = settings.cloud;
+  const dropbox = new Dropbox({ accessToken });
 
-const cloudSaveOtherEpic = (action$, { getState }) =>
-  action$.ofType('CLOUD_SAVE_OTHER').mergeMap(() => {
-    const { settings, cloud } = getState();
-    const settingsCloud = settings.cloud;
-    const { key: accessToken, path, user } = settingsCloud;
-    const dropbox = new Dropbox({ accessToken });
-    const saveCloudState = Observable.from(
-      dropbox.filesUpload({
-        contents: JSON.stringify({ settings, cloud }),
-        path: `/${path}/interplay/${user}/other.json`,
-        mode: { '.tag': 'overwrite' },
-        mute: true,
-      }),
-    );
+  return dropbox
+    .filesUpload({
+      contents: JSON.stringify({ settings, cloud }),
+      path: `/${path}/interplay/${user}/other.json`,
+      mode: { '.tag': 'overwrite' },
+      mute: true,
+    })
+    .catch(() => notifier.error('Failed to save to cloud'));
+};
 
-    return saveCloudState.ignoreElements();
-  });
+export const cloudSaveFiles = () => (dispatch, getState) => {
+  const {
+    settings: { cloud: { key: accessToken, path, user } },
+    files,
+  } = getState();
+  const dropbox = new Dropbox({ accessToken });
 
-export const cloudSaveFiles = () => ({
-  type: 'CLOUD_SAVE_FILES',
-});
-
-const cloudSaveFilesEpic = (action$, { getState }) =>
-  action$.ofType('CLOUD_SAVE_FILES').mergeMap(() => {
-    const { settings, files } = getState();
-    const settingsCloud = settings.cloud;
-    const { key: accessToken, path, user } = settingsCloud;
-    const dropbox = new Dropbox({ accessToken });
-    const saveCloudState = Observable.from(
-      dropbox.filesUpload({
-        contents: JSON.stringify(files),
-        path: `/${path}/interplay/${user}/files.json`,
-        mode: { '.tag': 'overwrite' },
-        mute: true,
-      }),
-    );
-
-    return saveCloudState.ignoreElements();
-  });
-
-export const epics = [cloudGetEpic, cloudSaveOtherEpic, cloudSaveFilesEpic];
+  return dropbox
+    .filesUpload({
+      contents: JSON.stringify(files),
+      path: `/${path}/interplay/${user}/files.json`,
+      mode: { '.tag': 'overwrite' },
+      mute: true,
+    })
+    .then(() => notifier.success('Successfully saved to cloud'))
+    .catch(() => notifier.error('Failed to save to cloud'));
+};

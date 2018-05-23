@@ -13,6 +13,6 @@ play media from the cloud on a browser
 ## commands
 - `yarn watch` to build and watch
 - `yarn export` to build and export static files
-- `yarn prettier` to clean your code
-- `yarn eslint` to check your code is clean
+- `yarn prettier` to clean code
+- `yarn eslint` to check code is clean
 - `yarn server` to start a simple server from a build

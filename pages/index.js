@@ -87,7 +87,9 @@ const Settings = ({
               shape="circle"
               icon="close"
               onClick={() =>
-                settingsReplace(set({ ...settings }, 'cloud.status', 'cancelled'))
+                settingsReplace(
+                  set({ ...settings }, 'cloud.status', 'cancelled'),
+                )
               }
             />
           </Tooltip>

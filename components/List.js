@@ -9,7 +9,7 @@ import {
 import { Input, Icon, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { get, isEqual } from 'lodash';
+import { get } from 'lodash';
 import style from '../styles/list';
 import CustomHead from '../components/CustomHead';
 import getSortedData from '../lib/getSortedData';

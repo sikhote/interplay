@@ -23,14 +23,6 @@ class List extends React.Component {
   state = {
     search: '',
   };
-  componentDidUpdate(prevProps) {
-    const { source, files, settings } = this.props;
-    const playerSource = get(settings, 'player.source');
-
-    if (playerSource !== source && !isEqual(files, prevProps.files)) {
-      this.goToCurrentPosition();
-    }
-  }
   goToCurrentPosition() {
     const { files, settings } = this.props;
     const { player: { file, source } } = settings;
@@ -96,8 +88,8 @@ class List extends React.Component {
                 ref={c => {
                   this.table = c;
                 }}
-                onRowClick={({ rowData: { path } }) =>
-                  filesGetUrl({ source, path, shouldPlay: true })
+                onRowClick={({ index: position, rowData: { path } }) =>
+                  filesGetUrl({ source, path, shouldPlay: true, position })
                 }
                 height={height}
                 headerHeight={30}

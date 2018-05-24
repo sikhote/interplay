@@ -43,22 +43,26 @@ class Player extends React.Component {
       filesGetUrl({ source, path, shouldPlay: true });
     }
   }
-  getFileInDirection(direction) {
-    const { settings, files } = this.props;
-    const source = get(settings, 'player.source');
-    const { path } = getFileInDirection(settings, files, direction);
-    return { source, path };
-  }
   render() {
     const { played, playedSeconds, path, isFullScreen } = this.state;
     const {
+      files,
       settings,
       settingsReplace,
       settingsReplaceAndCloudSaveOther,
       filesGetUrl,
     } = this.props;
     const { player } = settings;
-    const { volume, playing, muted, random, file = {}, loop } = player;
+    const {
+      source,
+      volume,
+      playing,
+      loading,
+      muted,
+      random,
+      file = {},
+      loop,
+    } = player;
     const { url, album, artist, name, type, category } = file;
 
     const config = {
@@ -82,12 +86,18 @@ class Player extends React.Component {
 
         // Get next link once 90% of media is over
         if (playing && played > 0.9) {
-          prepareFile(() => filesGetUrl(this.getFileInDirection('next')));
+          prepareFile(() =>
+            filesGetUrl({
+              source,
+              ...getFileInDirection(settings, files, 'next'),
+            }),
+          );
         }
       },
       onEnded: () =>
         filesGetUrl({
-          ...this.getFileInDirection(random ? 'random' : 'next'),
+          ...getFileInDirection(settings, files, random ? 'random' : 'next'),
+          source,
           shouldPlay: true,
         }),
       onClick: () => this.setState({ isFullScreen: !isFullScreen }),
@@ -108,16 +118,21 @@ class Player extends React.Component {
               icon="backward"
               onClick={() =>
                 filesGetUrl({
-                  ...this.getFileInDirection(random ? 'random' : 'previous'),
+                  ...getFileInDirection(
+                    settings,
+                    files,
+                    random ? 'random' : 'previous',
+                  ),
+                  source,
                   shouldPlay: true,
                 })
               }
             />
             <Button
               size="large"
-              disabled={!url}
               type="primary"
               shape="circle"
+              loading={loading}
               icon={playing ? 'pause' : 'caret-right'}
               onClick={() =>
                 settingsReplaceAndCloudSaveOther(
@@ -134,7 +149,12 @@ class Player extends React.Component {
               icon="forward"
               onClick={() =>
                 filesGetUrl({
-                  ...this.getFileInDirection(random ? 'random' : 'next'),
+                  ...getFileInDirection(
+                    settings,
+                    files,
+                    random ? 'random' : 'next',
+                  ),
+                  source,
                   shouldPlay: true,
                 })
               }
@@ -225,7 +245,7 @@ class Player extends React.Component {
       </div>
     );
   }
-} // ${artist} - ${album} - ${name}
+}
 
 Player.propTypes = {
   files: PropTypes.object.isRequired,

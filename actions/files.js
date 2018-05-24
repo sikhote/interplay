@@ -14,16 +14,21 @@ export const filesUpdate = payload => ({
 
 export const filesGetUrl = payload => (dispatch, getState) => {
   const { source, path: filePath, shouldPlay } = payload;
-  const state = getState();
-  const { settings, files } = state;
-  const file = files[source].find(file => file.path === filePath);
-  const getNewSettings = (file, playing) => ({
+  const { settings, files } = getState();
+  const fileIndex = files[source].findIndex(file => file.path === filePath);
+  const file = files[source][fileIndex];
+  const getNewSettings = (file, loading) => ({
     ...settings,
+    [source]: {
+      ...settings[source],
+      position: fileIndex,
+    },
     player: {
       ...settings.player,
       source,
       file,
-      playing,
+      playing: true,
+      loading,
     },
   });
 
@@ -33,16 +38,16 @@ export const filesGetUrl = payload => (dispatch, getState) => {
     moment(file.urlDate).isAfter(moment().subtract(3, 'hours'))
   ) {
     if (shouldPlay) {
-      dispatch(settingsReplace(getNewSettings(file, true)));
+      dispatch(settingsReplace(getNewSettings(file, false)));
       dispatch(cloudSaveOther());
     }
 
     return Promise.resolve();
   }
 
-  // Update state to indicate song was selected before URL is retrieved
+  // Update state to indicate song was selected and URL is loading
   if (shouldPlay) {
-    dispatch(settingsReplace(getNewSettings(file, false)));
+    dispatch(settingsReplace(getNewSettings(file, true)));
   }
 
   const accessToken = settings.cloud.key;
@@ -62,7 +67,7 @@ export const filesGetUrl = payload => (dispatch, getState) => {
       dispatch(filesUpdate({ file, source }));
 
       if (shouldPlay) {
-        dispatch(settingsReplace(getNewSettings(file, true)));
+        dispatch(settingsReplace(getNewSettings(file, false)));
         dispatch(cloudSaveOther());
       }
     })

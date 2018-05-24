@@ -14,12 +14,12 @@ export const initialState = {
     status: undefined,
   },
   audio: {
-    scrollPosition: 0,
+    position: 0,
     sortBy: 'artist',
     sortDirection: true,
   },
   video: {
-    scrollPosition: 0,
+    position: 0,
     sortBy: 'name',
     sortDirection: true,
   },

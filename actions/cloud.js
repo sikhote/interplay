@@ -1,5 +1,6 @@
 import Dropbox from 'dropbox';
 import { message as notifier } from 'antd';
+import { throttle } from 'lodash';
 
 export const cloudGetSuccess = cloudState => ({
   type: 'CLOUD_GET_SUCCESS',
@@ -38,26 +39,27 @@ export const cloudGet = () => (dispatch, getState) => {
     .catch(() => notifier.error('Failed to download from cloud'));
 };
 
-export const cloudSaveOther = () => (dispatch, getState) => {
-  const { settings, cloud } = getState();
-  const { key: accessToken, path, user } = settings.cloud;
-  const dropbox = new Dropbox({ accessToken });
+const throttledCloudSaveOther = throttle(callback => callback(), 300000, {
+  trailing: true,
+});
 
-  return dropbox
-    .filesUpload({
-      contents: JSON.stringify({ settings, cloud }),
-      path: `/${path}/interplay/${user}/other.json`,
-      mode: { '.tag': 'overwrite' },
-      mute: true,
-    })
-    .catch(() => notifier.error('Failed to save to cloud'));
-};
+export const cloudSaveOther = ({ settings, cloud }) => () =>
+  throttledCloudSaveOther(() => {
+    const { key: accessToken, path, user } = settings.cloud;
+    const dropbox = new Dropbox({ accessToken });
 
-export const cloudSaveFiles = () => (dispatch, getState) => {
-  const {
-    settings: { cloud: { key: accessToken, path, user } },
-    files,
-  } = getState();
+    dropbox
+      .filesUpload({
+        contents: JSON.stringify({ settings, cloud }),
+        path: `/${path}/interplay/${user}/other.json`,
+        mode: { '.tag': 'overwrite' },
+        mute: true,
+      })
+      .catch(() => notifier.error('Failed to save to cloud'));
+  });
+
+export const cloudSaveFiles = files => (dispatch, getState) => {
+  const { settings: { cloud: { key: accessToken, path, user } } } = getState();
   const dropbox = new Dropbox({ accessToken });
 
   return dropbox

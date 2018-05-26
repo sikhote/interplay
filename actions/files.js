@@ -5,7 +5,7 @@ import Promise from 'bluebird';
 import moment from 'moment';
 import { getFileType } from '../lib/files';
 import { settingsReplace } from './settings';
-import { cloudSaveFiles, cloudSaveOther } from './cloud';
+import { cloudSaveFiles } from './cloud';
 
 export const filesUpdate = payload => ({
   type: 'FILES_UPDATE',
@@ -39,7 +39,6 @@ export const filesGetUrl = payload => (dispatch, getState) => {
   ) {
     if (shouldPlay) {
       dispatch(settingsReplace(getNewSettings(file, false)));
-      dispatch(cloudSaveOther());
     }
 
     return Promise.resolve();
@@ -68,7 +67,6 @@ export const filesGetUrl = payload => (dispatch, getState) => {
 
       if (shouldPlay) {
         dispatch(settingsReplace(getNewSettings(file, false)));
-        dispatch(cloudSaveOther());
       }
     })
     .catch(() => notifier.error('Failed to get steaming URL'));
@@ -168,7 +166,7 @@ export const filesSync = () => (dispatch, getState) => {
       // Start using new files
       dispatch(filesReplace(files));
 
-      // Signal that syncing was successful
+      // Signal that syncing was successful (saves to cloud too)
       dispatch(
         settingsReplace(
           set({ ...getState().settings }, 'cloud', {
@@ -179,9 +177,8 @@ export const filesSync = () => (dispatch, getState) => {
         ),
       );
 
-      // Save states to cloud
-      dispatch(cloudSaveOther());
-      dispatch(cloudSaveFiles());
+      // Save files to cloud
+      dispatch(cloudSaveFiles(files));
 
       notifier.success('Synced files successfully');
     })

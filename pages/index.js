@@ -120,7 +120,7 @@ const Settings = ({
                 type="primary"
                 shape="circle"
                 icon="cloud-upload"
-                onClick={() => cloudSaveOther()}
+                onClick={() => cloudSaveOther({ settings, cloud })}
               />
             </Tooltip>
           )}
@@ -162,7 +162,7 @@ export default connect(
   dispatch => ({
     settingsReplace: settings => dispatch(settingsReplace(settings)),
     filesSync: () => dispatch(filesSync()),
-    cloudSaveOther: () => dispatch(cloudSaveOther()),
+    cloudSaveOther: payload => dispatch(cloudSaveOther(payload)),
     cloudGet: () => dispatch(cloudGet()),
   }),
 )(Settings);

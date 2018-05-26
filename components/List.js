@@ -13,7 +13,6 @@ import { get } from 'lodash';
 import style from '../styles/list';
 import CustomHead from '../components/CustomHead';
 import getSortedData from '../lib/getSortedData';
-import { cloudSaveOther } from '../actions/cloud';
 import { settingsReplace } from '../actions/settings';
 import { filesGetUrl } from '../actions/files';
 import fileColumns from '../lib/fileColumns';
@@ -37,7 +36,7 @@ class List extends React.Component {
       source,
       files,
       settings,
-      settingsReplaceAndCloudSaveOther,
+      settingsReplace,
       filesGetUrl,
       title,
       header,
@@ -118,7 +117,7 @@ class List extends React.Component {
                   )}`
                 }}
                 sort={({ sortBy, sortDirection }) =>
-                  settingsReplaceAndCloudSaveOther({
+                  settingsReplace({
                     ...settings,
                     [source]: {
                       ...settings[source],
@@ -153,7 +152,7 @@ List.propTypes = {
   source: PropTypes.string.isRequired,
   files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
-  settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
+  settingsReplace: PropTypes.func.isRequired,
   filesGetUrl: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   header: PropTypes.string.isRequired,
@@ -162,10 +161,7 @@ List.propTypes = {
 export default connect(
   ({ files, settings }) => ({ files, settings }),
   dispatch => ({
-    settingsReplaceAndCloudSaveOther: payload => {
-      dispatch(settingsReplace(payload));
-      dispatch(cloudSaveOther());
-    },
+    settingsReplace: payload => dispatch(settingsReplace(payload)),
     filesGetUrl: payload => dispatch(filesGetUrl(payload)),
   }),
 )(List);

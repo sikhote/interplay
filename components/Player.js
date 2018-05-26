@@ -7,7 +7,6 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 import style from '../styles/player';
 import getFileInDirection from '../lib/getFileInDirection';
-import { cloudSaveOther } from '../actions/cloud';
 import { settingsReplace } from '../actions/settings';
 import { filesGetUrl } from '../actions/files';
 
@@ -45,13 +44,7 @@ class Player extends React.Component {
   }
   render() {
     const { played, playedSeconds, path, isFullScreen } = this.state;
-    const {
-      files,
-      settings,
-      settingsReplace,
-      settingsReplaceAndCloudSaveOther,
-      filesGetUrl,
-    } = this.props;
+    const { files, settings, settingsReplace, filesGetUrl } = this.props;
     const { player } = settings;
     const {
       source,
@@ -135,7 +128,7 @@ class Player extends React.Component {
               loading={loading}
               icon={playing ? 'pause' : 'caret-right'}
               onClick={() =>
-                settingsReplaceAndCloudSaveOther(
+                settingsReplace(
                   merge({}, settings, {
                     player: { playing: !playing },
                   }),
@@ -165,9 +158,9 @@ class Player extends React.Component {
               <Switch
                 checkedChildren={<Icon type="sound" />}
                 unCheckedChildren={<Icon type="sound" />}
-                checked={!muted}
+                checked={muted}
                 onChange={() =>
-                  settingsReplaceAndCloudSaveOther(
+                  settingsReplace(
                     merge({}, settings, {
                       player: { muted: !muted },
                     }),
@@ -197,7 +190,7 @@ class Player extends React.Component {
                 unCheckedChildren={<Icon type="retweet" />}
                 checked={loop}
                 onChange={() =>
-                  settingsReplaceAndCloudSaveOther(
+                  settingsReplace(
                     merge({}, settings, {
                       player: { loop: !loop },
                     }),
@@ -211,7 +204,7 @@ class Player extends React.Component {
                 unCheckedChildren={<Icon type="question" />}
                 checked={random}
                 onChange={() =>
-                  settingsReplaceAndCloudSaveOther(
+                  settingsReplace(
                     merge({}, settings, {
                       player: { random: !random },
                     }),
@@ -251,17 +244,12 @@ Player.propTypes = {
   files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
-  settingsReplaceAndCloudSaveOther: PropTypes.func.isRequired,
   filesGetUrl: PropTypes.func.isRequired,
 };
 
 export default connect(
   ({ files, settings }) => ({ files, settings }),
   dispatch => ({
-    settingsReplaceAndCloudSaveOther: payload => {
-      dispatch(settingsReplace(payload));
-      dispatch(cloudSaveOther());
-    },
     settingsReplace: payload => dispatch(settingsReplace(payload)),
     filesGetUrl: payload => dispatch(filesGetUrl(payload)),
   }),

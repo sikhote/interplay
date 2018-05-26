@@ -24,7 +24,9 @@ class List extends React.Component {
   };
   goToCurrentPosition() {
     const { files, settings } = this.props;
-    const { player: { file, source } } = settings;
+    const {
+      player: { file, source },
+    } = settings;
     const { sortBy, sortDirection } = settings[source];
     const data = files[source];
     const sortedData = getSortedData(data, sortBy, sortDirection);
@@ -52,7 +54,11 @@ class List extends React.Component {
         )
       : files[source];
     const sortedData = getSortedData(searchedData, sortBy, sortDirection);
-    const { player: { file: { path: currentPath } } } = settings;
+    const {
+      player: {
+        file: { path: currentPath },
+      },
+    } = settings;
 
     return (
       <div className="root">
@@ -94,7 +100,10 @@ class List extends React.Component {
                 headerHeight={30}
                 noRowsRenderer={() => <div className="no-files">No files</div>}
                 rowRenderer={arg => {
-                  const { rowData: { path }, className } = arg;
+                  const {
+                    rowData: { path },
+                    className,
+                  } = arg;
                   const newClassName = `${className} ${
                     path === currentPath ? 'active' : ''
                   }`;

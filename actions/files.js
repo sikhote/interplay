@@ -166,7 +166,7 @@ export const filesSync = () => (dispatch, getState) => {
       // Start using new files
       dispatch(filesReplace(files));
 
-      // Signal that syncing was successful (saves to cloud too)
+      // Signal that syncing was successful
       dispatch(
         settingsReplace(
           set({ ...getState().settings }, 'cloud', {

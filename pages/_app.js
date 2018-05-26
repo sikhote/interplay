@@ -36,10 +36,14 @@ class ReduxApp extends App {
     this.tryCloudGet();
   }
   tryCloudGet() {
-    const { store: { dispatch, getState } } = this.props;
+    const {
+      store: { dispatch, getState },
+    } = this.props;
     const {
       cloud: { hasCloudStore },
-      settings: { cloud: { key, path } },
+      settings: {
+        cloud: { key, path },
+      },
     } = getState();
 
     if (!hasCloudStore && key && path) {

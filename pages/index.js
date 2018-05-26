@@ -160,7 +160,7 @@ Settings.propTypes = {
 export default connect(
   ({ settings, cloud }) => ({ settings, cloud }),
   dispatch => ({
-    settingsReplace: settings => dispatch(settingsReplace(settings)),
+    settingsReplace: payload => dispatch(settingsReplace(payload)),
     filesSync: () => dispatch(filesSync()),
     cloudSaveOther: payload => dispatch(cloudSaveOther(payload)),
     cloudGet: () => dispatch(cloudGet()),

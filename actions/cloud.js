@@ -8,7 +8,11 @@ export const cloudGetSuccess = cloudState => ({
 });
 
 export const cloudGet = () => (dispatch, getState) => {
-  const { settings: { cloud: { key: accessToken, path, user } } } = getState();
+  const {
+    settings: {
+      cloud: { key: accessToken, path, user },
+    },
+  } = getState();
   const dropbox = new Dropbox({ accessToken });
 
   return Promise.all([
@@ -59,7 +63,11 @@ export const cloudSaveOther = ({ settings, cloud }) => () =>
   });
 
 export const cloudSaveFiles = files => (dispatch, getState) => {
-  const { settings: { cloud: { key: accessToken, path, user } } } = getState();
+  const {
+    settings: {
+      cloud: { key: accessToken, path, user },
+    },
+  } = getState();
   const dropbox = new Dropbox({ accessToken });
 
   return dropbox

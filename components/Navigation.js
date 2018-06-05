@@ -2,9 +2,12 @@ import React from 'react';
 import { Menu, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
+import { connect } from 'react-redux';
 import WindowSizeListener from 'react-window-size-listener';
 import { bps } from '../styles/base';
 import style from '../styles/navigation';
+import { playlistsAdd } from '../actions/playlists';
+import { titleToSlug } from '../lib/playlists';
 
 class Navigation extends React.Component {
   constructor(props) {
@@ -14,7 +17,10 @@ class Navigation extends React.Component {
     };
   }
   render() {
-    const { router } = this.props;
+    const {
+      router,
+      playlists: { playlists },
+    } = this.props;
     const { width } = this.state;
 
     return (
@@ -38,6 +44,11 @@ class Navigation extends React.Component {
               <Icon type={icon} /> <span>{message}</span>
             </Menu.Item>
           ))}
+          {playlists.map(({ title }) => (
+            <Menu.Item key={`/playlists/${titleToSlug(title)}`}>
+              <Icon type="bars" /> <span>{title}</span>
+            </Menu.Item>
+          ))}
         </Menu>
       </div>
     );
@@ -46,6 +57,14 @@ class Navigation extends React.Component {
 
 Navigation.propTypes = {
   router: PropTypes.object.isRequired,
+  playlists: PropTypes.object.isRequired,
 };
 
-export default withRouter(Navigation);
+export default withRouter(
+  connect(
+    ({ playlists }) => ({ playlists }),
+    dispatch => ({
+      playlistsAdd: payload => dispatch(playlistsAdd(payload)),
+    }),
+  )(Navigation),
+);

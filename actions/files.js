@@ -178,7 +178,7 @@ export const filesSync = () => (dispatch, getState) => {
       );
 
       // Save files to cloud
-      dispatch(cloudSaveFiles(files));
+      dispatch(cloudSaveFiles());
 
       notifier.success('Synced files successfully');
     })

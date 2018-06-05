@@ -22,6 +22,9 @@ export const cloudGet = () => (dispatch, getState) => {
     dropbox.filesDownload({
       path: `/${path}/interplay/${user}/files.json`,
     }),
+    dropbox.filesDownload({
+      path: `/${path}/interplay/${user}/playlists.json`,
+    }),
   ])
     .then(values =>
       Promise.all(
@@ -35,7 +38,9 @@ export const cloudGet = () => (dispatch, getState) => {
         ),
       ),
     )
-    .then(values => Promise.resolve({ ...values[0], files: values[1] }))
+    .then(values =>
+      Promise.resolve({ ...values[0], files: values[1], playlists: values[2] }),
+    )
     .then(cloudState => {
       dispatch(cloudGetSuccess(cloudState));
       notifier.success('Successfully downloaded from cloud');
@@ -47,8 +52,9 @@ const throttledCloudSaveOther = throttle(callback => callback(), 300000, {
   trailing: true,
 });
 
-export const cloudSaveOther = ({ settings, cloud }) => () =>
+export const cloudSaveOther = () => (dispatch, getState) =>
   throttledCloudSaveOther(() => {
+    const { settings, cloud } = getState();
     const { key: accessToken, path, user } = settings.cloud;
     const dropbox = new Dropbox({ accessToken });
 
@@ -62,11 +68,12 @@ export const cloudSaveOther = ({ settings, cloud }) => () =>
       .catch(() => notifier.error('Failed to save to cloud'));
   });
 
-export const cloudSaveFiles = files => (dispatch, getState) => {
+export const cloudSaveFiles = () => (dispatch, getState) => {
   const {
     settings: {
       cloud: { key: accessToken, path, user },
     },
+    files,
   } = getState();
   const dropbox = new Dropbox({ accessToken });
 
@@ -80,3 +87,27 @@ export const cloudSaveFiles = files => (dispatch, getState) => {
     .then(() => notifier.success('Successfully saved to cloud'))
     .catch(() => notifier.error('Failed to save to cloud'));
 };
+
+const throttledCloudSavePlaylists = throttle(callback => callback(), 60000, {
+  trailing: true,
+});
+
+export const cloudSavePlaylists = () => (dispatch, getState) =>
+  throttledCloudSavePlaylists(() => {
+    const {
+      settings: {
+        cloud: { key: accessToken, path, user },
+      },
+      playlists,
+    } = getState();
+    const dropbox = new Dropbox({ accessToken });
+
+    dropbox
+      .filesUpload({
+        contents: JSON.stringify(playlists),
+        path: `/${path}/interplay/${user}/playlists.json`,
+        mode: { '.tag': 'overwrite' },
+        mute: true,
+      })
+      .catch(() => notifier.error('Failed to save to cloud'));
+  });

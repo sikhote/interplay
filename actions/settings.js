@@ -1,11 +1,7 @@
 import { cloudSaveOther } from '../actions/cloud';
 
-export const settingsReplace = settings => (dispatch, getState) => {
-  const { cloud } = getState();
-
+export const settingsReplace = settings => dispatch =>
   dispatch({
     type: 'SETTINGS_REPLACE',
     payload: { settings },
-  });
-  dispatch(cloudSaveOther({ settings, cloud }));
-};
+  }).then(() => dispatch(cloudSaveOther()));

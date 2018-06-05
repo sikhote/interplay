@@ -3,8 +3,8 @@ const initialState = {
     {
       created: Date.now(),
       title: 'Gimme More',
-      tracks: []
-    }
+      tracks: [],
+    },
   ],
 };
 

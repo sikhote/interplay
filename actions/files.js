@@ -115,49 +115,51 @@ export const filesSync = () => (dispatch, getState) => {
     list: { path, recursive: true },
     entries: [],
   })
-    .then(entries => entries.reduce(
-      (files, entry) => {
-        if (entry['.tag'] === 'file') {
-          const filePath = entry.path_lower.replace(`${path}/`, '');
-          const parts = filePath.split('/');
-          const fileName = parts.pop().split('.');
-          const fileExt = fileName.pop();
-          const type = parts[0] === 'videos' ? 'video' : getFileType(fileExt);
-          let name = startCase(fileName.join('.'));
-          let track = null;
+    .then(entries =>
+      entries.reduce(
+        (files, entry) => {
+          if (entry['.tag'] === 'file') {
+            const filePath = entry.path_lower.replace(`${path}/`, '');
+            const parts = filePath.split('/');
+            const fileName = parts.pop().split('.');
+            const fileExt = fileName.pop();
+            const type = parts[0] === 'videos' ? 'video' : getFileType(fileExt);
+            let name = startCase(fileName.join('.'));
+            let track = null;
 
-          if (/^[0-9]{2}[" "]/.test(name)) {
-            track = Number(name.substring(0, 2));
-            name = name.substring(3);
+            if (/^[0-9]{2}[" "]/.test(name)) {
+              track = Number(name.substring(0, 2));
+              name = name.substring(3);
+            }
+
+            if (type === 'audio') {
+              files.audio.push({
+                album: startCase(parts.pop()),
+                artist: startCase(parts.pop()),
+                name,
+                path: filePath,
+                track,
+                link: null,
+                linkDate: null,
+                type,
+              });
+            } else if (type === 'video') {
+              files.video.push({
+                name: startCase(fileName.join('.')),
+                category: parts.length > 1 ? startCase(last(parts)) : '',
+                path: filePath,
+                link: null,
+                linkDate: null,
+                type,
+              });
+            }
           }
 
-          if (type === 'audio') {
-            files.audio.push({
-              album: startCase(parts.pop()),
-              artist: startCase(parts.pop()),
-              name,
-              path: filePath,
-              track,
-              link: null,
-              linkDate: null,
-              type,
-            });
-          } else if (type === 'video') {
-            files.video.push({
-              name: startCase(fileName.join('.')),
-              category: parts.length > 1 ? startCase(last(parts)) : '',
-              path: filePath,
-              link: null,
-              linkDate: null,
-              type,
-            });
-          }
-        }
-
-        return files;
-      },
-      { audio: [], video: [] },
-    ))
+          return files;
+        },
+        { audio: [], video: [] },
+      ),
+    )
     .then(files => {
       // Start using new files
       dispatch(filesReplace(files));

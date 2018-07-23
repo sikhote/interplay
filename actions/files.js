@@ -1,7 +1,6 @@
 import { startCase, set, has, last } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
-import Promise from 'bluebird';
 import moment from 'moment';
 import { getFileType } from '../lib/files';
 import { settingsReplace } from './settings';
@@ -94,31 +93,29 @@ export const filesSync = () => (dispatch, getState) => {
     ),
   );
 
-  return Promise.coroutine(function* co() {
-    const getEntries = options => {
-      const listPromise = options.cursor
-        ? dropbox.filesListFolderContinue({ cursor: options.cursor })
-        : dropbox.filesListFolder(options.list);
+  const getEntries = options => {
+    const listPromise = options.cursor
+      ? dropbox.filesListFolderContinue({ cursor: options.cursor })
+      : dropbox.filesListFolder(options.list);
 
-      return listPromise.then(response => {
-        options.entries.push(...response.entries);
+    return listPromise.then(response => {
+      options.entries.push(...response.entries);
 
-        if (getState().settings.cloud.status === 'cancelled') {
-          return Promise.reject(new Error('cancelled'));
-        }
+      if (getState().settings.cloud.status === 'cancelled') {
+        return Promise.reject(new Error('cancelled'));
+      }
 
-        return response.has_more
-          ? getEntries({ ...options, cursor: response.cursor })
-          : options.entries;
-      });
-    };
-
-    const entries = yield getEntries({
-      list: { path, recursive: true },
-      entries: [],
+      return response.has_more
+        ? getEntries({ ...options, cursor: response.cursor })
+        : options.entries;
     });
+  };
 
-    return entries.reduce(
+  return getEntries({
+    list: { path, recursive: true },
+    entries: [],
+  })
+    .then(entries => entries.reduce(
       (files, entry) => {
         if (entry['.tag'] === 'file') {
           const filePath = entry.path_lower.replace(`${path}/`, '');
@@ -160,8 +157,7 @@ export const filesSync = () => (dispatch, getState) => {
         return files;
       },
       { audio: [], video: [] },
-    );
-  })
+    ))
     .then(files => {
       // Start using new files
       dispatch(filesReplace(files));

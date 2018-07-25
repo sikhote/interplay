@@ -9,19 +9,65 @@ import {
 import { Input, Icon, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'next/router';
+import moment from 'moment';
 import { get } from 'lodash';
 import style from '../styles/list';
 import CustomHead from '../components/CustomHead';
 import getSortedData from '../lib/getSortedData';
 import { settingsReplace } from '../actions/settings';
 import { filesGetUrl } from '../actions/files';
-import fileColumns from '../lib/fileColumns';
-import fileSearchKeys from '../lib/fileSearchKeys';
+import listColumns from '../lib/listColumns';
+import listSearchKeys from '../lib/listSearchKeys';
+import { titleToSlug } from '../lib/playlists';
 
 class List extends React.Component {
   state = {
     search: '',
   };
+  onRowClick(arg) {
+    const position = get(arg, 'index');
+    const path = get(arg, 'rowData.path');
+    const {
+      source,
+      playlists: { playlists },
+      filesGetUrl,
+      router,
+    } = this.props;
+
+    switch (source) {
+      case 'playlists': {
+        const slug = titleToSlug(get(playlists, `[${position}].name`));
+        router.push(`/playlists/${slug}`);
+        break;
+      }
+      case 'playlist': {
+        console.log('helllo play me');
+        break;
+      }
+      default:
+        filesGetUrl({ source, path, shouldPlay: true, position });
+    }
+  }
+  getRowRenderer(arg) {
+    const { settings, source } = this.props;
+    const currentPath = get(settings, 'player.file.path');
+    const path = get(arg, 'rowData.path');
+    const className = get(arg, 'className');
+    const newClassName = `${className} ${path === currentPath ? 'active' : ''}`;
+
+    switch (source) {
+      case 'playlists':
+        return defaultTableRowRenderer(arg);
+      case 'playlist':
+        return defaultTableRowRenderer(arg);
+      default:
+        return defaultTableRowRenderer({
+          ...arg,
+          className: newClassName,
+        });
+    }
+  }
   goToCurrentPosition() {
     const { files, settings } = this.props;
     const {
@@ -37,28 +83,52 @@ class List extends React.Component {
     const {
       source,
       files,
+      playlists: { playlists },
       settings,
       settingsReplace,
-      filesGetUrl,
       title,
       header,
     } = this.props;
     const playerSource = get(settings, 'player.source');
-    const { position, sortBy, sortDirection } = settings[source];
     const { search } = this.state;
+    let position;
+    let sortBy;
+    let sortDirection;
+    let data;
+
+    switch (source) {
+      case 'playlists':
+        data = playlists.map(({ created, updated, tracks, ...rest }) => ({
+          ...rest,
+          created: moment(created).format('YYYY-M-D'),
+          updated: moment(updated).format('YYYY-M-D'),
+          tracks: tracks.length,
+        }));
+        ({ position, sortBy, sortDirection } = this.state);
+        break;
+      case 'playlist':
+        data = [];
+        ({ position, sortBy, sortDirection } = this.state);
+        break;
+      default: {
+        data = files[source];
+        ({ position, sortBy, sortDirection } = get(
+          settings,
+          `[${source}]`,
+          {},
+        ));
+      }
+    }
+
     const searchedData = search
-      ? files[source].filter(file =>
-          fileSearchKeys[source].find(
-            key => file[key].toLowerCase().indexOf(search.toLowerCase()) !== -1,
+      ? data.filter(entry =>
+          listSearchKeys[source].find(
+            key =>
+              entry[key].toLowerCase().indexOf(search.toLowerCase()) !== -1,
           ),
         )
-      : files[source];
+      : data;
     const sortedData = getSortedData(searchedData, sortBy, sortDirection);
-    const {
-      player: {
-        file: { path: currentPath },
-      },
-    } = settings;
 
     return (
       <div className="root">
@@ -75,16 +145,18 @@ class List extends React.Component {
               onChange={e => this.setState({ search: e.target.value })}
             />
           </div>
-          <div>
-            <Button
-              disabled={playerSource !== source}
-              icon="compass"
-              onClick={() => this.goToCurrentPosition()}
-              size="small"
-            >
-              Current
-            </Button>
-          </div>
+          {(source === 'video' || source === 'audio') && (
+            <div>
+              <Button
+                disabled={playerSource !== source}
+                icon="compass"
+                onClick={() => this.goToCurrentPosition()}
+                size="small"
+              >
+                Current
+              </Button>
+            </div>
+          )}
         </div>
         <div className="table">
           <AutoSizer>
@@ -93,25 +165,11 @@ class List extends React.Component {
                 ref={c => {
                   this.table = c;
                 }}
-                onRowClick={({ index: position, rowData: { path } }) =>
-                  filesGetUrl({ source, path, shouldPlay: true, position })
-                }
+                onRowClick={arg => this.onRowClick(arg)}
                 height={height}
                 headerHeight={30}
-                noRowsRenderer={() => <div className="no-files">No files</div>}
-                rowRenderer={arg => {
-                  const {
-                    rowData: { path },
-                    className,
-                  } = arg;
-                  const newClassName = `${className} ${
-                    path === currentPath ? 'active' : ''
-                  }`;
-                  return defaultTableRowRenderer({
-                    ...arg,
-                    className: newClassName,
-                  });
-                }}
+                noRowsRenderer={() => <div className="no-data">No rows!</div>}
+                rowRenderer={arg => this.getRowRenderer(arg)}
                 rowCount={sortedData.length}
                 rowGetter={({ index }) => sortedData[index]}
                 rowHeight={26}
@@ -120,7 +178,7 @@ class List extends React.Component {
                 rowStyle={{
                   // prettier-ignore
                   grid: `none / ${
-                  fileColumns[source].reduce(
+                  listColumns[source].reduce(
                     (a, v) => a + (v.width ? ` ${v.width}px` : ' 1fr'),
                     '',
                   )}`
@@ -140,7 +198,7 @@ class List extends React.Component {
                   sortDirection ? SortDirection.ASC : SortDirection.DESC
                 }
               >
-                {fileColumns[source].map(({ title, dataKey, width }) => (
+                {listColumns[source].map(({ title, dataKey, width }) => (
                   <Column
                     key={title}
                     label={title}
@@ -160,17 +218,21 @@ class List extends React.Component {
 List.propTypes = {
   source: PropTypes.string.isRequired,
   files: PropTypes.object.isRequired,
+  playlists: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
   filesGetUrl: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   header: PropTypes.string.isRequired,
+  router: PropTypes.object.isRequired,
 };
 
-export default connect(
-  ({ files, settings }) => ({ files, settings }),
-  dispatch => ({
-    settingsReplace: payload => dispatch(settingsReplace(payload)),
-    filesGetUrl: payload => dispatch(filesGetUrl(payload)),
-  }),
-)(List);
+export default withRouter(
+  connect(
+    ({ files, settings, playlists }) => ({ files, settings, playlists }),
+    dispatch => ({
+      settingsReplace: payload => dispatch(settingsReplace(payload)),
+      filesGetUrl: payload => dispatch(filesGetUrl(payload)),
+    }),
+  )(List),
+);

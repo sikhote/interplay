@@ -102,7 +102,7 @@ export default css`
       background: ${transparentize(0.8, colors.blue)};
     }
 
-    :global(.no-files) {
+    :global(.no-data) {
       padding-left: ${spacing.medium}px;
       padding-right: ${spacing.medium}px;
       padding-bottom: ${spacing.small}px;

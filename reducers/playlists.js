@@ -2,7 +2,14 @@ const initialState = {
   playlists: [
     {
       created: Date.now(),
-      title: 'Gimme More',
+      updated: Date.now(),
+      name: 'Gimme More',
+      tracks: [],
+    },
+    {
+      created: 1529470943807,
+      updated: 1529470943807,
+      name: 'Buy Me Tacos',
       tracks: [],
     },
   ],

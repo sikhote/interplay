@@ -39,14 +39,14 @@ class Navigation extends React.Component {
             { key: '/', icon: 'setting', message: 'Settings' },
             { key: '/audio', icon: 'sound', message: 'Audio' },
             { key: '/video', icon: 'video-camera', message: 'Video' },
-          ].map(({ key, icon, message }) => (
-            <Menu.Item key={key}>
-              <Icon type={icon} /> <span>{message}</span>
-            </Menu.Item>
-          ))}
-          {playlists.map(({ title }) => (
-            <Menu.Item key={`/playlists/${titleToSlug(title)}`}>
-              <Icon type="bars" /> <span>{title}</span>
+            ].map(({ key, icon, message }) => (
+              <Menu.Item key={key}>
+                <Icon type={icon} /> <span>{message}</span>
+              </Menu.Item>
+            ))}
+          {playlists.map(({ name }) => (
+            <Menu.Item key={`/playlists/${titleToSlug(name)}`}>
+              <Icon type="bars" /> <span>{name}</span>
             </Menu.Item>
           ))}
         </Menu>

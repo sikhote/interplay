@@ -1,7 +1,6 @@
 import { startCase, set, has, last } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
-import Promise from 'bluebird';
 import moment from 'moment';
 import { getFileType } from '../lib/files';
 import { settingsReplace } from './settings';
@@ -94,74 +93,73 @@ export const filesSync = () => (dispatch, getState) => {
     ),
   );
 
-  return Promise.coroutine(function* co() {
-    const getEntries = options => {
-      const listPromise = options.cursor
-        ? dropbox.filesListFolderContinue({ cursor: options.cursor })
-        : dropbox.filesListFolder(options.list);
+  const getEntries = options => {
+    const listPromise = options.cursor
+      ? dropbox.filesListFolderContinue({ cursor: options.cursor })
+      : dropbox.filesListFolder(options.list);
 
-      return listPromise.then(response => {
-        options.entries.push(...response.entries);
+    return listPromise.then(response => {
+      options.entries.push(...response.entries);
 
-        if (getState().settings.cloud.status === 'cancelled') {
-          return Promise.reject(new Error('cancelled'));
-        }
+      if (getState().settings.cloud.status === 'cancelled') {
+        return Promise.reject(new Error('cancelled'));
+      }
 
-        return response.has_more
-          ? getEntries({ ...options, cursor: response.cursor })
-          : options.entries;
-      });
-    };
-
-    const entries = yield getEntries({
-      list: { path, recursive: true },
-      entries: [],
+      return response.has_more
+        ? getEntries({ ...options, cursor: response.cursor })
+        : options.entries;
     });
+  };
 
-    return entries.reduce(
-      (files, entry) => {
-        if (entry['.tag'] === 'file') {
-          const filePath = entry.path_lower.replace(`${path}/`, '');
-          const parts = filePath.split('/');
-          const fileName = parts.pop().split('.');
-          const fileExt = fileName.pop();
-          const type = parts[0] === 'videos' ? 'video' : getFileType(fileExt);
-          let name = startCase(fileName.join('.'));
-          let track = null;
-
-          if (/^[0-9]{2}[" "]/.test(name)) {
-            track = Number(name.substring(0, 2));
-            name = name.substring(3);
-          }
-
-          if (type === 'audio') {
-            files.audio.push({
-              album: startCase(parts.pop()),
-              artist: startCase(parts.pop()),
-              name,
-              path: filePath,
-              track,
-              link: null,
-              linkDate: null,
-              type,
-            });
-          } else if (type === 'video') {
-            files.video.push({
-              name: startCase(fileName.join('.')),
-              category: parts.length > 1 ? startCase(last(parts)) : '',
-              path: filePath,
-              link: null,
-              linkDate: null,
-              type,
-            });
-          }
-        }
-
-        return files;
-      },
-      { audio: [], video: [] },
-    );
+  return getEntries({
+    list: { path, recursive: true },
+    entries: [],
   })
+    .then(entries =>
+      entries.reduce(
+        (files, entry) => {
+          if (entry['.tag'] === 'file') {
+            const filePath = entry.path_lower.replace(`${path}/`, '');
+            const parts = filePath.split('/');
+            const fileName = parts.pop().split('.');
+            const fileExt = fileName.pop();
+            const type = parts[0] === 'videos' ? 'video' : getFileType(fileExt);
+            let name = startCase(fileName.join('.'));
+            let track = null;
+
+            if (/^[0-9]{2}[" "]/.test(name)) {
+              track = Number(name.substring(0, 2));
+              name = name.substring(3);
+            }
+
+            if (type === 'audio') {
+              files.audio.push({
+                album: startCase(parts.pop()),
+                artist: startCase(parts.pop()),
+                name,
+                path: filePath,
+                track,
+                link: null,
+                linkDate: null,
+                type,
+              });
+            } else if (type === 'video') {
+              files.video.push({
+                name: startCase(fileName.join('.')),
+                category: parts.length > 1 ? startCase(last(parts)) : '',
+                path: filePath,
+                link: null,
+                linkDate: null,
+                type,
+              });
+            }
+          }
+
+          return files;
+        },
+        { audio: [], video: [] },
+      ),
+    )
     .then(files => {
       // Start using new files
       dispatch(filesReplace(files));

@@ -12,6 +12,7 @@ export const initialState = {
     user,
     date: undefined,
     status: undefined,
+    editing: true,
   },
   audio: {
     position: 0,

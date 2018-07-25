@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import { connect } from 'react-redux';
 import WindowSizeListener from 'react-window-size-listener';
+import { get } from 'lodash';
 import { bps } from '../styles/base';
 import style from '../styles/navigation';
 import { playlistsAdd } from '../actions/playlists';
@@ -22,6 +23,7 @@ class Navigation extends React.Component {
       playlists: { playlists },
     } = this.props;
     const { width } = this.state;
+    const alpha = get(router.query, 'alpha');
 
     return (
       <div className="root">
@@ -31,7 +33,7 @@ class Navigation extends React.Component {
         />
         <Menu
           onClick={({ key }) => router.push(key)}
-          selectedKeys={[router.pathname]}
+          selectedKeys={[`${router.pathname}${alpha ? `/${alpha}` : ''}`]}
           mode={width < 800 ? 'horizontal' : 'inline'}
           theme="dark"
         >
@@ -39,16 +41,22 @@ class Navigation extends React.Component {
             { key: '/', icon: 'setting', message: 'Settings' },
             { key: '/audio', icon: 'sound', message: 'Audio' },
             { key: '/video', icon: 'video-camera', message: 'Video' },
-            ].map(({ key, icon, message }) => (
-              <Menu.Item key={key}>
-                <Icon type={icon} /> <span>{message}</span>
-              </Menu.Item>
-            ))}
-          {playlists.map(({ name }) => (
-            <Menu.Item key={`/playlists/${titleToSlug(name)}`}>
-              <Icon type="bars" /> <span>{name}</span>
+          ].map(({ key, icon, message }) => (
+            <Menu.Item key={key}>
+              <Icon type={icon} /> <span>{message}</span>
             </Menu.Item>
           ))}
+          {width < 800 && (
+            <Menu.Item key="/playlists">
+              <Icon type="bars" /> <span>Playlists</span>
+            </Menu.Item>
+          )}
+          {width > 800 &&
+            playlists.map(({ name }) => (
+              <Menu.Item key={`/playlists/${titleToSlug(name)}`}>
+                <Icon type="bars" /> <span>{name}</span>
+              </Menu.Item>
+            ))}
         </Menu>
       </div>
     );

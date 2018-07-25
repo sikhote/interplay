@@ -62,10 +62,7 @@ export const cloudGet = () => (dispatch, getState) => {
       dispatch(cloudGetSuccess(cloudState));
       notifier.success('Successfully downloaded from cloud');
     })
-    .catch(e => {
-      console.log(e);
-      notifier.error('Failed to download from cloud');
-    });
+    .catch(() => notifier.error('Failed to download from cloud'));
 };
 
 const throttledCloudSaveOther = throttle(callback => callback(), 300000, {
@@ -78,7 +75,7 @@ export const cloudSaveOther = () => (dispatch, getState) =>
     const { key: accessToken, path, user } = settings.cloud;
     const dropbox = new Dropbox({ accessToken });
 
-    dropbox
+    return dropbox
       .filesUpload({
         contents: JSON.stringify({ settings, cloud }),
         path: `/${path}/interplay/${user}/other.json`,

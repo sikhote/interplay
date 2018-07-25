@@ -33,12 +33,15 @@ class Player extends React.Component {
     playedSeconds: 0,
     isFullScreen: true,
   };
-  componentDidMount() {
-    const { settings, filesGetUrl } = this.props;
+  componentDidUpdate(prevProps) {
+    const { settings, filesGetUrl, cloud } = this.props;
     const { path } = this.state;
     const source = get(settings, 'player.source');
+    const playing = get(settings, 'player.playing');
+    const hasCloudStore = get(cloud, 'hasCloudStore');
+    const hasCloudStorePrev = get(prevProps.cloud, 'hasCloudStore');
 
-    if (source && path) {
+    if (hasCloudStore !== hasCloudStorePrev && playing && source && path) {
       filesGetUrl({ source, path, shouldPlay: true });
     }
   }
@@ -127,13 +130,17 @@ class Player extends React.Component {
               shape="circle"
               loading={loading}
               icon={playing ? 'pause' : 'caret-right'}
-              onClick={() =>
+              onClick={() => {
+                if (!playing) {
+                  filesGetUrl({ source, path, shouldPlay: true });
+                }
+
                 settingsReplace(
                   merge({}, settings, {
                     player: { playing: !playing },
                   }),
-                )
-              }
+                );
+              }}
             />
             <Button
               size="large"
@@ -241,6 +248,7 @@ class Player extends React.Component {
 }
 
 Player.propTypes = {
+  cloud: PropTypes.object.isRequired,
   files: PropTypes.object.isRequired,
   settings: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
@@ -248,7 +256,7 @@ Player.propTypes = {
 };
 
 export default connect(
-  ({ files, settings }) => ({ files, settings }),
+  ({ files, settings, cloud }) => ({ files, settings, cloud }),
   dispatch => ({
     settingsReplace: payload => dispatch(settingsReplace(payload)),
     filesGetUrl: payload => dispatch(filesGetUrl(payload)),

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Button, Tooltip, Alert, Icon } from 'antd';
+import { Input, Button, Tooltip, Alert, Icon, Switch } from 'antd';
 import moment from 'moment';
 import { set } from 'lodash';
 import { connect } from 'react-redux';
@@ -37,7 +37,22 @@ const Settings = ({
       specified Dropbox folder.
     </div>
     <div className="inputs">
+      <Tooltip placement="top" title="Edit Settings">
+        <Switch
+          checkedChildren={<Icon type="lock" />}
+          unCheckedChildren={<Icon type="lock" />}
+          checked={settings.cloud.editing}
+          onChange={value => {
+            settingsReplace(set({ ...settings }, 'cloud.editing', value));
+
+            if (!value) {
+              cloudGet();
+            }
+          }}
+        />
+      </Tooltip>
       <Input
+        disabled={!settings.cloud.editing}
         className="input"
         prefix={<Icon type="user" />}
         placeholder="default"
@@ -48,6 +63,7 @@ const Settings = ({
         }}
       />
       <Input
+        disabled={!settings.cloud.editing}
         className="input"
         prefix={<Icon type="key" />}
         placeholder="ABCD1234"
@@ -58,6 +74,7 @@ const Settings = ({
         }}
       />
       <Input
+        disabled={!settings.cloud.editing}
         className="input"
         prefix={<Icon type="folder" />}
         placeholder="itunes/itunes music"
@@ -83,6 +100,7 @@ const Settings = ({
         {settings.cloud.status === 'syncing' && (
           <Tooltip placement="top" title="Cancel sync">
             <Button
+              disabled={settings.cloud.editing}
               type="danger"
               shape="circle"
               icon="close"
@@ -105,6 +123,7 @@ const Settings = ({
               }
             >
               <Button
+                disabled={settings.cloud.editing}
                 type="primary"
                 shape="circle"
                 icon="sync"
@@ -117,6 +136,7 @@ const Settings = ({
           settings.cloud.path && (
             <Tooltip placement="top" title="Save state to cloud">
               <Button
+                disabled={settings.cloud.editing}
                 type="primary"
                 shape="circle"
                 icon="cloud-upload"
@@ -128,6 +148,7 @@ const Settings = ({
           settings.cloud.path && (
             <Tooltip placement="top" title="Download state from cloud">
               <Button
+                disabled={settings.cloud.editing}
                 type="primary"
                 shape="circle"
                 icon="cloud-download"
@@ -137,6 +158,7 @@ const Settings = ({
           )}
         <Tooltip placement="top" title="Reset local settings">
           <Button
+            disabled={settings.cloud.editing}
             type="primary"
             shape="circle"
             icon="delete"

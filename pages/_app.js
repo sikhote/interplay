@@ -20,10 +20,6 @@ class ReduxApp extends App {
       : {};
     return { pageProps };
   }
-  constructor(props) {
-    super(props);
-    this.tryCloudGet();
-  }
   componentDidMount() {
     const currentPath = getCurrentPath();
     const { page = getPage(currentPath), ...params } = match(currentPath);
@@ -31,8 +27,7 @@ class ReduxApp extends App {
     if (Router.route !== `/${page}`) {
       Router.push(`/${page}?${qp.toString(params)}`, currentPath);
     }
-  }
-  componentDidUpdate() {
+
     this.tryCloudGet();
   }
   tryCloudGet() {

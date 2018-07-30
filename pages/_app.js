@@ -8,7 +8,7 @@ import Navigation from '../components/Navigation';
 import LoadingBar from '../components/LoadingBar';
 import makeStore from '../lib/makeStore';
 import isBrowser from '../lib/isBrowser';
-import { match, getPage, getCurrentPath } from '../lib/routing';
+import { getCurrentPath, getParams } from '../lib/routing';
 import appStyle from '../styles/app';
 import globalStyle from '../styles/global';
 import { cloudGet } from '../actions/cloud';
@@ -22,7 +22,7 @@ class ReduxApp extends App {
   }
   componentDidMount() {
     const currentPath = getCurrentPath();
-    const { page = getPage(currentPath), ...params } = match(currentPath);
+    const { page, ...params } = getParams(currentPath);
 
     if (Router.route !== `/${page}`) {
       Router.push(`/${page}?${qp.toString(params)}`, currentPath);
@@ -48,7 +48,7 @@ class ReduxApp extends App {
   render() {
     const { Component, pageProps } = this.props;
     const currentPath = getCurrentPath();
-    const { page = getPage(currentPath) } = match(currentPath);
+    const { page } = getParams(currentPath);
 
     return (
       <Container>

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { merge } from 'lodash';
+import { merge, get } from 'lodash';
 import settings from './settings';
 import files from './files';
 import cloud from './cloud';
@@ -13,6 +13,9 @@ const rootReducer = (state, action) => {
       settings: {
         cloud: {
           editing: false,
+          key: get(state, 'settings.cloud.key', ''),
+          path: get(state, 'settings.cloud.path', ''),
+          user: get(state, 'settings.cloud.user', ''),
         },
         player: {
           loading: false,

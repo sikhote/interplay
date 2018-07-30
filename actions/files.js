@@ -93,21 +93,21 @@ export const filesSync = () => (dispatch, getState) => {
     ),
   );
 
-  const getEntries = options => {
-    const listPromise = options.cursor
-      ? dropbox.filesListFolderContinue({ cursor: options.cursor })
-      : dropbox.filesListFolder(options.list);
+  const getEntries = ({ cursor, list, entries }) => {
+    const listPromise = cursor
+      ? dropbox.filesListFolderContinue({ cursor })
+      : dropbox.filesListFolder(list);
 
     return listPromise.then(response => {
-      options.entries.push(...response.entries);
+      entries.push(...response.entries);
 
       if (getState().settings.cloud.status === 'cancelled') {
         return Promise.reject(new Error('cancelled'));
       }
 
       return response.has_more
-        ? getEntries({ ...options, cursor: response.cursor })
-        : options.entries;
+        ? getEntries({ list, entries, cursor: response.cursor })
+        : entries;
     });
   };
 

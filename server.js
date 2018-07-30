@@ -1,7 +1,7 @@
 const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
-const { match, pages } = require('./lib/routing');
+const { getParams, pages } = require('./lib/routing');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -11,7 +11,7 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   createServer((req, res) => {
     const { pathname, query } = parse(req.url, true);
-    const { page, ...params } = match(pathname);
+    const { page, ...params } = getParams(pathname);
 
     if (!pages.includes(page)) {
       handle(req, res);

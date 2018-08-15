@@ -40,6 +40,11 @@ export default css`
 
     :global(.ReactVirtualized__Grid) {
       outline: none;
+      overflow-x: visible !important;
+    }
+
+    :global(.ReactVirtualized__Grid__innerScrollContainer) {
+      overflow: visible !important;
     }
 
     :global(.ReactVirtualized__Table__headerRow) {
@@ -94,7 +99,7 @@ export default css`
       outline: none;
     }
 
-    :global(.ReactVirtualized__Table__row:nth-child(even)) {
+    :global(.ReactVirtualized__Table__row.even) {
       background: rgba(0, 0, 0, 0.03);
     }
 

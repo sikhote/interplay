@@ -3,13 +3,10 @@ import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import Router from 'next/router';
 import qp from 'query-parse';
-import Player from '../components/Player';
-import Navigation from '../components/Navigation';
-import LoadingBar from '../components/LoadingBar';
+import Root from '../components/Root';
 import makeStore from '../lib/makeStore';
 import isBrowser from '../lib/isBrowser';
 import { getCurrentPath, getParams } from '../lib/routing';
-import appStyle from '../styles/app';
 import globalStyle from '../styles/global';
 import { cloudGet } from '../actions/cloud';
 
@@ -55,18 +52,10 @@ class ReduxApp extends App {
         <style jsx global>
           {globalStyle}
         </style>
-        <style jsx>{appStyle}</style>
-        <LoadingBar />
-        <div className="root">
-          <div className="navigation">
-            <Navigation />
-          </div>
-          <div className="main">
-            <Player />
-            {isBrowser &&
-              Router.route === `/${page}` && <Component {...pageProps} />}
-          </div>
-        </div>
+        <Root>
+          {isBrowser &&
+            Router.route === `/${page}` && <Component {...pageProps} />}
+        </Root>
       </Container>
     );
   }

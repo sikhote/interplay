@@ -1,25 +1,21 @@
 import React from 'react';
-import {
-  AutoSizer,
-  Column,
-  SortDirection,
-  Table,
-  defaultTableRowRenderer,
-} from 'react-virtualized';
+import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import { Input, Icon, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'next/router';
 import moment from 'moment';
 import { get } from 'lodash';
+import { Droppable } from 'react-beautiful-dnd';
 import style from '../styles/list';
-import CustomHead from '../components/CustomHead';
+import CustomHead from './CustomHead';
 import getSortedData from '../lib/getSortedData';
 import { settingsReplace } from '../actions/settings';
 import { filesGetUrl } from '../actions/files';
 import listColumns from '../lib/listColumns';
 import listSearchKeys from '../lib/listSearchKeys';
 import { titleToSlug } from '../lib/playlists';
+import ListRow from './ListRow';
 
 class List extends React.Component {
   state = {
@@ -55,18 +51,19 @@ class List extends React.Component {
     const path = get(arg, 'rowData.path');
     const className = get(arg, 'className');
     const newClassName = `${className} ${path === currentPath ? 'active' : ''}`;
+    const newArg = { ...arg, key: path };
+    let key;
 
     switch (source) {
       case 'playlists':
-        return defaultTableRowRenderer(arg);
-      case 'playlist':
-        return defaultTableRowRenderer(arg);
+        newArg.className = newClassName;
+        key = get(arg, 'rowData.name');
+        break;
       default:
-        return defaultTableRowRenderer({
-          ...arg,
-          className: newClassName,
-        });
+        key = path
     }
+
+    return <ListRow {...newArg} key={key} />;
   }
   goToCurrentPosition() {
     const { files, settings } = this.props;
@@ -158,58 +155,64 @@ class List extends React.Component {
             </div>
           )}
         </div>
-        <div className="table">
-          <AutoSizer>
-            {({ height, width }) => (
-              <Table
-                ref={c => {
-                  this.table = c;
-                }}
-                onRowClick={arg => this.onRowClick(arg)}
-                height={height}
-                headerHeight={30}
-                noRowsRenderer={() => <div className="no-data">No rows!</div>}
-                rowRenderer={arg => this.getRowRenderer(arg)}
-                rowCount={sortedData.length}
-                rowGetter={({ index }) => sortedData[index]}
-                rowHeight={26}
-                scrollToIndex={position}
-                width={width}
-                rowStyle={{
-                  // prettier-ignore
-                  grid: `none / ${
+        <Droppable droppableId="droppable" isDropDisabled>
+          {provided => (
+            <div className="table" ref={provided.innerRef}>
+              <AutoSizer>
+                {({ height, width }) => (
+                  <Table
+                    ref={c => {
+                      this.table = c;
+                    }}
+                    onRowClick={arg => this.onRowClick(arg)}
+                    height={height}
+                    headerHeight={30}
+                    noRowsRenderer={() => (
+                      <div className="no-data">No rows!</div>
+                    )}
+                    rowRenderer={arg => this.getRowRenderer(arg)}
+                    rowCount={sortedData.length}
+                    rowGetter={({ index }) => sortedData[index]}
+                    rowHeight={26}
+                    scrollToIndex={position}
+                    width={width}
+                    rowStyle={{
+                      // prettier-ignore
+                      grid: `none / ${
                   listColumns[source].reduce(
                     (a, v) => a + (v.width ? ` ${v.width}px` : ' 1fr'),
                     '',
                   )}`
-                }}
-                sort={({ sortBy, sortDirection }) =>
-                  settingsReplace({
-                    ...settings,
-                    [source]: {
-                      ...settings[source],
-                      sortBy,
-                      sortDirection: sortDirection === SortDirection.ASC,
-                    },
-                  })
-                }
-                sortBy={sortBy}
-                sortDirection={
-                  sortDirection ? SortDirection.ASC : SortDirection.DESC
-                }
-              >
-                {listColumns[source].map(({ title, dataKey, width }) => (
-                  <Column
-                    key={title}
-                    label={title}
-                    dataKey={dataKey}
-                    width={width || 100}
-                  />
-                ))}
-              </Table>
-            )}
-          </AutoSizer>
-        </div>
+                    }}
+                    sort={({ sortBy, sortDirection }) =>
+                      settingsReplace({
+                        ...settings,
+                        [source]: {
+                          ...settings[source],
+                          sortBy,
+                          sortDirection: sortDirection === SortDirection.ASC,
+                        },
+                      })
+                    }
+                    sortBy={sortBy}
+                    sortDirection={
+                      sortDirection ? SortDirection.ASC : SortDirection.DESC
+                    }
+                  >
+                    {listColumns[source].map(({ title, dataKey, width }) => (
+                      <Column
+                        key={title}
+                        label={title}
+                        dataKey={dataKey}
+                        width={width || 100}
+                      />
+                    ))}
+                  </Table>
+                )}
+              </AutoSizer>
+            </div>
+          )}
+        </Droppable>
       </div>
     );
   }

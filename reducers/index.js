@@ -4,8 +4,15 @@ import settings from './settings';
 import files from './files';
 import cloud from './cloud';
 import playlists from './playlists';
+import dragging from './dragging';
 
-const appReducer = combineReducers({ settings, files, cloud, playlists });
+const appReducer = combineReducers({
+  settings,
+  files,
+  cloud,
+  playlists,
+  dragging,
+});
 
 const rootReducer = (state, action) => {
   if (action.type === 'CLOUD_GET_SUCCESS') {

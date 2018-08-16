@@ -60,7 +60,7 @@ class List extends React.Component {
         key = get(arg, 'rowData.name');
         break;
       default:
-        key = path
+        key = path;
     }
 
     return <ListRow {...newArg} key={key} />;
@@ -232,7 +232,11 @@ List.propTypes = {
 
 export default withRouter(
   connect(
-    ({ files, settings, playlists }) => ({ files, settings, playlists }),
+    ({ files, settings, playlists }) => ({
+      files,
+      settings,
+      playlists,
+    }),
     dispatch => ({
       settingsReplace: payload => dispatch(settingsReplace(payload)),
       filesGetUrl: payload => dispatch(filesGetUrl(payload)),

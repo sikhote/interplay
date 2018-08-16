@@ -53,42 +53,35 @@ const ListRow = ({
 
   return (
     <Draggable draggableId={rowData.name} index={index}>
-      {(provided, snapshot) => {
-        let newClassName = className;
-
-        if (snapshot.isDragging) {
-          newClassName += ' is-dragging';
-        }
-
-        if (index % 2 === 0) {
-          newClassName += ' even';
-        }
-
-        return (
-          <div style={rowStyle}>
-            <div
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              {...a11yProps}
-              role="row"
-              className="draggable"
-            >
-              <style jsx>{`
-                .draggable {
+      {(provided, { isDragging }) => (
+        <div style={rowStyle}>
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            {...a11yProps}
+            role="row"
+            className={`draggable${isDragging ? ' is-dragging' : ''}`}
+          >
+            <style jsx>
+              {`
+                .draggable.is-dragging {
                   top: 0 !important;
                   left: 0 !important;
                   position: relative !important;
-                  z-index: 99999999;
+                  transform: none !important;
                 }
-              `}</style>
-              <div style={innerStyle} className={newClassName}>
-                {columns}
-              </div>
+              `}
+            </style>
+            <div
+              style={innerStyle}
+              className={`${className}${index % 2 === 0 ? ' even' : ''}`}
+            >
+              {columns}
             </div>
           </div>
-        );
-      }}
+        </div>
+      )}
     </Draggable>
   );
 };

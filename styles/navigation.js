@@ -10,6 +10,16 @@ export default css`
       height: 100%;
     }
 
+    :global(.ant-menu-item.is-droppable) {
+      padding: 2px 4px;
+      padding-left: 4px !important;
+    }
+
+    :global(.ant-menu-item.is-droppable .inner) {
+      border: 1px solid white;
+      padding: 5px 10px;
+    }
+
     @media (max-width: ${bps.medium - 1}px) {
       :global(.ant-menu) {
         display: flex;

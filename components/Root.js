@@ -1,16 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
+import { connect } from 'react-redux';
 import Player from '../components/Player';
 import Navigation from '../components/Navigation';
 import LoadingBar from '../components/LoadingBar';
 import rootStyle from '../styles/root';
+import { draggingUpdate } from '../actions/dragging';
 
-const Root = ({ children }) => (
+const Root = ({ children, draggingUpdate }) => (
   <div className="root">
     <style jsx>{rootStyle}</style>
     <LoadingBar />
-    <DragDropContext onDragEnd={() => console.log('drop')}>
+    <DragDropContext
+      onDragStart={() => draggingUpdate({ isDragging: true })}
+      onDragEnd={() => draggingUpdate({ isDragging: false })}
+    >
       <div className="container">
         <div className="navigation">
           <Navigation />
@@ -26,10 +31,16 @@ const Root = ({ children }) => (
 
 Root.propTypes = {
   children: PropTypes.any,
+  draggingUpdate: PropTypes.func.isRequired,
 };
 
 Root.defaultProps = {
   children: null,
 };
 
-export default Root;
+export default connect(
+  null,
+  dispatch => ({
+    draggingUpdate: payload => dispatch(draggingUpdate(payload)),
+  }),
+)(Root);

@@ -1,62 +1,61 @@
 import React from 'react';
-import { Menu, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import { bps } from '../styles/base';
-import style from '../styles/navigation';
+import { Droppable } from 'react-beautiful-dnd';
+import css from '../styles/navigation';
 import { playlistsAdd } from '../actions/playlists';
 import { titleToSlug } from '../lib/playlists';
 
 const Navigation = ({ router, playlists, isDragging }) => {
   const alpha = get(router.query, 'alpha');
+  const path = `${router.pathname}${alpha ? `/${alpha}` : ''}`;
 
   return (
     <div className="root">
-      <style jsx>{style}</style>
+      <style jsx>{css}</style>
       {[
         { key: '/', title: 'Settings', icon: 'cog' },
         { key: '/audio', title: 'Files', icon: 'list' },
-        { key: '/playlists', title: 'Playlists', icon: 'star' },
-        ].map(({ key, title, icon }) => (
-          <div key={key} onClick={() => router.push(key)}>
-            {title} <i className={`icon-${icon}`}>&#xe800;</i>
-          </div>
+        {
+          key: '/playlists',
+          title: 'Playlists',
+          icon: 'star',
+          className: ' playlists',
+        },
+        ...playlists.map(({ name }) => ({
+          key: `/playlists/${titleToSlug(name)}`,
+          title: name,
+          icon: 'star',
+          className: ` playlist${isDragging ? ' is-droppable' : ''}`,
+          droppable: true,
+        })),
+      ].map(({ key, title, icon, className = '', droppable }, index) => (
+        <Droppable key={key} droppableId={title} isDropDisabled={!droppable}>
+          {(provided, { isDraggingOver }) => {
+            let newClassName = `${className} item`;
+            newClassName += isDraggingOver ? ' is-dropping' : '';
+            newClassName += key === path ? ' active' : '';
+
+            return (
+              <div
+                role="button"
+                tabIndex={index}
+                onClick={() => router.push(key)}
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className={newClassName}
+              >
+                <div className="inner">
+                  <i className={`icon-${icon}`} />
+                  {title}
+                </div>
+              </div>
+            );
+          }}
+        </Droppable>
       ))}
-      <Menu
-        selectedKeys={[`${router.pathname}${alpha ? `/${alpha}` : ''}`]}
-        mode={width < 800 ? 'horizontal' : 'inline'}
-        theme="dark"
-      >
-        {[
-          { key: '/', icon: 'setting', message: 'Settings' },
-          { key: '/audio', icon: 'sound', message: 'Audio' },
-          { key: '/video', icon: 'video-camera', message: 'Video' },
-        ].map(({ key, icon, message }) => (
-          <Menu.Item key={key}>
-            <Icon type={icon} /> <span>{message}</span>
-          </Menu.Item>
-        ))}
-        {width < 800 && (
-          <Menu.Item key="/playlists">
-            <Icon type="bars" /> <span>Playlists</span>
-          </Menu.Item>
-        )}
-        {width > 800 &&
-          playlists.map(({ name }) => (
-            <div
-              key={`/playlists/${titleToSlug(name)}`}
-              className={
-                isDragging || true ? 'item-container is-droppable' : ''
-              }
-            >
-              <Menu.Item key={`/playlists/${titleToSlug(name)}Item`}>
-                <Icon type="bars" /> <span>{name}</span>
-              </Menu.Item>
-            </div>
-          ))}
-      </Menu>
     </div>
   );
 };

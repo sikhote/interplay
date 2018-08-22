@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
-import style from '../styles/list-row';
+import css from '../styles/list-row';
 
 const ListRow = ({
   className,
@@ -48,13 +48,13 @@ const ListRow = ({
   }
   const rowStyle = { ...style };
   delete rowStyle.grid;
-  delete rowStyle.overflow;
   const innerStyle = { grid: style.grid };
 
   return (
     <Draggable draggableId={rowData.name} index={index}>
       {(provided, { isDragging }) => (
         <div style={rowStyle}>
+          <style jsx>{css}</style>
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
@@ -63,16 +63,6 @@ const ListRow = ({
             role="row"
             className={`draggable${isDragging ? ' is-dragging' : ''}`}
           >
-            <style jsx>
-              {`
-                .draggable.is-dragging {
-                  top: 0 !important;
-                  left: 0 !important;
-                  position: relative !important;
-                  transform: none !important;
-                }
-              `}
-            </style>
             <div
               style={innerStyle}
               className={`${className}${index % 2 === 0 ? ' even' : ''}`}

@@ -15,8 +15,8 @@ export default css`
       "table table";
 
     .header {
-      padding-left: ${spacing.medium}px;
-      padding-right: ${spacing.medium}px;
+      padding-left: ${spacing.size3}px;
+      padding-right: ${spacing.size3}px;
       grid-area: header;
     }
 
@@ -26,11 +26,11 @@ export default css`
       grid-template-columns: auto auto;
       grid-auto-columns: auto;
       grid-auto-flow: column;
-      grid-gap: ${spacing.medium}px;
+      grid-gap: ${spacing.size3}px;
       align-items: center;
-      padding-left: ${spacing.medium}px;
-      padding-right: ${spacing.medium}px;
-      padding-bottom: ${spacing.medium}px;
+      padding-left: ${spacing.size3}px;
+      padding-right: ${spacing.size3}px;
+      padding-bottom: ${spacing.size3}px;
       justify-content: start;
     }
 
@@ -40,11 +40,11 @@ export default css`
 
     :global(.ReactVirtualized__Grid) {
       outline: none;
-      overflow-x: visible !important;
+      ${'' /* overflow-x: visible !important; */}
     }
 
     :global(.ReactVirtualized__Grid__innerScrollContainer) {
-      overflow: visible !important;
+      ${'' /* overflow: visible !important; */}
     }
 
     :global(.ReactVirtualized__Table__headerRow) {
@@ -56,8 +56,8 @@ export default css`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding-left: ${spacing.medium}px;
-      padding-right: ${spacing.medium}px;
+      padding-left: ${spacing.size3}px;
+      padding-right: ${spacing.size3}px;
       align-items: center;
     }
 
@@ -74,7 +74,7 @@ export default css`
     }
 
     :global(.ReactVirtualized__Table__headerColumn svg) {
-      padding-left: ${spacing.small}px;
+      padding-left: ${spacing.size2}px;
       width: 24px;
       height: 24px;
     }
@@ -108,10 +108,10 @@ export default css`
     }
 
     :global(.no-data) {
-      padding-left: ${spacing.medium}px;
-      padding-right: ${spacing.medium}px;
-      padding-bottom: ${spacing.small}px;
-      padding-top: ${spacing.small}px;
+      padding-left: ${spacing.size3}px;
+      padding-right: ${spacing.size3}px;
+      padding-bottom: ${spacing.size2}px;
+      padding-top: ${spacing.size2}px;
     }
 
     @media (max-width: ${bps.medium - 1}px) {

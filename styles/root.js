@@ -10,12 +10,16 @@ export default css`
 
       .navigation {
         grid-area: navigation;
+        position: relative;
+        z-index: 0;
       }
 
       .main {
         grid-area: main;
         display: grid;
         grid-template-columns: 1fr;
+        position: relative;
+        z-index: 1;
       }
     }
 

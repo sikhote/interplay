@@ -4,12 +4,17 @@ import css from 'styled-jsx/css';
 export default css`
   .root {
     .draggable {
-      top: 0 !important;
-      left: 0 !important;
-      position: relative !important;
+      &.is-dragging {
+        top: 0 !important;
+        left: 0 !important;
+        position: relative !important;
+        ${'' /* transform: none !important; */}
+      }
     }
-    .inner {
+
+    :global(.ReactVirtualized__Table__row) {
       display: grid;
+      outline: none;
     }
   }
 `;

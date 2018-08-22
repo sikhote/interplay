@@ -36,7 +36,7 @@
 				"nprogress": "0.2.0",
 				"path-match": "1.2.4",
 				"polished": "1.9.2",
-				"prettier": "^1.12.1",
+				"prettier": "^1.14.2",
 				"prop-types": "15.6.0",
 				"query-parse": "2.0.0",
 				"rc-slider": "^8.6.1",

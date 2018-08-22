@@ -47,6 +47,7 @@ export default class extends Document {
           />
           <meta name="theme-color" content="#ffffff" />
           <link rel="stylesheet" href="/static/css/antd.min.css" />
+          <link rel="stylesheet" href="/static/css/fontello.css" />
         </Head>
         <body>
           <Main />

@@ -4,10 +4,10 @@ import { spacing, bps } from './base';
 // prettier-ignore
 export default css`
   .root {
-    padding-left: ${spacing.medium}px;
-    padding-right: ${spacing.medium}px;
-    padding-top: ${spacing.medium}px;
-    padding-bottom: ${spacing.medium}px;
+    padding-left: ${spacing.size3}px;
+    padding-right: ${spacing.size3}px;
+    padding-top: ${spacing.size3}px;
+    padding-bottom: ${spacing.size3}px;
     background:
       linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.03) 100%);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -15,7 +15,7 @@ export default css`
     grid-template-columns: 0px 1fr;
 
     &.video {
-      grid-gap: ${spacing.large}px;
+      grid-gap: ${spacing.size4}px;
       grid-template-columns: 120px 1fr;
 
       &.is-full-screen {
@@ -46,8 +46,8 @@ export default css`
 
     .main {
       display: grid;
-      grid-column-gap: ${spacing.large}px;
-      grid-row-gap: ${spacing.medium}px;
+      grid-column-gap: ${spacing.size4}px;
+      grid-row-gap: ${spacing.size3}px;
       grid-template-rows: auto;
 
       .directions {
@@ -57,13 +57,13 @@ export default css`
         grid-auto-flow: column;
         align-items: center;
         grid-area: directions;
-        grid-gap: ${spacing.small}px;
+        grid-gap: ${spacing.size2}px;
       }
 
       .control {
         display: grid;
         align-items: center;
-        grid-gap: ${spacing.small}px;
+        grid-gap: ${spacing.size2}px;
         max-width: 400px;
 
         &.sound {
@@ -89,8 +89,8 @@ export default css`
     @media (max-width: ${bps.medium - 1}px) {
       .main {
         display: grid;
-        grid-column-gap: ${spacing.large}px;
-        grid-row-gap: ${spacing.medium}px;
+        grid-column-gap: ${spacing.size4}px;
+        grid-row-gap: ${spacing.size3}px;
         grid-template-columns: auto 1fr;
         grid-template-rows: auto;
         grid-template-areas:

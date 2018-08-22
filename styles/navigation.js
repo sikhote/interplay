@@ -1,67 +1,72 @@
 import css from 'styled-jsx/css';
-import { colors, bps } from './base';
+import {
+  colors,
+  bps,
+  fontSizes,
+  lineHeights,
+  spacing,
+  borderRadii,
+} from './base';
 
 // prettier-ignore
 export default css`
   .root {
     height: 100%;
+    background: ${colors.menu};
 
-    :global(.ant-menu) {
-      height: 100%;
-    }
+    .item {
+      color: ${colors.menuItemColor};
+      ${fontSizes.menuItemTitle}
+      ${lineHeights.normal}
+      padding-top: ${spacing.size3}px;
+      padding-bottom: ${spacing.size3}px;
+      padding-left: ${spacing.size3}px;
+      padding-right: ${spacing.size3}px;
+      position: relative;
 
-    :global(.ant-menu-item.is-droppable) {
-      padding: 2px 4px;
-      padding-left: 4px !important;
-    }
+      .inner {
+        padding-top: ${spacing.size3}px;
+        padding-bottom: ${spacing.size3}px;
+        padding-left: ${spacing.size3}px;
+        padding-right: ${spacing.size3}px;
 
-    :global(.ant-menu-item.is-droppable .inner) {
-      border: 1px solid white;
-      padding: 5px 10px;
-    }
-
-    @media (max-width: ${bps.medium - 1}px) {
-      :global(.ant-menu) {
-        display: flex;
-        align-items: center;
-        border: 0;
-        line-height: 1em;
+        i {
+          margin-right: ${spacing.size3}px;
+        }
       }
 
-      :global(.ant-menu-item) {
-        top: auto;
-        float: none;
-        text-align: center;
-        flex: 1 1 auto;
-        line-height: 1em;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        margin: 0 !important;
-        box-shadow: inset 0 1px 0 0 ${colors.darkBlue};
+      &.active {
+        background: ${colors.menuItemBackgorund};
+        color: ${colors.menuItemActiveColor};
       }
 
-      :global(.anticon) {
-        display: block;
-        margin-right: 0;
+      &.is-droppable {
+        .inner {
+          outline: 1px solid ${colors.menuItemDropBorder};
+          ${borderRadii.size1}
+        }
+      }
+
+      &.is-dropping {
+        .inner {
+          background: ${colors.menuItemDroppingBackground};
+        }
       }
     }
 
     @media (max-width: ${bps.medium - 1}px) {
-      :global(.ant-menu-item span) {
-        display: none;
+      .item {
+        &.playlist {
+          display: none;
+        }
       }
     }
 
     @media (min-width: ${bps.medium}px) {
-      :global(.ant-menu-item) {
-        margin-top: 0;
-      }
-
-      :global(.anticon) {
-        margin-bottom: 10px;
+      .item {
+        &.playlists {
+          display: none;
+        }
       }
     }
   }

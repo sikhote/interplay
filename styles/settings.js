@@ -4,9 +4,9 @@ import { spacing } from './base';
 // prettier-ignore
 export default css`
   .root {
-    padding-left: ${spacing.medium}px;
-    padding-right: ${spacing.medium}px;
-    padding-bottom: ${spacing.medium}px;
+    padding-left: ${spacing.size3}px;
+    padding-right: ${spacing.size3}px;
+    padding-bottom: ${spacing.size3}px;
 
     :global(.alert) {
       width: 100%;
@@ -14,7 +14,7 @@ export default css`
     }
 
     .inputs {
-      padding-top: ${spacing.large}px;
+      padding-top: ${spacing.size4}px;
       display: grid;
       place-items: start;
       place-content: start;
@@ -22,7 +22,7 @@ export default css`
       grid-template-rows: auto;
       grid-auto-rows: auto;
       grid-auto-flow: row;
-      grid-gap: ${spacing.medium}px;
+      grid-gap: ${spacing.size3}px;
     }
 
     :global(.input) {
@@ -35,7 +35,7 @@ export default css`
       grid-template-rows: 1fr;
       grid-auto-flow: column;
       grid-auto-rows: auto;
-      grid-gap: ${spacing.medium}px;
+      grid-gap: ${spacing.size3}px;
     }
   }
 `;

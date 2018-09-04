@@ -249,7 +249,7 @@ class Player extends React.Component {
 
 Player.propTypes = {
   cloud: PropTypes.object.isRequired,
-  files: PropTypes.object.isRequired,
+  files: PropTypes.array.isRequired,
   settings: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
   filesGetUrl: PropTypes.func.isRequired,

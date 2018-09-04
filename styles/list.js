@@ -1,6 +1,5 @@
 import css from 'styled-jsx/css';
-import { transparentize } from 'polished';
-import { colors, spacing, fontSizes, bps } from './base';
+import { spacing, fontSizes, bps } from './base';
 
 // prettier-ignore
 export default css`
@@ -36,25 +35,36 @@ export default css`
 
     .table {
       grid-area: table;
+
+      &.playlist,
+      &.files {
+        :global(.ReactVirtualized__Table__headerRow),
+        :global(.ReactVirtualized__Table__row) {
+          grid: none / 40px 1fr 1fr 1fr;
+        }
+      }
+
+      &.playlists {
+        :global(.ReactVirtualized__Table__headerRow),
+        :global(.ReactVirtualized__Table__row) {
+          grid: none / 1fr 90px 90px 60px;
+        }
+      }
     }
 
     :global(.ReactVirtualized__Grid) {
       outline: none;
-      ${'' /* overflow-x: visible !important; */}
     }
 
-    :global(.ReactVirtualized__Grid__innerScrollContainer) {
-      ${'' /* overflow: visible !important; */}
-    }
-
-    :global(.ReactVirtualized__Table__headerRow) {
+    :global(.ReactVirtualized__Table__headerRow),
+    :global(.ReactVirtualized__Table__row) {
       display: grid;
+      outline: none;
+      height: 100%;
     }
 
-    :global(.ReactVirtualized__Table__headerColumn),
-    :global(.ReactVirtualized__Table__rowColumn) {
+    :global(.ReactVirtualized__Table__headerColumn) {
       white-space: nowrap;
-      overflow: hidden;
       text-overflow: ellipsis;
       padding-left: ${spacing.size3}px;
       padding-right: ${spacing.size3}px;
@@ -79,8 +89,7 @@ export default css`
       height: 24px;
     }
 
-    :global(.ReactVirtualized__Table__headerRow),
-    :global(.ReactVirtualized__Table__row) {
+    :global(.ReactVirtualized__Table__headerRow) {
       display: grid;
       align-items: center;
     }
@@ -93,18 +102,6 @@ export default css`
         rgba(0, 0, 0, 0) 0%,
         rgba(0, 0, 0, 0.03) 100%
       );
-    }
-
-    :global(.ReactVirtualized__Table__row) {
-      outline: none;
-    }
-
-    :global(.ReactVirtualized__Table__row.even) {
-      background: rgba(0, 0, 0, 0.03);
-    }
-
-    :global(.ReactVirtualized__Table__row.active) {
-      background: ${transparentize(0.8, colors.blue)};
     }
 
     :global(.no-data) {

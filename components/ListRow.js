@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
+import { get } from 'lodash';
 import css from '../styles/list-row';
 
 const ListRow = ({
@@ -14,7 +15,26 @@ const ListRow = ({
   onRowRightClick,
   rowData,
   style,
+  settings,
+  source,
 }) => {
+  const currentPath = get(settings, 'player.file.path');
+  const path = get(rowData, 'path');
+  let isDraggable = false;
+  let newClassName = className;
+
+  switch (source) {
+    case 'playlist':
+      newClassName = `${className} ${path === currentPath ? 'active' : ''}`;
+      isDraggable = true;
+      break;
+    case 'playlists':
+      break;
+    default:
+      newClassName = `${className} ${path === currentPath ? 'active' : ''}`;
+      break;
+  }
+
   const a11yProps = {};
 
   if (
@@ -46,33 +66,36 @@ const ListRow = ({
         onRowRightClick({ event, index, rowData });
     }
   }
-  const rowStyle = { ...style };
-  delete rowStyle.grid;
-  const innerStyle = { grid: style.grid };
+
+  const inner = (
+    <div
+      className={`${newClassName}${index % 2 === 0 ? ' even' : ''}`}
+      {...a11yProps}
+    >
+      {columns}
+    </div>
+  );
 
   return (
-    <Draggable draggableId={rowData.name} index={index}>
-      {(provided, { isDragging }) => (
-        <div style={rowStyle}>
-          <style jsx>{css}</style>
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            {...a11yProps}
-            role="row"
-            className={`draggable${isDragging ? ' is-dragging' : ''}`}
-          >
+    <div className="root" style={style}>
+      <style jsx>{css}</style>
+      {isDraggable ? (
+        <Draggable draggableId={rowData.name} index={index}>
+          {(provided, { isDragging }) => (
             <div
-              style={innerStyle}
-              className={`${className}${index % 2 === 0 ? ' even' : ''}`}
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              className={`draggable${isDragging ? ' is-dragging' : ''}`}
             >
-              {columns}
+              {inner}
             </div>
-          </div>
-        </div>
+          )}
+        </Draggable>
+      ) : (
+        inner
       )}
-    </Draggable>
+    </div>
   );
 };
 
@@ -88,6 +111,8 @@ ListRow.propTypes = {
   onRowRightClick: PropTypes.func,
   rowData: PropTypes.any.isRequired,
   style: PropTypes.any.isRequired,
+  settings: PropTypes.object.isRequired,
+  source: PropTypes.string.isRequired,
 };
 
 ListRow.defaultProps = {

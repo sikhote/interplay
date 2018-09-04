@@ -14,17 +14,11 @@ export const initialState = {
     status: undefined,
     editing: true,
   },
-  audio: {
+  player: {
+    source: 'media',
     position: 0,
     sortBy: 'artist',
     sortDirection: true,
-  },
-  video: {
-    position: 0,
-    sortBy: 'name',
-    sortDirection: true,
-  },
-  player: {
     volume: 0.1,
     muted: false,
     playing: false,

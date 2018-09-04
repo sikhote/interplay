@@ -50,20 +50,26 @@ class List extends React.Component {
     const currentPath = get(settings, 'player.file.path');
     const path = get(arg, 'rowData.path');
     const className = get(arg, 'className');
-    const newClassName = `${className} ${path === currentPath ? 'active' : ''}`;
-    const newArg = { ...arg, key: path };
-    let key;
+    const newArg = {
+      ...arg,
+      key: path,
+      isDraggable: false,
+      className: `${className} ${path === currentPath ? 'active' : ''}`,
+    };
 
     switch (source) {
+      case 'playlist':
+        newArg.isDraggable = true;
+        break;
       case 'playlists':
-        newArg.className = newClassName;
-        key = get(arg, 'rowData.name');
+        newArg.key = get(arg, 'rowData.name');
+        newArg.className = get(arg, 'className');
         break;
       default:
-        key = path;
+        break;
     }
 
-    return <ListRow {...newArg} key={key} />;
+    return <ListRow {...newArg} />;
   }
   goToCurrentPosition() {
     const { files, settings } = this.props;
@@ -155,9 +161,9 @@ class List extends React.Component {
             </div>
           )}
         </div>
-        <Droppable droppableId="droppable" isDropDisabled>
+        <Droppable droppableId="droppable">
           {provided => (
-            <div className="table" ref={provided.innerRef}>
+            <div className={`table ${source}`} ref={provided.innerRef}>
               <AutoSizer>
                 {({ height, width }) => (
                   <Table
@@ -170,20 +176,14 @@ class List extends React.Component {
                     noRowsRenderer={() => (
                       <div className="no-data">No rows!</div>
                     )}
-                    rowRenderer={arg => this.getRowRenderer(arg)}
+                    rowRenderer={args => (
+                      <ListRow {...args} settings={settings} source={source} />
+                    )}
                     rowCount={sortedData.length}
                     rowGetter={({ index }) => sortedData[index]}
                     rowHeight={26}
                     scrollToIndex={position}
                     width={width}
-                    rowStyle={{
-                      // prettier-ignore
-                      grid: `none / ${
-                  listColumns[source].reduce(
-                    (a, v) => a + (v.width ? ` ${v.width}px` : ' 1fr'),
-                    '',
-                  )}`
-                    }}
                     sort={({ sortBy, sortDirection }) =>
                       settingsReplace({
                         ...settings,

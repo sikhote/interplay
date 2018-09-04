@@ -6,16 +6,12 @@ import Player from '../components/Player';
 import Navigation from '../components/Navigation';
 import LoadingBar from '../components/LoadingBar';
 import css from '../styles/root';
-import { draggingUpdate } from '../actions/dragging';
 
-const Root = ({ children, draggingUpdate }) => (
+const Root = ({ children }) => (
   <div className="root">
     <style jsx>{css}</style>
     <LoadingBar />
-    <DragDropContext
-      onDragStart={() => draggingUpdate({ isDragging: true })}
-      onDragEnd={() => draggingUpdate({ isDragging: false })}
-    >
+    <DragDropContext onDragEnd={() => console.log('done dragging')}>
       <div className="container">
         <div className="navigation">
           <Navigation />
@@ -31,7 +27,6 @@ const Root = ({ children, draggingUpdate }) => (
 
 Root.propTypes = {
   children: PropTypes.any,
-  draggingUpdate: PropTypes.func.isRequired,
 };
 
 Root.defaultProps = {
@@ -40,7 +35,5 @@ Root.defaultProps = {
 
 export default connect(
   null,
-  dispatch => ({
-    draggingUpdate: payload => dispatch(draggingUpdate(payload)),
-  }),
+  null,
 )(Root);

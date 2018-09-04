@@ -1,12 +1,5 @@
 import css from 'styled-jsx/css';
-import {
-  colors,
-  bps,
-  fontSizes,
-  lineHeights,
-  spacing,
-  borderRadii,
-} from './base';
+import { colors, bps, fontSizes, lineHeights, spacing } from './base';
 
 // prettier-ignore
 export default css`
@@ -20,37 +13,17 @@ export default css`
       ${lineHeights.normal}
       padding-top: ${spacing.size3}px;
       padding-bottom: ${spacing.size3}px;
-      padding-left: ${spacing.size3}px;
-      padding-right: ${spacing.size3}px;
-      position: relative;
+      padding-left: ${spacing.size4}px;
+      padding-right: ${spacing.size4}px;
+      outline: none;
 
-      .inner {
-        padding-top: ${spacing.size3}px;
-        padding-bottom: ${spacing.size3}px;
-        padding-left: ${spacing.size3}px;
-        padding-right: ${spacing.size3}px;
-
-        i {
-          margin-right: ${spacing.size3}px;
-        }
+      i {
+        margin-right: ${spacing.size3}px;
       }
 
       &.active {
         background: ${colors.menuItemBackgorund};
         color: ${colors.menuItemActiveColor};
-      }
-
-      &.is-droppable {
-        .inner {
-          outline: 1px solid ${colors.menuItemDropBorder};
-          ${borderRadii.size1}
-        }
-      }
-
-      &.is-dropping {
-        .inner {
-          background: ${colors.menuItemDroppingBackground};
-        }
       }
     }
 

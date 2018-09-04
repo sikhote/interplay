@@ -4,14 +4,12 @@ import settings from './settings';
 import files from './files';
 import cloud from './cloud';
 import playlists from './playlists';
-import dragging from './dragging';
 
 const appReducer = combineReducers({
   settings,
   files,
   cloud,
   playlists,
-  dragging,
 });
 
 const rootReducer = (state, action) => {
@@ -20,11 +18,12 @@ const rootReducer = (state, action) => {
       settings: {
         cloud: {
           editing: false,
-          key: get(state, 'settings.cloud.key', ''),
-          path: get(state, 'settings.cloud.path', ''),
-          user: get(state, 'settings.cloud.user', ''),
+          key: get(state, 'settings.cloud.key') || '',
+          path: get(state, 'settings.cloud.path') || '',
+          user: get(state, 'settings.cloud.user') || '',
         },
         player: {
+          playing: false,
           loading: false,
         },
       },

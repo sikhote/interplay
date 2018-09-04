@@ -27,12 +27,12 @@ export const cloudGet = () => (dispatch, getState) => {
       .filesDownload({
         path: `/${path}/interplay/${user}/files.json`,
       })
-      .catch(() => Promise.resolve({})),
+      .catch(() => Promise.resolve([])),
     dropbox
       .filesDownload({
         path: `/${path}/interplay/${user}/playlists.json`,
       })
-      .catch(() => Promise.resolve({})),
+      .catch(() => Promise.resolve([])),
   ])
     .then(values =>
       Promise.all(
@@ -54,8 +54,8 @@ export const cloudGet = () => (dispatch, getState) => {
     .then(values =>
       Promise.resolve({
         ...values[0],
-        files: { ...files, ...values[1] },
-        playlists: { ...playlists, ...values[2] },
+        files: values[1],
+        playlists: values[2],
       }),
     )
     .then(cloudState => {
@@ -65,7 +65,7 @@ export const cloudGet = () => (dispatch, getState) => {
     .catch(() => notifier.error('Failed to download from cloud'));
 };
 
-const throttledCloudSaveOther = throttle(callback => callback(), 300000, {
+const throttledCloudSaveOther = throttle(callback => callback(), 10000, {
   trailing: true,
 });
 

@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import { Droppable } from 'react-beautiful-dnd';
 import css from '../styles/navigation';
 import { playlistsAdd } from '../actions/playlists';
 import { titleToSlug } from '../lib/playlists';
 
-const Navigation = ({ router, playlists, isDragging }) => {
+const Navigation = ({ router, playlists }) => {
   const alpha = get(router.query, 'alpha');
   const path = `${router.pathname}${alpha ? `/${alpha}` : ''}`;
 
@@ -17,7 +16,7 @@ const Navigation = ({ router, playlists, isDragging }) => {
       <style jsx>{css}</style>
       {[
         { key: '/', title: 'Settings', icon: 'cog' },
-        { key: '/audio', title: 'Files', icon: 'list' },
+        { key: '/media', title: 'Media', icon: 'list' },
         {
           key: '/playlists',
           title: 'Playlists',
@@ -28,33 +27,25 @@ const Navigation = ({ router, playlists, isDragging }) => {
           key: `/playlists/${titleToSlug(name)}`,
           title: name,
           icon: 'star',
-          className: ` playlist${isDragging ? ' is-droppable' : ''}`,
-          droppable: true,
+          className: 'playlist$',
         })),
-      ].map(({ key, title, icon, className = '', droppable }, index) => (
-        <Droppable key={key} droppableId={title} isDropDisabled={!droppable}>
-          {(provided, { isDraggingOver }) => {
-            let newClassName = `${className} item`;
-            newClassName += isDraggingOver ? ' is-dropping' : '';
-            newClassName += key === path ? ' active' : '';
-
-            return (
-              <div
-                role="button"
-                tabIndex={index}
-                onClick={() => router.push(key)}
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={newClassName}
-              >
-                <div className="inner">
-                  <i className={`icon-${icon}`} />
-                  {title}
-                </div>
-              </div>
-            );
-          }}
-        </Droppable>
+        {
+          key: 'playlists-add',
+          title: '',
+          icon: ' list-add',
+          className: 'playlists-add',
+        },
+      ].map(({ key, title, icon, className = '' }, index) => (
+        <div
+          key={key}
+          role="button"
+          tabIndex={index}
+          onClick={() => router.push(key)}
+          className={`${className} item${key === path ? ' active' : ''}`}
+        >
+          <i className={`icon-${icon}`} />
+          {title}
+        </div>
       ))}
     </div>
   );
@@ -63,14 +54,13 @@ const Navigation = ({ router, playlists, isDragging }) => {
 Navigation.propTypes = {
   router: PropTypes.object.isRequired,
   playlists: PropTypes.array.isRequired,
-  isDragging: PropTypes.bool.isRequired,
+  playlistsAdd: PropTypes.func.isRequired,
 };
 
 export default withRouter(
   connect(
-    ({ playlists, dragging }) => ({
-      playlists: playlists.playlists,
-      isDragging: dragging.isDragging,
+    ({ playlists }) => ({
+      playlists: [],
     }),
     dispatch => ({
       playlistsAdd: payload => dispatch(playlistsAdd(payload)),

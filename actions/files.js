@@ -1,4 +1,4 @@
-import { startCase, set, has, last } from 'lodash';
+import { startCase, has, last, get } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import moment from 'moment';
@@ -12,40 +12,42 @@ export const filesUpdate = payload => ({
 });
 
 export const filesGetUrl = payload => (dispatch, getState) => {
-  const { source, path: filePath, shouldPlay } = payload;
+  const { path: filePath, shouldPlay } = payload;
   const { settings, files } = getState();
-  const fileIndex = files[source].findIndex(file => file.path === filePath);
-  const file = files[source][fileIndex];
-  const getNewSettings = (file, loading) => ({
+  const fileIndex = files.findIndex(file => file.path === filePath);
+  const file = files[fileIndex];
+  const getNewSettings = newSettings => ({
     ...settings,
-    [source]: {
-      ...settings[source],
-      position: fileIndex,
-    },
     player: {
       ...settings.player,
-      source,
-      file,
-      playing: true,
-      loading,
+      ...newSettings,
     },
   });
 
-  // If the current linkDate is not too old
+  // Update state to indicate song was selected and URL is loading
+  if (shouldPlay) {
+    dispatch(
+      settingsReplace(
+        getNewSettings({
+          file,
+          position: fileIndex,
+          loading: true,
+          playing: true,
+        }),
+      ),
+    );
+  }
+
+  // If the current linkDate is not too old no need to load a new link
   if (
     has(file, 'urlDate') &&
     moment(file.urlDate).isAfter(moment().subtract(3, 'hours'))
   ) {
     if (shouldPlay) {
-      dispatch(settingsReplace(getNewSettings(file, false)));
+      dispatch(settingsReplace(getNewSettings({ loading: false })));
     }
 
     return Promise.resolve();
-  }
-
-  // Update state to indicate song was selected and URL is loading
-  if (shouldPlay) {
-    dispatch(settingsReplace(getNewSettings(file, true)));
   }
 
   const accessToken = settings.cloud.key;
@@ -62,13 +64,13 @@ export const filesGetUrl = payload => (dispatch, getState) => {
       }),
     )
     .then(file => {
-      dispatch(filesUpdate({ file, source }));
+      dispatch(filesUpdate({ file }));
 
       if (shouldPlay) {
-        dispatch(settingsReplace(getNewSettings(file, false)));
+        dispatch(settingsReplace(getNewSettings({ file, loading: false })));
       }
     })
-    .catch(() => notifier.error('Failed to get steaming URL'));
+    .catch(() => notifier.error('Failed to get streaming URL'));
 };
 
 export const filesReplace = files => ({
@@ -84,13 +86,14 @@ export const filesSync = () => (dispatch, getState) => {
 
   // Signal that syncing is starting
   dispatch(
-    settingsReplace(
-      set({ ...getState().settings }, 'cloud', {
+    settingsReplace({
+      ...getState().settings,
+      cloud: {
         ...settingsCloud,
         date: Date.now(),
         status: 'syncing',
-      }),
-    ),
+      },
+    }),
   );
 
   const getEntries = ({ cursor, list, entries }) => {
@@ -116,49 +119,41 @@ export const filesSync = () => (dispatch, getState) => {
     entries: [],
   })
     .then(entries =>
-      entries.reduce(
-        (files, entry) => {
-          if (entry['.tag'] === 'file') {
-            const filePath = entry.path_lower.replace(`${path}/`, '');
-            const parts = filePath.split('/');
-            const fileName = parts.pop().split('.');
-            const fileExt = fileName.pop();
-            const type = parts[0] === 'videos' ? 'video' : getFileType(fileExt);
-            let name = startCase(fileName.join('.'));
-            let track = null;
+      entries.reduce((files, entry) => {
+        if (entry['.tag'] === 'file') {
+          const filePath = entry.path_lower.replace(`${path}/`, '');
+          const parts = filePath.split('/');
+          const fileName = parts.pop().split('.');
+          const fileExt = fileName.pop();
+          const type = parts[0] === 'videos' ? 'video' : getFileType(fileExt);
+          let name = startCase(fileName.join('.'));
+          let track = null;
 
-            if (/^[0-9]{2}[" "]/.test(name)) {
-              track = Number(name.substring(0, 2));
-              name = name.substring(3);
-            }
-
-            if (type === 'audio') {
-              files.audio.push({
-                album: startCase(parts.pop()),
-                artist: startCase(parts.pop()),
-                name,
-                path: filePath,
-                track,
-                link: null,
-                linkDate: null,
-                type,
-              });
-            } else if (type === 'video') {
-              files.video.push({
-                name: startCase(fileName.join('.')),
-                category: parts.length > 1 ? startCase(last(parts)) : '',
-                path: filePath,
-                link: null,
-                linkDate: null,
-                type,
-              });
-            }
+          if (/^[0-9]{2}[" "]/.test(name)) {
+            track = Number(name.substring(0, 2));
+            name = name.substring(3);
           }
 
-          return files;
-        },
-        { audio: [], video: [] },
-      ),
+          files.push({
+            album: startCase(parts.pop()),
+            artist: startCase(parts.pop()),
+            name: type === 'video' ? startCase(fileName.join('.')) : name,
+            category:
+              type === 'video'
+                ? parts.length > 1
+                  ? startCase(last(parts))
+                  : ''
+                : '',
+            path: filePath,
+            track,
+            link: null,
+            linkDate: null,
+            type,
+          });
+        }
+
+        return files;
+      }, []),
     )
     .then(files => {
       // Start using new files
@@ -166,13 +161,14 @@ export const filesSync = () => (dispatch, getState) => {
 
       // Signal that syncing was successful
       dispatch(
-        settingsReplace(
-          set({ ...getState().settings }, 'cloud', {
+        settingsReplace({
+          ...getState().settings,
+          cloud: {
             ...settingsCloud,
             date: Date.now(),
             status: 'success',
-          }),
-        ),
+          },
+        }),
       );
 
       // Save files to cloud
@@ -186,16 +182,10 @@ export const filesSync = () => (dispatch, getState) => {
       if (error.message === 'cancelled') {
         cloud.status = 'cancelled';
       } else {
-        const errorMessage =
-          error.error && error.error.error_summary
-            ? error.error.error_summary
-            : 'Unknown error';
-        notifier.error(errorMessage);
+        notifier.error(get(error, 'error.error_summary') || 'Unknown error');
       }
 
       // Signal that syncing was not successful
-      dispatch(
-        settingsReplace(set({ ...getState().settings }, 'cloud', cloud)),
-      );
+      dispatch(settingsReplace({ ...getState().settings, cloud }));
     });
 };

@@ -16,9 +16,6 @@ export const initialState = {
   },
   player: {
     source: 'media',
-    position: 0,
-    sortBy: 'artist',
-    sortDirection: true,
     volume: 0.1,
     muted: false,
     playing: false,
@@ -28,6 +25,8 @@ export const initialState = {
     played: 0,
     playedSeconds: 0,
   },
+  // Stores position, sortBy, sortDirection for each list
+  lists: {},
 };
 
 const reducer = (state = initialState, action) => {

@@ -15,88 +15,19 @@ import { filesGetUrl } from '../actions/files';
 import listColumns from '../lib/listColumns';
 import listSearchKeys from '../lib/listSearchKeys';
 import { titleToSlug } from '../lib/playlists';
+import getDefaulListSettings from '../lib/getDefaulListSettings';
 import ListRow from './ListRow';
 
 class List extends React.Component {
-  state = {
-    search: '',
-  };
-  onRowClick(arg) {
-    const position = get(arg, 'index');
-    const path = get(arg, 'rowData.path');
-    const {
-      source,
-      playlists: { playlists },
-      filesGetUrl,
-      router,
-    } = this.props;
+  constructor(props) {
+    super(props);
 
-    switch (source) {
-      case 'playlists': {
-        const slug = titleToSlug(get(playlists, `[${position}].name`));
-        router.push(`/playlists/${slug}`);
-        break;
-      }
-      case 'playlist': {
-        console.log('helllo play me');
-        break;
-      }
-      default:
-        filesGetUrl({ source, path, shouldPlay: true, position });
-    }
-  }
-  getRowRenderer(arg) {
-    const { settings, source } = this.props;
-    const currentPath = get(settings, 'player.file.path');
-    const path = get(arg, 'rowData.path');
-    const className = get(arg, 'className');
-    const newArg = {
-      ...arg,
-      key: path,
-      isDraggable: false,
-      className: `${className} ${path === currentPath ? 'active' : ''}`,
-    };
-
-    switch (source) {
-      case 'playlist':
-        newArg.isDraggable = true;
-        break;
-      case 'playlists':
-        newArg.key = get(arg, 'rowData.name');
-        newArg.className = get(arg, 'className');
-        break;
-      default:
-        break;
-    }
-
-    return <ListRow {...newArg} />;
-  }
-  goToCurrentPosition() {
-    const { files, settings } = this.props;
-    const {
-      player: { file, source },
-    } = settings;
-    const { sortBy, sortDirection } = settings[source];
-    const data = files[source];
-    const sortedData = getSortedData(data, sortBy, sortDirection);
-    const currentIndex = sortedData.findIndex(({ path }) => path === file.path);
-    this.table.scrollToRow(currentIndex);
-  }
-  render() {
     const {
       source,
       files,
       playlists: { playlists },
-      settings,
-      settingsReplace,
-      title,
-      header,
-    } = this.props;
-    const playerSource = get(settings, 'player.source');
-    const { search } = this.state;
-    let position;
-    let sortBy;
-    let sortDirection;
+    } = props;
+
     let data;
 
     switch (source) {
@@ -107,31 +38,102 @@ class List extends React.Component {
           updated: moment(updated).format('YYYY-M-D'),
           tracks: tracks.length,
         }));
-        ({ position, sortBy, sortDirection } = this.state);
         break;
-      case 'playlist':
-        data = [];
-        ({ position, sortBy, sortDirection } = this.state);
+      case 'video':
+      case 'audio':
+        data = files.filter(({ type }) => type === 'source');
         break;
+      // Playlists
       default: {
-        data = files[source];
-        ({ position, sortBy, sortDirection } = get(
-          settings,
-          `[${source}]`,
-          {},
-        ));
+        data = [];
       }
     }
 
+    this.state = {
+      search: '',
+      data,
+      searchedData: data,
+      sortedData: data,
+    };
+  }
+  onRowClick(arg) {
+    const position = get(arg, 'index');
+    const path = get(arg, 'rowData.path');
+    const {
+      source,
+      playlists: { playlists },
+      filesGetUrl,
+      router,
+    } = this.props;
+
+    if (source === 'playlists') {
+      const slug = titleToSlug(get(playlists, `[${position}].name`));
+      router.push(`/playlists/${slug}`);
+    } else {
+      filesGetUrl({ source, path, shouldPlay: true, position });
+    }
+  }
+  getRowRenderer(arg) {
+    const { settings, source } = this.props;
+    const currentPath = get(settings, 'player.file.path');
+    const path = get(arg, 'rowData.path');
+    const className = get(arg, 'className');
+    const newArg = {
+      ...arg,
+      key: path,
+      className: `${className} ${path === currentPath ? 'active' : ''}`,
+    };
+
+    switch (source) {
+      case 'playlists':
+        newArg.key = get(arg, 'rowData.name');
+        newArg.className = get(arg, 'className');
+        break;
+      default:
+        break;
+    }
+
+    return <ListRow {...newArg} />;
+  }
+  setSearchedData() {
+    const { source, settings } = this.props;
+    const { search, data } = this.state;
+    const { sortBy, sortDirection } =
+      settings.lists[source] || getDefaulListSettings();
+    const searchKeys = listSearchKeys[source] || listSearchKeys.playlists;
     const searchedData = search
       ? data.filter(entry =>
-          listSearchKeys[source].find(
+          searchKeys[source].find(
             key =>
               entry[key].toLowerCase().indexOf(search.toLowerCase()) !== -1,
           ),
         )
       : data;
+
+    this.setState({ searchedData }, () =>
+      this.setSortedData({ sortBy, sortDirection }),
+    );
+  }
+  setSortedData({ sortBy, sortDirection }) {
+    const { searchedData } = this.state;
     const sortedData = getSortedData(searchedData, sortBy, sortDirection);
+    this.setState({ sortedData });
+  }
+  goToCurrentPosition() {
+    const { sortedData } = this.state;
+    const { settings } = this.props;
+    const {
+      player: { file },
+    } = settings;
+    const currentIndex = sortedData.findIndex(({ path }) => path === file.path);
+    this.table.scrollToRow(currentIndex);
+  }
+  render() {
+    const { source, settings, settingsReplace, title, header } = this.props;
+    const playerSource = get(settings, 'player.source');
+    const { search, sortedData } = this.state;
+    const { position, sortBy, sortDirection } =
+      settings.lists[source] || getDefaulListSettings();
 
     return (
       <div className="root">
@@ -145,7 +147,11 @@ class List extends React.Component {
               addonBefore={<Icon type="search" />}
               placeholder="Search"
               value={search}
-              onChange={e => this.setState({ search: e.target.value })}
+              onChange={e =>
+                this.setSearch({ search: e.target.value }, () =>
+                  this.setSearchedData(),
+                )
+              }
             />
           </div>
           {(source === 'video' || source === 'audio') && (
@@ -184,7 +190,8 @@ class List extends React.Component {
                     rowHeight={26}
                     scrollToIndex={position}
                     width={width}
-                    sort={({ sortBy, sortDirection }) =>
+                    sort={({ sortBy, sortDirection }) => {
+                      this.setSortedData({ sortBy, sortDirection });
                       settingsReplace({
                         ...settings,
                         [source]: {
@@ -192,8 +199,8 @@ class List extends React.Component {
                           sortBy,
                           sortDirection: sortDirection === SortDirection.ASC,
                         },
-                      })
-                    }
+                      });
+                    }}
                     sortBy={sortBy}
                     sortDirection={
                       sortDirection ? SortDirection.ASC : SortDirection.DESC

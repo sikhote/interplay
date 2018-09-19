@@ -1,4 +1,4 @@
-import { startCase, has, last, get } from 'lodash';
+import { startCase, has, get } from 'lodash';
 import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import moment from 'moment';
@@ -122,33 +122,39 @@ export const filesSync = () => (dispatch, getState) => {
       entries.reduce((files, entry) => {
         if (entry['.tag'] === 'file') {
           const filePath = entry.path_lower.replace(`${path}/`, '');
-          const parts = filePath.split('/');
-          const fileName = parts.pop().split('.');
-          const fileExt = fileName.pop();
-          const type = parts[0] === 'videos' ? 'video' : getFileType(fileExt);
-          let name = startCase(fileName.join('.'));
-          let track = null;
+          const parts = filePath.split('/').reverse();
+          const fileNameParts = parts[0].split('.');
+          const type = getFileType(fileNameParts.pop());
+          let name = startCase(fileNameParts.join('.'));
+          let track;
 
-          if (/^[0-9]{2}[" "]/.test(name)) {
+          if (!type) {
+            return files;
+          }
+
+          if (type === 'audio' && /^[0-9]{2}[" "]/.test(name)) {
             track = Number(name.substring(0, 2));
             name = name.substring(3);
           }
 
           files.push({
-            album: startCase(parts.pop()),
-            artist: startCase(parts.pop()),
-            name: type === 'video' ? startCase(fileName.join('.')) : name,
-            category:
-              type === 'video'
-                ? parts.length > 1
-                  ? startCase(last(parts))
-                  : ''
-                : '',
+            name,
             path: filePath,
-            track,
-            link: null,
-            linkDate: null,
+            link: undefined,
+            linkDate: undefined,
             type,
+            ...(type === 'audio'
+              ? {
+                  album: startCase(get(parts, '[1]', '')),
+                  artist: startCase(get(parts, '[2]', '')),
+                  track,
+                }
+              : {}),
+            ...(type === 'video'
+              ? {
+                  category: startCase(get(parts, '[1]', '')),
+                }
+              : {}),
           });
         }
 
@@ -156,6 +162,7 @@ export const filesSync = () => (dispatch, getState) => {
       }, []),
     )
     .then(files => {
+      console.log(files);
       // Start using new files
       dispatch(filesReplace(files));
 
@@ -177,15 +184,13 @@ export const filesSync = () => (dispatch, getState) => {
       notifier.success('Synced files successfully');
     })
     .catch(error => {
-      const cloud = { ...settingsCloud, date: Date.now(), status: 'error' };
+      const cloud = {
+        ...settingsCloud,
+        date: Date.now(),
+        status: error.message === 'cancelled' ? 'cancelled' : 'error',
+      };
 
-      if (error.message === 'cancelled') {
-        cloud.status = 'cancelled';
-      } else {
-        notifier.error(get(error, 'error.error_summary') || 'Unknown error');
-      }
-
-      // Signal that syncing was not successful
       dispatch(settingsReplace({ ...getState().settings, cloud }));
+      notifier.error(get(error, 'error.error_summary') || 'Unknown error');
     });
 };

@@ -13,7 +13,7 @@ const Playlists = ({ alpha: slug, playlists: { playlists } }) => {
       key={slug || 'playlists'}
       title={get(playlist, 'name') || 'playlists'}
       header={get(playlist, 'name') || 'Playlists'}
-      source={playlist ? 'playlist' : 'playlists'}
+      source={playlist ? playlist.name : 'playlists'}
     />
   );
 };

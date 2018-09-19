@@ -12,8 +12,6 @@ export const cloudGet = () => (dispatch, getState) => {
     settings: {
       cloud: { key: accessToken, path, user },
     },
-    files,
-    playlists,
   } = getState();
   const dropbox = new Dropbox({ accessToken });
 
@@ -59,7 +57,7 @@ export const cloudGet = () => (dispatch, getState) => {
       }),
     )
     .then(cloudState => {
-      dispatch(cloudGetSuccess(cloudState));
+      // dispatch(cloudGetSuccess(cloudState));
       notifier.success('Successfully downloaded from cloud');
     })
     .catch(() => notifier.error('Failed to download from cloud'));

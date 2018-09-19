@@ -16,7 +16,8 @@ const Navigation = ({ router, playlists }) => {
       <style jsx>{css}</style>
       {[
         { key: '/', title: 'Settings', icon: 'cog' },
-        { key: '/media', title: 'Media', icon: 'list' },
+        { key: '/audio', title: 'Audio', icon: 'audio' },
+        { key: '/video', title: 'Video', icon: 'video' },
         {
           key: '/playlists',
           title: 'Playlists',
@@ -27,13 +28,13 @@ const Navigation = ({ router, playlists }) => {
           key: `/playlists/${titleToSlug(name)}`,
           title: name,
           icon: 'star',
-          className: 'playlist$',
+          className: 'playlist',
         })),
         {
           key: 'playlists-add',
           title: '',
           icon: ' list-add',
-          className: 'playlists-add',
+          className: 'playlist-add',
         },
       ].map(({ key, title, icon, className = '' }, index) => (
         <div

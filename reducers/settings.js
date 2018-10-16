@@ -15,7 +15,7 @@ export const initialState = {
     editing: true,
   },
   player: {
-    source: 'media',
+    source: 'audio',
     volume: 0.1,
     muted: false,
     playing: false,
@@ -25,7 +25,7 @@ export const initialState = {
     played: 0,
     playedSeconds: 0,
   },
-  // Stores position, sortBy, sortDirection for each list
+  // Stores position, sortBy, sortDirection, search for each list
   lists: {},
 };
 

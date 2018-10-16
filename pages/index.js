@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 import CustomHead from '../components/CustomHead';
 import { settingsReplace } from '../actions/settings';
 import { filesSync } from '../actions/files';
-import { cloudSaveOther, cloudGet } from '../actions/cloud';
+import { cloudSaveOther, cloudGet, cloudDelete } from '../actions/cloud';
 import { initialState } from '../reducers/settings';
 import style from '../styles/settings';
 
@@ -17,6 +17,7 @@ const Settings = ({
   filesSync,
   cloudSaveOther,
   cloudGet,
+  cloudDelete,
   settings,
   cloud,
 }) => (
@@ -156,13 +157,16 @@ const Settings = ({
               />
             </Tooltip>
           )}
-        <Tooltip placement="top" title="Reset local settings">
+        <Tooltip placement="top" title="Delete all settings">
           <Button
             disabled={settings.cloud.editing}
             type="primary"
             shape="circle"
             icon="delete"
-            onClick={() => settingsReplace(initialState)}
+            onClick={() => {
+              settingsReplace(initialState);
+              cloudDelete();
+            }}
           />
         </Tooltip>
       </div>
@@ -177,6 +181,7 @@ Settings.propTypes = {
   filesSync: PropTypes.func.isRequired,
   cloudSaveOther: PropTypes.func.isRequired,
   cloudGet: PropTypes.func.isRequired,
+  cloudDelete: PropTypes.func.isRequired,
 };
 
 export default connect(
@@ -186,5 +191,6 @@ export default connect(
     filesSync: () => dispatch(filesSync()),
     cloudSaveOther: payload => dispatch(cloudSaveOther(payload)),
     cloudGet: () => dispatch(cloudGet()),
+    cloudDelete: () => dispatch(cloudDelete()),
   }),
 )(Settings);

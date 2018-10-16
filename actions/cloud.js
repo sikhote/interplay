@@ -57,13 +57,13 @@ export const cloudGet = () => (dispatch, getState) => {
       }),
     )
     .then(cloudState => {
-      // dispatch(cloudGetSuccess(cloudState));
+      dispatch(cloudGetSuccess(cloudState));
       notifier.success('Successfully downloaded from cloud');
     })
     .catch(() => notifier.error('Failed to download from cloud'));
 };
 
-const throttledCloudSaveOther = throttle(callback => callback(), 10000, {
+const throttledCloudSaveOther = throttle(callback => callback(), 5000, {
   trailing: true,
 });
 
@@ -103,7 +103,7 @@ export const cloudSaveFiles = () => (dispatch, getState) => {
     .catch(() => notifier.error('Failed to save to cloud'));
 };
 
-const throttledCloudSavePlaylists = throttle(callback => callback(), 60000, {
+const throttledCloudSavePlaylists = throttle(callback => callback(), 5000, {
   trailing: true,
 });
 
@@ -126,3 +126,16 @@ export const cloudSavePlaylists = () => (dispatch, getState) =>
       })
       .catch(() => notifier.error('Failed to save to cloud'));
   });
+
+export const cloudDelete = () => (dispatch, getState) => {
+  const {
+    settings: {
+      cloud: { key: accessToken, path, user },
+    },
+  } = getState();
+  const dropbox = new Dropbox({ accessToken });
+
+  dropbox
+    .filesDelete({ path: `/${path}/interplay/${user}` })
+    .catch(() => notifier.error('Failed to delete from cloud'));
+};

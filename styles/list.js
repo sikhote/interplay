@@ -36,7 +36,7 @@ export default css`
     .table {
       grid-area: table;
 
-      &.playlist,
+      ${'' /* &.playlist,
       &.files {
         :global(.ReactVirtualized__Table__headerRow),
         :global(.ReactVirtualized__Table__row) {
@@ -49,19 +49,19 @@ export default css`
         :global(.ReactVirtualized__Table__row) {
           grid: none / 1fr 90px 90px 60px;
         }
-      }
+      } */}
     }
 
     :global(.ReactVirtualized__Grid) {
       outline: none;
     }
 
-    :global(.ReactVirtualized__Table__headerRow),
+    ${'' /* :global(.ReactVirtualized__Table__headerRow),
     :global(.ReactVirtualized__Table__row) {
       display: grid;
-      outline: none;
+
       height: 100%;
-    }
+    } */}
 
     :global(.ReactVirtualized__Table__headerColumn) {
       white-space: nowrap;
@@ -69,6 +69,7 @@ export default css`
       padding-left: ${spacing.size3}px;
       padding-right: ${spacing.size3}px;
       align-items: center;
+      outline: none;
     }
 
     :global(.ReactVirtualized__Table__headerColumn) {
@@ -89,10 +90,10 @@ export default css`
       height: 24px;
     }
 
-    :global(.ReactVirtualized__Table__headerRow) {
+    ${'' /* :global(.ReactVirtualized__Table__headerRow) {
       display: grid;
       align-items: center;
-    }
+    } */}
 
     :global(.ReactVirtualized__Table__headerRow) {
       border-top: 1px solid rgba(0, 0, 0, 0.1);

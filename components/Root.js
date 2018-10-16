@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DragDropContext } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
 import Player from '../components/Player';
 import Navigation from '../components/Navigation';
@@ -11,17 +10,15 @@ const Root = ({ children }) => (
   <div className="root">
     <style jsx>{css}</style>
     <LoadingBar />
-    <DragDropContext onDragEnd={() => console.log('done dragging')}>
-      <div className="container">
-        <div className="navigation">
-          <Navigation />
-        </div>
-        <div className="main">
-          <Player />
-          {children}
-        </div>
+    <div className="container">
+      <div className="navigation">
+        <Navigation />
       </div>
-    </DragDropContext>
+      <div className="main">
+        <Player />
+        {children}
+      </div>
+    </div>
   </div>
 );
 

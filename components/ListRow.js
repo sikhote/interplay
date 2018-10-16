@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Draggable } from 'react-beautiful-dnd';
 import { get } from 'lodash';
-import css from '../styles/list-row';
+import { transparentize } from 'polished';
+import { colors, spacing } from '../styles/base';
 
 const ListRow = ({
-  className,
   columns,
   index,
   onRowClick,
@@ -16,23 +15,30 @@ const ListRow = ({
   rowData,
   style,
   settings,
-  source,
 }) => {
   const currentPath = get(settings, 'player.file.path');
   const path = get(rowData, 'path');
-  let isDraggable = false;
-  let newClassName = className;
+  const newStyle = {
+    ...style,
+    outline: 'none',
+    alignItems: 'center',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    paddingLeft: spacing.size3,
+    paddingRight: spacing.size3,
+  };
+  // const innerStyle = {
+  //   display: style.display,
+  //   grid: style.grid,
+  //   outline: 'none',
+  // }
+  // delete containerStyle.display;
+  // delete containerStyle.grid;
 
-  switch (source) {
-    case 'playlist':
-      newClassName = `${className} ${path === currentPath ? 'active' : ''}`;
-      isDraggable = true;
-      break;
-    case 'playlists':
-      break;
-    default:
-      newClassName = `${className} ${path === currentPath ? 'active' : ''}`;
-      break;
+  if (path === currentPath) {
+    newStyle.backgroundColor = transparentize(0.8, colors.blue);
+  } else if (index % 2 === 0) {
+    newStyle.backgroundColor = 'rgba(0, 0, 0, 0.03)';
   }
 
   const a11yProps = {};
@@ -67,43 +73,18 @@ const ListRow = ({
     }
   }
 
-  const inner = (
-    <div
-      className={`${newClassName}${index % 2 === 0 ? ' even' : ''}`}
-      {...a11yProps}
-    >
+  return (
+    // <div style={containerStyle}>
+    <div style={newStyle} {...a11yProps}>
       {columns}
     </div>
-  );
-
-  return (
-    <div className="root" style={style}>
-      <style jsx>{css}</style>
-      {isDraggable ? (
-        <Draggable draggableId={rowData.name} index={index}>
-          {(provided, { isDragging }) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              className={`draggable${isDragging ? ' is-dragging' : ''}`}
-            >
-              {inner}
-            </div>
-          )}
-        </Draggable>
-      ) : (
-        inner
-      )}
-    </div>
+    // </div>
   );
 };
 
 ListRow.propTypes = {
-  className: PropTypes.string.isRequired,
   columns: PropTypes.array.isRequired,
   index: PropTypes.number.isRequired,
-  isScrolling: PropTypes.bool.isRequired,
   onRowClick: PropTypes.func,
   onRowDoubleClick: PropTypes.func,
   onRowMouseOver: PropTypes.func,
@@ -112,7 +93,6 @@ ListRow.propTypes = {
   rowData: PropTypes.any.isRequired,
   style: PropTypes.any.isRequired,
   settings: PropTypes.object.isRequired,
-  source: PropTypes.string.isRequired,
 };
 
 ListRow.defaultProps = {

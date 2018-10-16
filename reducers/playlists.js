@@ -32,7 +32,7 @@ const reducer = (state = initialState, action) => {
       const newState = state.slice();
       const { playlist } = action.payload;
       const index = newState.findIndex(({ id }) => id === playlist.id);
-      newState.splice(index, 0);
+      newState.splice(index, 1);
       return newState;
     }
     default:

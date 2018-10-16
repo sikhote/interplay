@@ -162,7 +162,6 @@ export const filesSync = () => (dispatch, getState) => {
       }, []),
     )
     .then(files => {
-      console.log(files);
       // Start using new files
       dispatch(filesReplace(files));
 

@@ -1,16 +1,15 @@
 import React from 'react';
-import App, { Container } from 'next/app';
-import withRedux from 'next-redux-wrapper';
+import NextApp, { Container } from 'next/app';
 import Router from 'next/router';
-import qp from 'query-parse';
-import Root from '../components/Root';
-import makeStore from '../lib/makeStore';
+import Error from 'next/error';
+import Providers from '../components/Providers';
 import isBrowser from '../lib/isBrowser';
-import { getCurrentPath, getParams } from '../lib/routing';
-import globalStyle from '../styles/global';
-import { cloudGet } from '../actions/cloud';
+import { matches, getCurrentPath, pages } from '../lib/routing';
+import syncRouting from '../lib/syncRouting';
+import Empty from '../components/Empty';
+import '../static/css/fontello.css';
 
-class ReduxApp extends App {
+class App extends NextApp {
   static async getInitialProps({ Component, ctx }) {
     const pageProps = Component.getInitialProps
       ? await Component.getInitialProps(ctx)
@@ -18,47 +17,29 @@ class ReduxApp extends App {
     return { pageProps };
   }
   componentDidMount() {
-    const currentPath = getCurrentPath();
-    const { page, ...params } = getParams(currentPath);
-
-    if (Router.route !== `/${page}`) {
-      Router.push(`/${page}?${qp.toString(params)}`, currentPath);
-    }
-
-    this.tryCloudGet();
-  }
-  tryCloudGet() {
-    const {
-      store: { dispatch, getState },
-    } = this.props;
-    const {
-      cloud: { hasCloudStore },
-      settings: {
-        cloud: { key, path },
-      },
-    } = getState();
-
-    if (!hasCloudStore && key && path) {
-      dispatch(cloudGet());
-    }
+    syncRouting();
   }
   render() {
     const { Component, pageProps } = this.props;
     const currentPath = getCurrentPath();
-    const { page } = getParams(currentPath);
+    const match = matches.find(m => m(currentPath));
+    const { page = '' } = match ? match(currentPath) : {};
 
     return (
       <Container>
-        <style jsx global>
-          {globalStyle}
-        </style>
-        <Root>
+        <Providers>
           {isBrowser &&
-            Router.route === `/${page}` && <Component {...pageProps} />}
-        </Root>
+            (!match || !pages.includes(page) ? (
+              <Error statusCode={404} />
+            ) : isBrowser && Router.pathname === currentPath ? (
+              <Component {...pageProps} />
+            ) : (
+              <Empty />
+            ))}
+        </Providers>
       </Container>
     );
   }
 }
 
-export default withRedux(makeStore)(ReduxApp);
+export default App;

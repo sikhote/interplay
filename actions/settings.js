@@ -7,3 +7,8 @@ export const settingsReplace = settings => dispatch => {
   });
   dispatch(cloudSaveOther());
 };
+
+export const settingsReplaceLocal = settings => ({
+  type: 'SETTINGS_REPLACE',
+  payload: { settings },
+});

@@ -17,7 +17,6 @@ const rootReducer = (state, action) => {
     const newCloudState = merge(action.payload.cloudState, {
       settings: {
         cloud: {
-          editing: false,
           key: get(state, 'settings.cloud.key') || '',
           path: get(state, 'settings.cloud.path') || '',
           user: get(state, 'settings.cloud.user') || '',

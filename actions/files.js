@@ -1,10 +1,10 @@
 import { startCase, has, get } from 'lodash';
-import { message as notifier } from 'antd';
 import Dropbox from 'dropbox';
 import moment from 'moment';
 import { getFileType } from '../lib/files';
 import { settingsReplace } from './settings';
 import { cloudSaveFiles } from './cloud';
+import notifier from '../lib/notifier';
 
 export const filesUpdate = payload => ({
   type: 'FILES_UPDATE',
@@ -16,13 +16,17 @@ export const filesGetUrl = payload => (dispatch, getState) => {
   const { settings, files } = getState();
   const fileIndex = files.findIndex(file => file.path === filePath);
   const file = files[fileIndex];
-  const getNewSettings = newSettings => ({
-    ...settings,
-    player: {
-      ...settings.player,
-      ...newSettings,
-    },
-  });
+  const getNewSettings = newSettings => {
+    const { settings } = getState();
+
+    return {
+      ...settings,
+      player: {
+        ...settings.player,
+        ...newSettings,
+      },
+    };
+  };
 
   // Update state to indicate song was selected and URL is loading
   if (shouldPlay) {
@@ -56,18 +60,19 @@ export const filesGetUrl = payload => (dispatch, getState) => {
 
   return dropbox
     .filesGetTemporaryLink({ path: `${path}/${filePath}` })
-    .then(({ link: url }) =>
-      Promise.resolve({
+    .then(({ link: url }) => {
+      const newFile = {
         ...file,
         url,
         urlDate: Date.now(),
-      }),
-    )
-    .then(file => {
-      dispatch(filesUpdate({ file }));
+      };
+
+      dispatch(filesUpdate({ file: newFile }));
 
       if (shouldPlay) {
-        dispatch(settingsReplace(getNewSettings({ file, loading: false })));
+        dispatch(
+          settingsReplace(getNewSettings({ file: newFile, loading: false })),
+        );
       }
     })
     .catch(() => notifier.error('Failed to get streaming URL'));

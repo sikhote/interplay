@@ -1,53 +1,23 @@
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
+import { get } from 'lodash';
+import { AppRegistry } from '../components/rnw';
 
-export default class extends Document {
+export default class IntlDocument extends Document {
+  static async getInitialProps({ renderPage, req }) {
+    AppRegistry.registerComponent('Main', () => Main);
+    const { getStyleElement } = AppRegistry.getApplication('Main', {});
+    const page = renderPage();
+    const styles = React.Children.toArray([getStyleElement()]);
+    return { ...page, locale: get(req, 'locale'), styles };
+  }
   render() {
+    const { locale } = this.props;
+
     return (
-      <html lang="en">
+      <html lang={locale}>
         <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-          />
-          <link
-            rel="apple-touch-icon"
-            sizes="180x180"
-            href="/static/images/favicons/apple-touch-icon.png"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="/static/images/favicons/favicon-32x32.png"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="16x16"
-            href="/static/images/favicons/favicon-16x16.png"
-          />
-          <link
-            rel="manifest"
-            href="/static/images/favicons/site.webmanifest"
-          />
-          <link
-            rel="mask-icon"
-            href="/static/images/favicons/safari-pinned-tab.svg"
-            color="#5bbad5"
-          />
-          <link
-            rel="shortcut icon"
-            href="/static/images/favicons/favicon.ico"
-          />
-          <meta name="msapplication-TileColor" content="#00aba9" />
-          <meta
-            name="msapplication-config"
-            content="/static/images/favicons/browserconfig.xml"
-          />
-          <meta name="theme-color" content="#ffffff" />
-          <link rel="stylesheet" href="/static/css/antd.min.css" />
-          <link rel="stylesheet" href="/static/css/fontello.css" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
         <body>
           <Main />

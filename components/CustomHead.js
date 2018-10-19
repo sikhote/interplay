@@ -1,23 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import content from '../lib/content';
+import { injectIntl } from 'react-intl';
 
-const CustomHead = ({ title }) => (
+const CustomHead = ({ title, intl }) => (
   <Head>
     <title>
-      {content.name}
-      {title ? `${content.divider}${title}` : ''}
+      {intl.formatMessage({ id: 'site_name' })}
+      {title ? `${intl.formatMessage({ id: 'site_divider' })}${title}` : ''}
     </title>
   </Head>
 );
 
 CustomHead.propTypes = {
   title: PropTypes.string,
+  intl: PropTypes.object.isRequired,
 };
 
 CustomHead.defaultProps = {
   title: '',
 };
 
-export default CustomHead;
+export default injectIntl(CustomHead);

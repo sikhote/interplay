@@ -1,6 +1,6 @@
 import Dropbox from 'dropbox';
-import { message as notifier } from 'antd';
 import { throttle } from 'lodash';
+import notifier from '../lib/notifier';
 
 export const cloudGetSuccess = cloudState => ({
   type: 'CLOUD_GET_SUCCESS',

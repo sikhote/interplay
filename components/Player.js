@@ -1,7 +1,9 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import { merge, get, throttle } from 'lodash';
+import screenfull from 'screenfull';
 import { Button, Slider, Switch, Icon, Tooltip } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -31,8 +33,11 @@ class Player extends React.Component {
     path: undefined,
     played: 0,
     playedSeconds: 0,
-    isFullScreen: true,
+    isFullscreen: false,
   };
+  componentDidMount() {
+    screenfull.on('change', () => this.setIsFullscreen());
+  }
   componentDidUpdate(prevProps) {
     const { settings, filesGetUrl, cloud } = this.props;
     const { path } = this.state;
@@ -45,9 +50,21 @@ class Player extends React.Component {
       filesGetUrl({ source, path, shouldPlay: true });
     }
   }
+  componentWillUnmount() {
+    screenfull.off('change', () => this.setIsFullscreen());
+  }
+  setIsFullscreen() {
+    this.setState({ isFullscreen: screenfull.isFullscreen });
+  }
   render() {
-    const { played, playedSeconds, path, isFullScreen } = this.state;
-    const { files, settings, settingsReplace, filesGetUrl } = this.props;
+    const { played, playedSeconds, path, isFullscreen } = this.state;
+    const {
+      files,
+      settings,
+      settingsReplace,
+      filesGetUrl,
+      playlists,
+    } = this.props;
     const { player } = settings;
     const {
       source,
@@ -60,16 +77,15 @@ class Player extends React.Component {
       loop,
     } = player;
     const { url, album, artist, name, type, category } = file;
-
     const config = {
       className: 'player',
       loop,
       muted,
-      width: 'auto',
-      height: 'auto',
+      width: type === 'video' ? 124 : 0,
+      height: type === 'video' ? 70 : 0,
       progressInterval: 1000,
-      playsinline: !isFullScreen,
-      controls: isFullScreen,
+      playsinline: true,
+      controls: isFullscreen,
       volume,
       playing,
       url,
@@ -85,24 +101,27 @@ class Player extends React.Component {
           prepareFile(() =>
             filesGetUrl({
               source,
-              ...getFileInDirection(settings, files, 'next'),
+              ...getFileInDirection(settings, files, playlists),
             }),
           );
         }
       },
       onEnded: () =>
         filesGetUrl({
-          ...getFileInDirection(settings, files, random ? 'random' : 'next'),
+          ...getFileInDirection(
+            settings,
+            files,
+            playlists,
+            random ? 'random' : 'next',
+          ),
           source,
           shouldPlay: true,
         }),
-      onClick: () => this.setState({ isFullScreen: !isFullScreen }),
+      onClick: () => screenfull.request(findDOMNode(this.player)),
     };
 
     return (
-      <div
-        className={`root ${type || ''} ${isFullScreen ? 'is-full-screen' : ''}`}
-      >
+      <div className={`root ${type || ''}`}>
         <style jsx>{style}</style>
         <ReactPlayer {...config} />
         <div className="main">
@@ -117,6 +136,7 @@ class Player extends React.Component {
                   ...getFileInDirection(
                     settings,
                     files,
+                    playlists,
                     random ? 'random' : 'previous',
                   ),
                   source,
@@ -152,6 +172,7 @@ class Player extends React.Component {
                   ...getFileInDirection(
                     settings,
                     files,
+                    playlists,
                     random ? 'random' : 'next',
                   ),
                   source,
@@ -253,10 +274,16 @@ Player.propTypes = {
   settings: PropTypes.object.isRequired,
   settingsReplace: PropTypes.func.isRequired,
   filesGetUrl: PropTypes.func.isRequired,
+  playlists: PropTypes.array.isRequired,
 };
 
 export default connect(
-  ({ files, settings, cloud }) => ({ files, settings, cloud }),
+  ({ files, settings, playlists, cloud }) => ({
+    files,
+    settings,
+    playlists,
+    cloud,
+  }),
   dispatch => ({
     settingsReplace: payload => dispatch(settingsReplace(payload)),
     filesGetUrl: payload => dispatch(filesGetUrl(payload)),

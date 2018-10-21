@@ -54,7 +54,7 @@ const Settings = ({
         prefix={<Icon icon="user" fontSize={fontSizes.a4} />}
         placeholder="default"
         value={settings.cloud.user}
-        onChange={({ target: { value } }) => {
+        onChangeText={value => {
           Cookies.set('user', value);
           settingsReplaceLocal(set({ ...settings }, 'cloud.user', value));
         }}
@@ -65,7 +65,7 @@ const Settings = ({
         prefix={<Icon icon="key" />}
         placeholder="ABCD1234"
         value={settings.cloud.key}
-        onChange={({ target: { value } }) => {
+        onChangeText={value => {
           Cookies.set('key', value);
           settingsReplaceLocal(set({ ...settings }, 'cloud.key', value));
         }}
@@ -76,7 +76,7 @@ const Settings = ({
         prefix={<Icon icon="folder" />}
         placeholder="itunes/itunes music"
         value={settings.cloud.path}
-        onChange={({ target: { value } }) => {
+        onChangeText={value => {
           Cookies.set('path', value.toLowerCase());
           settingsReplaceLocal(
             set({ ...settings }, 'cloud.path', value.toLowerCase()),

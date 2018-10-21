@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import { transparentize } from 'polished';
-import { colors, spacing } from '../styles/base';
+import { colors, spacing } from '../../styles/base';
 
 const ListRow = ({
   columns,

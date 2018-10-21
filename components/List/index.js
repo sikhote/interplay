@@ -1,24 +1,29 @@
 import React from 'react';
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
-import { Input, Icon, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'next/router';
 import { get } from 'lodash';
-import style from '../styles/list';
-import CustomHead from './CustomHead';
-import getSortedData from '../lib/getSortedData';
-import getSearchedData from '../lib/getSearchedData';
-import getSourcedData from '../lib/getSourcedData';
-import { settingsReplace } from '../actions/settings';
-import { filesGetUrl } from '../actions/files';
-import getListColumns from '../lib/getListColumns';
-import { titleToSlug } from '../lib/playlists';
-import getDefaulListSettings from '../lib/getDefaulListSettings';
+import getSortedData from '../../lib/getSortedData';
+import getSearchedData from '../../lib/getSearchedData';
+import getSourcedData from '../../lib/getSourcedData';
+import { settingsReplace } from '../../actions/settings';
+import { filesGetUrl } from '../../actions/files';
+import getListColumns from '../../lib/getListColumns';
+import { titleToSlug } from '../../lib/playlists';
+import getDefaulListSettings from '../../lib/getDefaulListSettings';
 import ListRow from './ListRow';
+import styles from './styles';
+import Page from '../Page';
+import H1 from '../html/H1';
+import { View, TextInput, Button } from '../rnw';
+import { bps } from '../../lib/styling';
+import DimensionsContext from '../DimensionsContext';
+import Icon from '../Icon';
 
 class List extends React.Component {
   render() {
+    this.temp = 1;
     const {
       source,
       settings,
@@ -59,40 +64,35 @@ class List extends React.Component {
     };
 
     return (
-      <div className="root">
-        <style jsx>{style}</style>
-        <CustomHead title={title} />
-        <h1 className="header">{header}</h1>
-        <div className="controls">
-          <div className="search">
-            <Input
-              size="small"
-              addonBefore={<Icon type="search" />}
-              placeholder="Search"
-              value={search}
-              onChange={e => saveListSettings({ search: e.target.value })}
-            />
-          </div>
-          {source !== 'playlists' && (
-            <div>
-              <Button
-                disabled={settings.player.source !== source}
-                icon="compass"
-                onClick={() => {
-                  const file = get(this, 'props.settings.player.file', {});
-                  const currentIndex = sortedData.findIndex(
-                    ({ path }) => path === file.path,
-                  );
-                  this.table.scrollToRow(currentIndex);
-                }}
-                size="small"
-              >
-                Current
-              </Button>
-            </div>
-          )}
-        </div>
-        <div className="table">
+      <DimensionsContext.Consumer>
+        {({ width }) => (
+          <Page title={title}>
+            <View style={[styles.top, width < bps.a3 ? styles.topA3 : {}]}>
+              <H1>{header}</H1>
+              <View style={styles.controls}>
+                <TextInput
+                  prefix={<Icon icon="search" />}
+                  placeholder="Search"
+                  value={search}
+                  onChangeText={value => saveListSettings({ search: value })}
+                />
+                {source !== 'playlists' && (
+                  <Button
+                    title="Current"
+                    icon="compass"
+                    disabled={settings.player.source !== source}
+                    onPress={() => {
+                      const file = get(this, 'props.settings.player.file', {});
+                      const currentIndex = sortedData.findIndex(
+                        ({ path }) => path === file.path,
+                      );
+                      this.table.scrollToRow(currentIndex);
+                    }}
+                  />
+                )}
+              </View>
+            </View>
+            {/* <div className="table">
           <AutoSizer>
             {({ height, width }) => (
               <Table
@@ -140,8 +140,10 @@ class List extends React.Component {
               </Table>
             )}
           </AutoSizer>
-        </div>
-      </div>
+        </div> */}
+          </Page>
+        )}
+      </DimensionsContext.Consumer>
     );
   }
 }

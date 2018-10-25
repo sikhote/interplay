@@ -8,7 +8,7 @@ import en from 'react-intl/locale-data/en';
 import { isBrowser, getLocale } from 'parlor';
 import makeStore from '../lib/makeStore';
 import { Dimensions } from './rnw';
-import { translations } from '../lib/localization';
+import translations from '../lib/translations';
 import DimensionsContext from './DimensionsContext';
 import { cloudGet } from '../actions/cloud';
 

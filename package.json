@@ -34,7 +34,7 @@
 				"moment": "2.22.0",
 				"next": "^7.0.2",
 				"next-redux-wrapper": "^2.0.0",
-				"parlor": "0.0.16",
+				"parlor": "0.0.17",
 				"path-match": "1.2.4",
 				"polished": "1.9.2",
 				"prettier": "^1.14.2",

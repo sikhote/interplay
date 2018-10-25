@@ -5647,10 +5647,10 @@ parallel-transform@^1.1.0:
     inherits "^2.0.3"
     readable-stream "^2.1.5"
 
-parlor@0.0.16:
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/parlor/-/parlor-0.0.16.tgz#7b5f78fc4d06bc38fc0342bb61124abb80ab0197"
-  integrity sha512-asfQZEuPh7PDnbbB/VmBQLRv7wy8rUZO63KUawGVy9wQSBDYbBbglWuUjpWbqFI51w7TrZdJxcl9vAX/QMxmmQ==
+parlor@0.0.17:
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/parlor/-/parlor-0.0.17.tgz#4457a70d135a06373baf5a524a3ed69ec6b876f8"
+  integrity sha512-rR06uEidjqc5WPsCzSI9ih04ARBuDoRGNyH4ez8srj/UNF7aY5M81SblwkFWUI9/mzmjuB/Xw3Z6oCPgt0bBqA==
   dependencies:
     "@babel/cli" "^7.1.2"
     "@babel/core" "^7.1.2"

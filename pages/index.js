@@ -52,7 +52,7 @@ const Settings = ({
       <TextInput
         className="user"
         prefix={<Icon icon="user" fontSize={fontSizes.a4} />}
-        placeholder="default"
+        placeholder="user"
         value={settings.cloud.user}
         onChangeText={value => {
           Cookies.set('user', value);
@@ -63,7 +63,7 @@ const Settings = ({
       <TextInput
         className="input"
         prefix={<Icon icon="key" />}
-        placeholder="ABCD1234"
+        placeholder="abc123"
         value={settings.cloud.key}
         onChangeText={value => {
           Cookies.set('key', value);

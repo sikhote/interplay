@@ -12,7 +12,7 @@
 				"eslint": "eslint \"./**/*.js\"",
 				"export": "next build && next export -o build",
 				"invalidate": "serverless invalidate",
-				"watch": "node server.js",
+				"watch": "node node_modules/parlor/dist/next-server.js",
 				"prettier": "prettier --write \"./**/*.js\"",
 				"server": "yarn export; cd build && python -m SimpleHTTPServer",
 				"sync": "serverless sync"
@@ -34,6 +34,7 @@
 				"moment": "2.22.0",
 				"next": "^7.0.2",
 				"next-redux-wrapper": "^2.0.0",
+				"parlor": "0.0.16",
 				"path-match": "1.2.4",
 				"polished": "1.9.2",
 				"prettier": "^1.14.2",

@@ -5,10 +5,10 @@ import { Provider as ReduxProvider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
-import isBrowser from '../lib/isBrowser';
+import { isBrowser, getLocale } from 'parlor';
 import makeStore from '../lib/makeStore';
 import { Dimensions } from './rnw';
-import { getLocale, translations } from '../lib/localization';
+import { translations } from '../lib/localization';
 import DimensionsContext from './DimensionsContext';
 import { cloudGet } from '../actions/cloud';
 

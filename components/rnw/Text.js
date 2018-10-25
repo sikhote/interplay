@@ -25,15 +25,17 @@ const Text = ({
   style,
 }) => (
   <RNWText
-    style={[{
-      fontSize,
-      color,
-      fontWeight,
-      fontFamily,
-      lineHeight,
-      width,
-      textAlign,
-    }].concat(style)}
+    style={[
+      {
+        fontSize,
+        color,
+        fontWeight,
+        fontFamily,
+        lineHeight,
+        width,
+        textAlign,
+      },
+    ].concat(style)}
     numberOfLines={numberOfLines}
     className={messageId}
   >

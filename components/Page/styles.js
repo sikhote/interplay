@@ -23,5 +23,5 @@ export default {
   },
   mainVerticalPaddingA3: {
     paddingVertical: spacing.pageVerticalA3,
-  }
+  },
 };

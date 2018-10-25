@@ -15,11 +15,11 @@ export default {
     paddingHorizontal: spacing.pageHorizontal,
     paddingVertical: spacing.a4,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   itemA3: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   itemTitle: {
     paddingLeft: spacing.a5,

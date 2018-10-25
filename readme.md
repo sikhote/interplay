@@ -1,4 +1,3 @@
-[![NPM version](https://img.shields.io/npm/v/interplay.app.svg)](https://www.npmjs.com/package/interplay.app)
 [![CircleCI Build Status](https://img.shields.io/circleci/project/github/sikhote/interplay.app/master.svg?label=CircleCI)](https://circleci.com/gh/sikhote/interplay.app)
 [![Dependency Status](https://david-dm.org/sikhote/interplay.app.svg)](https://david-dm.org/sikhote/interplay.app)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)

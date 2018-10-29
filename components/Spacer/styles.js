@@ -1,5 +1,5 @@
 export default {
-  spacer: {
-    width: '100%',
-  },
+	spacer: {
+		width: '100%',
+	},
 };

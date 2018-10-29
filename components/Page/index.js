@@ -1,56 +1,71 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from '../rnw';
-import styles from './styles';
+import { Provider as ReduxProvider } from 'react-redux';
+import withRedux from 'next-redux-wrapper';
+import { IntlProvider, addLocaleData } from 'react-intl';
+import en from 'react-intl/locale-data/en';
+import { isBrowser, getLocale } from 'parlor';
+import makeStore from '../../lib/makeStore';
+import translations from '../../lib/translations';
+import { cloudGet } from '../../actions/cloud';
 import Navigation from '../Navigation';
-import DimensionsContext from '../DimensionsContext';
-import { bps } from '../../lib/styling';
-import CustomHead from '../CustomHead';
+import { localStyles, globalStyles } from './styles';
 
-const Page = ({ children, title, horizontalPadding, verticalPadding }) => (
-  <React.Fragment>
-    <CustomHead title={title} />
-    <DimensionsContext.Consumer>
-      {({ width }) => (
-        <View
-          style={[styles.container, width < bps.a3 ? styles.containerA3 : {}]}
-        >
-          <Navigation />
-          <View
-            style={[
-              styles.main,
-              horizontalPadding
-                ? width < bps.a3
-                  ? styles.mainHorizontalPaddingA3
-                  : styles.mainHorizontalPadding
-                : {},
-              verticalPadding
-                ? width < bps.a3
-                  ? styles.mainVerticalPaddingA3
-                  : styles.mainVerticalPadding
-                : {},
-            ]}
-          >
-            {children}
-          </View>
-        </View>
-      )}
-    </DimensionsContext.Consumer>
-  </React.Fragment>
-);
+if (isBrowser) {
+	addLocaleData(en);
+}
+
+class Page extends React.PureComponent {
+	componentDidMount() {
+		this.tryCloudGet();
+	}
+
+	tryCloudGet() {
+		const {
+			store: { dispatch, getState },
+		} = this.props;
+		const {
+			cloud: { hasCloudStore },
+			settings: {
+				cloud: { key, path },
+			},
+		} = getState();
+
+		if (!hasCloudStore && key && path) {
+			dispatch(cloudGet());
+		}
+	}
+
+	render() {
+		const { children, store } = this.props;
+		const messages = translations[getLocale()];
+		const now = Date.now();
+
+		return (
+			<ReduxProvider store={store}>
+				<IntlProvider
+					locale={getLocale()}
+					messages={messages}
+					initialNow={now}
+					textComponent={React.Fragment}
+				>
+					<div className="container">
+						<style jsx>{localStyles}</style>
+						<style global jsx>
+							{globalStyles}
+						</style>
+						<Navigation />
+						<div className="main">{children}</div>
+					</div>
+				</IntlProvider>
+			</ReduxProvider>
+		);
+	}
+}
 
 Page.propTypes = {
-  children: PropTypes.any,
-  title: PropTypes.string,
-  horizontalPadding: PropTypes.bool,
-  verticalPadding: PropTypes.bool,
+	children: PropTypes.any.isRequired,
+	store: PropTypes.object.isRequired,
 };
 
-Page.defaultProps = {
-  children: null,
-  title: '',
-  horizontalPadding: false,
-  verticalPadding: false,
-};
-
-export default Page;
+export default withRedux(makeStore)(Page);

@@ -7,23 +7,23 @@ const startDelay = 1000;
 let timer = null;
 
 Router.onRouteChangeStart = () => {
-  timer = setTimeout(() => NProgress.start(), startDelay);
+	timer = setTimeout(() => NProgress.start(), startDelay);
 };
 
 Router.onRouteChangeComplete = () => {
-  clearTimeout(timer);
-  NProgress.done();
+	clearTimeout(timer);
+	NProgress.done();
 };
 
 Router.onRouteChangeError = () => {
-  clearTimeout(timer);
-  NProgress.done();
+	clearTimeout(timer);
+	NProgress.done();
 };
 
 const LoadingBar = () => (
-  <style jsx global>
-    {style}
-  </style>
+	<style jsx global>
+		{style}
+	</style>
 );
 
 export default LoadingBar;

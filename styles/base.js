@@ -3,7 +3,7 @@
 import { transparentize } from 'polished';
 
 export const bps = {
-  medium: 800,
+	medium: 800,
 };
 
 export const spacing = {};
@@ -39,12 +39,12 @@ fontSizes.smallTitle = fontSizes.size1;
 fontSizes.menuItemTitle = fontSizes.size2;
 
 export const lineHeights = {
-  normal: 'line-height: 1.4em;',
-  close: 'line-height: 1em;',
+	normal: 'line-height: 1.4em;',
+	close: 'line-height: 1em;',
 };
 
 export const fontFamilies = {
-  sansSerif: `
+	sansSerif: `
     font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     ${lineHeights.normal}
   `,

@@ -1,17 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from '../rnw';
 import { spacing } from '../../lib/styling';
 import styles from './styles';
 
-const Spacer = ({ height }) => <View style={[styles.spacer, { height }]} />;
+const Spacer = ({ height }) => <div style={{ height }} className="spacer" />;
 
 Spacer.propTypes = {
-  height: PropTypes.number,
+	height: PropTypes.number,
 };
 
 Spacer.defaultProps = {
-  height: spacing.a5,
+	height: spacing.a5,
 };
 
 export default Spacer;

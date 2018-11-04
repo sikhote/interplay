@@ -5,19 +5,21 @@ import { set } from 'lodash';
 import { connect } from 'react-redux';
 import Cookies from 'js-cookie';
 import css from 'styled-jsx/css';
+import { Button, Input } from 'antd';
 import { settingsReplaceLocal } from '../actions/settings';
 import { filesSync } from '../actions/files';
 import { cloudSaveOther, cloudGet, cloudDelete } from '../actions/cloud';
 import { getInitialState } from '../reducers/settings';
-import { TextInput, Button } from '../components/rnw';
-import H1 from '../components/html/H1';
+import H1 from '../components/H1';
 import Icon from '../components/Icon';
-import IconButton from '../components/IconButton';
 import Spacer from '../components/Spacer';
 import Text from '../components/Text';
 import { fontSizes, spacing } from '../lib/styling';
 
 const styles = css`
+	.container {
+		padding: ${spacing.pageVertical}px ${spacing.pageHorizontal}px;
+	}
 	.inputs {
 		max-width: 400px;
 	}
@@ -25,7 +27,7 @@ const styles = css`
 		display: grid;
 	}
 	.icon {
-		margin-right: ${spacing.a4};
+		margin-right: ${spacing.a4}px;
 	}
 `;
 
@@ -38,7 +40,7 @@ const Settings = ({
 	cloud,
 	settingsReplaceLocal,
 }) => (
-	<div>
+	<div className="container">
 		<style jsx>{styles}</style>
 		<H1>Settings</H1>
 		<Spacer />
@@ -51,7 +53,7 @@ const Settings = ({
 		</Text>
 		{/* <Spacer />
 		<div className="inputs">
-			<TextInput
+			<Input
 				className="user"
 				prefix={<Icon icon="user" fontSize={fontSizes.a4} />}
 				placeholder="user"
@@ -62,7 +64,7 @@ const Settings = ({
 				}}
 			/>
 			<Spacer height={spacing.a2} />
-			<TextInput
+			<Input
 				className="input"
 				prefix={<Icon icon="key" />}
 				placeholder="abc123"
@@ -73,7 +75,7 @@ const Settings = ({
 				}}
 			/>
 			<Spacer height={spacing.a2} />
-			<TextInput
+			<Input
 				className="input"
 				prefix={<Icon icon="folder" />}
 				placeholder="itunes/itunes music"

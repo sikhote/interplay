@@ -2,9 +2,21 @@ import React from 'react';
 import NextApp, { Container } from 'next/app';
 import Error from 'next/error';
 import { syncRouting, getCurrentPath } from 'parlor';
+import css from 'styled-jsx/css';
 import { matches, pages } from '../lib/routing';
 import Empty from '../components/Empty';
 import Page from '../components/Page';
+
+const styles = css.global`
+	@import url('/static/css/fontello.css');
+	@import url('/static/css/antd.min.css');
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+`;
 
 class App extends NextApp {
 	constructor(props) {
@@ -27,6 +39,7 @@ class App extends NextApp {
 
 		return (
 			<Container>
+				<style jsx>{styles}</style>
 				{synced ? (
 					!match || !pages.includes(page) ? (
 						<Error statusCode={404} />

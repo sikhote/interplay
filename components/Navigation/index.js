@@ -4,7 +4,7 @@ import { withRouter } from 'next/router';
 import Link from 'next/link';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import { fontSizes, colors } from '../../lib/styling';
+import { colors } from '../../lib/styling';
 import getMenuItems from '../../lib/getMenuItems';
 import Icon from '../Icon';
 import Text from '../Text';
@@ -17,27 +17,11 @@ const Navigation = ({ router, playlists }) => {
 	return (
 		<div className="container">
 			<style jsx>{styles}</style>
-			{getMenuItems(playlists).map(({ key, title, icon, className }) => (
-				<Link key={key} href={`/${key}`}>
-					<a className={`item ${className}`}>
-						<Icon
-							icon={icon}
-							fontSize={fontSizes.navigationItem}
-							color={
-								key === path
-									? colors.navigationItemActive
-									: colors.navigationItem
-							}
-						/>
-						<Text
-							className="item-title"
-							fontSize={fontSizes.navigationItem}
-							color={
-								key === path
-									? colors.navigationItemActive
-									: colors.navigationItem
-							}
-						>
+			{getMenuItems(playlists).map(({ key, title, icon, className = '' }) => (
+				<Link key={key} href={`${key}`}>
+					<a className={`item ${className} ${path === key ? 'active' : ''}`}>
+						<Icon icon={icon} color={colors.navigationItem} className="icon" />
+						<Text color={colors.navigationItem} className="title">
 							{title}
 						</Text>
 					</a>

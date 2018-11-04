@@ -1,6 +1,6 @@
 import React from 'react';
-import Text from '../Text';
-import { fontSizes, colors, lineHeights } from '../../lib/styling';
+import { fontSizes, colors, lineHeights } from '../lib/styling';
+import Text from './Text';
 
 const H1 = props => (
 	<Text

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { injectIntl } from 'react-intl';
 
-const CustomHead = ({ title, intl }) => (
+const PageTitle = ({ title, intl }) => (
 	<Head>
 		<title>
 			{intl.formatMessage({ id: 'site_name' })}
@@ -12,13 +12,13 @@ const CustomHead = ({ title, intl }) => (
 	</Head>
 );
 
-CustomHead.propTypes = {
+PageTitle.propTypes = {
 	title: PropTypes.string,
 	intl: PropTypes.object.isRequired,
 };
 
-CustomHead.defaultProps = {
+PageTitle.defaultProps = {
 	title: '',
 };
 
-export default injectIntl(CustomHead);
+export default injectIntl(PageTitle);

@@ -9,7 +9,7 @@ import makeStore from '../../lib/makeStore';
 import translations from '../../lib/translations';
 import { cloudGet } from '../../actions/cloud';
 import Navigation from '../Navigation';
-import { localStyles, globalStyles } from './styles';
+import styles from './styles';
 
 if (isBrowser) {
 	addLocaleData(en);
@@ -50,10 +50,7 @@ class Page extends React.PureComponent {
 					textComponent={React.Fragment}
 				>
 					<div className="container">
-						<style jsx>{localStyles}</style>
-						<style global jsx>
-							{globalStyles}
-						</style>
+						<style jsx>{styles}</style>
 						<Navigation />
 						<div className="main">{children}</div>
 					</div>

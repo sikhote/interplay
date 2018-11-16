@@ -1,10 +1,12 @@
 import Dropbox from 'dropbox';
-import { throttle } from 'lodash';
+import { merge, get, throttle } from 'lodash';
 import notifier from '../lib/notifier';
+import { appChange } from './app';
+import { settingsReplaceLocal } from './settings';
 
-export const cloudGetSuccess = cloudState => ({
-	type: 'CLOUD_GET_SUCCESS',
-	payload: { cloudState },
+export const cloudConnectedChange = payload => ({
+	type: 'CLOUD_CONNECTED_CHANGE',
+	payload,
 });
 
 export const cloudGet = () => (dispatch, getState) => {
@@ -16,6 +18,7 @@ export const cloudGet = () => (dispatch, getState) => {
 	const dropbox = new Dropbox({ accessToken });
 
 	return Promise.all([
+		dropbox.filesGetMetadata({ path: `/${path}` }),
 		dropbox
 			.filesDownload({
 				path: `/${path}/interplay/${user}/other.json`,
@@ -37,7 +40,7 @@ export const cloudGet = () => (dispatch, getState) => {
 				values.map(
 					data =>
 						new Promise(resolve => {
-							if (!data.fileBlob) {
+							if (!data || !data.fileBlob) {
 								resolve(data);
 								return;
 							}
@@ -53,16 +56,43 @@ export const cloudGet = () => (dispatch, getState) => {
 		)
 		.then(values =>
 			Promise.resolve({
-				...values[0],
-				files: values[1],
-				playlists: values[2],
+				...values[1],
+				files: values[2],
+				playlists: values[3],
 			}),
 		)
 		.then(cloudState => {
-			dispatch(cloudGetSuccess(cloudState));
+			const state = getState();
+			const newState = merge(cloudState, {
+				settings: {
+					cloud: {
+						key: get(state, 'settings.cloud.key') || '',
+						path: get(state, 'settings.cloud.path') || '',
+						user: get(state, 'settings.cloud.user') || '',
+						isConnected: true,
+					},
+					player: {
+						playing: false,
+						loading: false,
+					},
+				},
+			});
+
+			dispatch(appChange(newState));
 			notifier.success('Successfully downloaded from cloud');
 		})
-		.catch(() => notifier.error('Failed to download from cloud'));
+		.catch(() => {
+			const { settings } = getState();
+			const newSettings = {
+				...settings,
+				cloud: {
+					...settings.cloud,
+					isConnected: false,
+				},
+			};
+			dispatch(settingsReplaceLocal(newSettings));
+			notifier.error('Failed to download from cloud');
+		});
 };
 
 const throttledCloudSaveOther = throttle(callback => callback(), 5000, {

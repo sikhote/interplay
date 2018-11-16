@@ -11,10 +11,12 @@ import { filesSync } from '../actions/files';
 import { cloudSaveOther, cloudGet, cloudDelete } from '../actions/cloud';
 import { getInitialState } from '../reducers/settings';
 import H1 from '../components/H1';
-import Icon from '../components/Icon';
+import InputIcon from '../components/InputIcon';
 import Spacer from '../components/Spacer';
 import Text from '../components/Text';
-import { fontSizes, spacing } from '../lib/styling';
+import Icon from '../components/Icon';
+import IconButton from '../components/IconButton';
+import { colors, spacing, bps } from '../lib/styling';
 
 const styles = css`
 	.container {
@@ -23,11 +25,23 @@ const styles = css`
 	.inputs {
 		max-width: 400px;
 	}
+	:global(.save) {
+		width: 100%;
+	}
 	.icons {
 		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: auto;
+		justify-content: start;
+		grid-gap: ${spacing.a3}px;
 	}
-	.icon {
-		margin-right: ${spacing.a4}px;
+	.icons :global(.ant-btn) {
+	}
+
+	@media (max-width: ${bps.a2}px) {
+		.container {
+			padding: ${spacing.pageA2}px;
+		}
 	}
 `;
 
@@ -37,7 +51,6 @@ const Settings = ({
 	cloudGet,
 	cloudDelete,
 	settings,
-	cloud,
 	settingsReplaceLocal,
 }) => (
 	<div className="container">
@@ -51,104 +64,119 @@ const Settings = ({
 			name. All settings and playlists are stored in folder within the specified
 			Dropbox folder.
 		</Text>
-		{/* <Spacer />
+		<Spacer />
 		<div className="inputs">
 			<Input
-				className="user"
-				prefix={<Icon icon="user" fontSize={fontSizes.a4} />}
-				placeholder="user"
+				prefix={<InputIcon icon="user" />}
+				placeholder="person"
 				value={settings.cloud.user}
-				onChangeText={value => {
-					Cookies.set('user', value);
-					settingsReplaceLocal(set({ ...settings }, 'cloud.user', value));
-				}}
-			/>
-			<Spacer height={spacing.a2} />
-			<Input
-				className="input"
-				prefix={<Icon icon="key" />}
-				placeholder="abc123"
-				value={settings.cloud.key}
-				onChangeText={value => {
-					Cookies.set('key', value);
-					settingsReplaceLocal(set({ ...settings }, 'cloud.key', value));
-				}}
-			/>
-			<Spacer height={spacing.a2} />
-			<Input
-				className="input"
-				prefix={<Icon icon="folder" />}
-				placeholder="itunes/itunes music"
-				value={settings.cloud.path}
-				onChangeText={value => {
-					Cookies.set('path', value.toLowerCase());
+				onChange={e => {
+					Cookies.set('user', e.target.value);
 					settingsReplaceLocal(
-						set({ ...settings }, 'cloud.path', value.toLowerCase()),
+						set({ ...settings }, 'cloud.user', e.target.value),
 					);
 				}}
 			/>
 			<Spacer height={spacing.a2} />
-			<Button title="Save" onPress={() => cloudGet()} />
+			<Input
+				prefix={<InputIcon icon="key" />}
+				placeholder="abc123"
+				value={settings.cloud.key}
+				onChange={e => {
+					Cookies.set('key', e.target.value);
+					settingsReplaceLocal(
+						set({ ...settings }, 'cloud.key', e.target.value),
+					);
+				}}
+			/>
+			<Spacer height={spacing.a2} />
+			<Input
+				className="input"
+				prefix={<InputIcon icon="folder" />}
+				placeholder="itunes/itunes music"
+				value={settings.cloud.path}
+				onChange={e => {
+					Cookies.set('path', e.target.value.toLowerCase());
+					settingsReplaceLocal(
+						set({ ...settings }, 'cloud.path', e.target.value.toLowerCase()),
+					);
+				}}
+			/>
+			<Spacer height={spacing.a2} />
+			<Button
+				disabled={!settings.cloud.key || !settings.cloud.path}
+				className="save"
+				type="primary"
+				onClick={() => cloudGet()}
+			>
+				Save
+			</Button>
 		</div>
 		<Spacer />
 		<Text>
-			{(cloud.hasCloudStore ? 'Connected. ' : 'No connection. ') +
-				(settings.cloud.date
-					? `Synced ${moment(settings.cloud.date).fromNow()}.`
-					: 'Never synced.')}
+			{settings.cloud.isConnected ? 'Connected. ' : 'No connection. '}
+			{settings.cloud.isConnected && settings.cloud.date
+				? `Synced ${moment(settings.cloud.date).fromNow()}.`
+				: 'Never synced.'}
 		</Text>
 		<Spacer />
 		<div className="icons">
 			{settings.cloud.status === 'syncing' && (
 				<IconButton
-					className="icon"
-					icon="cancel"
-					onPress={() =>
+					shape="circle"
+					type="primary"
+					onClick={() =>
 						settingsReplaceLocal(
 							set({ ...settings }, 'cloud.status', 'cancelled'),
 						)
 					}
-				/>
+				>
+					<Icon color={colors.white} icon="cancel" />
+				</IconButton>
 			)}
 			{Boolean(settings.cloud.key && settings.cloud.path) && (
 				<IconButton
-					className="icon"
-					icon="arrows-ccw"
 					loading={settings.cloud.status === 'syncing'}
-					onPress={() => filesSync()}
-				/>
+					shape="circle"
+					type="primary"
+					onClick={() => filesSync()}
+				>
+					<Icon color={colors.white} icon="arrows-ccw" />
+				</IconButton>
 			)}
 			{Boolean(settings.cloud.key && settings.cloud.path) && (
 				<IconButton
-					className="icon"
-					icon="upload-cloud"
-					onPress={() => cloudSaveOther({ settings, cloud })}
-				/>
+					shape="circle"
+					type="primary"
+					onClick={() => cloudSaveOther()}
+				>
+					<Icon color={colors.white} icon="upload-cloud" />
+				</IconButton>
 			)}
 			{Boolean(settings.cloud.key && settings.cloud.path) && (
-				<IconButton
-					className="icon"
-					icon="download-cloud"
-					onPress={() => cloudGet()}
-				/>
+				<IconButton shape="circle" type="primary" onClick={() => cloudGet()}>
+					<Icon color={colors.white} icon="download-cloud" />
+				</IconButton>
 			)}
 			<IconButton
-				icon="trash"
-				onPress={() => {
+				shape="circle"
+				type="primary"
+				onClick={() => {
 					Cookies.set('key', '');
 					Cookies.set('path', '');
 					Cookies.set('user', '');
 					settingsReplaceLocal(getInitialState());
 					cloudDelete();
 				}}
-			/>
-		</div> */}
+			>
+				<Icon color={colors.white} icon="trash" />
+			</IconButton>
+		</div>
 	</div>
 );
 
 Settings.propTypes = {
 	settings: PropTypes.object.isRequired,
-	cloud: PropTypes.object.isRequired,
 	settingsReplaceLocal: PropTypes.func.isRequired,
 	filesSync: PropTypes.func.isRequired,
 	cloudSaveOther: PropTypes.func.isRequired,
@@ -157,11 +185,11 @@ Settings.propTypes = {
 };
 
 export default connect(
-	({ settings, cloud }) => ({ settings, cloud }),
+	({ settings }) => ({ settings }),
 	dispatch => ({
 		settingsReplaceLocal: payload => dispatch(settingsReplaceLocal(payload)),
 		filesSync: () => dispatch(filesSync()),
-		cloudSaveOther: payload => dispatch(cloudSaveOther(payload)),
+		cloudSaveOther: () => dispatch(cloudSaveOther()),
 		cloudGet: () => dispatch(cloudGet()),
 		cloudDelete: () => dispatch(cloudDelete()),
 	}),

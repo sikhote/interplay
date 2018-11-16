@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'next/router';
 import { get } from 'lodash';
+import { Button, Input } from 'antd';
 import getSortedData from '../../lib/getSortedData';
 import getSearchedData from '../../lib/getSearchedData';
 import getSourcedData from '../../lib/getSourcedData';
@@ -12,13 +13,11 @@ import { filesGetUrl } from '../../actions/files';
 import getListColumns from '../../lib/getListColumns';
 import { titleToSlug } from '../../lib/playlists';
 import getDefaulListSettings from '../../lib/getDefaulListSettings';
-import Page from '../Page';
 import H1 from '../H1';
-import { View, TextInput, Button } from '../rnw';
-import { bps } from '../../lib/styling';
-import Icon from '../Icon';
-import styles from './styles';
+import InputIcon from '../InputIcon';
+import PageTitle from '../PageTitle';
 import ListRow from './ListRow';
+import styles from './styles';
 
 class List extends React.Component {
 	render() {
@@ -61,88 +60,84 @@ class List extends React.Component {
 				filesGetUrl({ source, path, shouldPlay: true, position });
 			}
 		};
+		const currentPath = get(settings, 'player.file.path');
 
 		return (
-			<DimensionsContext.Consumer>
-				{({ width }) => (
-					<Page title={title}>
-						<View style={[styles.top, width < bps.a3 ? styles.topA3 : {}]}>
-							<H1>{header}</H1>
-							<View style={styles.controls}>
-								<TextInput
-									prefix={<Icon icon="search" />}
-									placeholder="Search"
-									value={search}
-									onChangeText={value => saveListSettings({ search: value })}
-								/>
-								{source !== 'playlists' && (
-									<Button
-										title="Current"
-										icon="compass"
-										disabled={settings.player.source !== source}
-										onPress={() => {
-											const file = get(this, 'props.settings.player.file', {});
-											const currentIndex = sortedData.findIndex(
-												({ path }) => path === file.path,
-											);
-											this.table.scrollToRow(currentIndex);
-										}}
-									/>
+			<div className="container">
+				<PageTitle title={title} />
+				<style jsx>{styles}</style>
+				<div className="header">
+					<H1>{header}</H1>
+					<div className="controls">
+						<Input
+							prefix={<InputIcon icon="search" />}
+							placeholder="Search"
+							value={search}
+							onChange={e => saveListSettings({ search: e.target.value })}
+						/>
+						{source !== 'playlists' && (
+							<Button
+								disabled={settings.player.source !== source}
+								className="save"
+								type="primary"
+								onClick={() => {
+									const file = get(this, 'props.settings.player.file', {});
+									const currentIndex = sortedData.findIndex(
+										({ path }) => path === file.path,
+									);
+									this.table.scrollToRow(currentIndex);
+								}}
+							>
+								Current
+							</Button>
+						)}
+					</div>
+				</div>
+				<div className={`table ${source}`}>
+					<AutoSizer>
+						{({ height, width }) => (
+							<Table
+								ref={c => {
+									this.table = c;
+								}}
+								height={height}
+								headerHeight={30}
+								noRowsRenderer={() => (
+									<div className="no-data">So empty *sigh*</div>
 								)}
-							</View>
-						</View>
-						{/* <div className="table">
-          <AutoSizer>
-            {({ height, width }) => (
-              <Table
-                ref={c => {
-                  this.table = c;
-                }}
-                onRowClick={onRowClick}
-                height={height}
-                headerHeight={30}
-                noRowsRenderer={() => <div className="no-data">No rows!</div>}
-                rowRenderer={args => (
-                  <ListRow {...args} settings={settings} source={source} />
-                )}
-                rowCount={sortedData.length}
-                rowGetter={({ index }) => sortedData[index]}
-                rowHeight={26}
-                scrollToIndex={position}
-                width={width}
-                rowStyle={{
-                  grid: `none / ${getListColumns(source).reduce(
-                    (a, v) => a + (v.width ? ` ${v.width}px` : ' 1fr'),
-                    '',
-                  )}`,
-                  display: 'grid',
-                }}
-                sort={({ sortBy, sortDirection }) =>
-                  saveListSettings({
-                    sortBy,
-                    sortDirection: sortDirection === SortDirection.ASC,
-                  })
-                }
-                sortBy={sortBy}
-                sortDirection={
-                  sortDirection ? SortDirection.ASC : SortDirection.DESC
-                }
-              >
-                {getListColumns(source).map(({ title, dataKey, width }) => (
-                  <Column
-                    key={title}
-                    label={title}
-                    dataKey={dataKey}
-                    width={width || 100}
-                  />
-                ))}
-              </Table>
-            )}
-          </AutoSizer>
-        </div> */}
-					</Page>
-				)}
-			</DimensionsContext.Consumer>
+								rowRenderer={args => (
+									<ListRow {...args} currentPath={currentPath} />
+								)}
+								rowCount={sortedData.length}
+								rowGetter={({ index }) => sortedData[index]}
+								rowHeight={26}
+								scrollToIndex={position}
+								width={width}
+								sort={({ sortBy, sortDirection }) =>
+									saveListSettings({
+										sortBy,
+										sortDirection: sortDirection === SortDirection.ASC,
+									})
+								}
+								sortBy={sortBy}
+								sortDirection={
+									sortDirection ? SortDirection.ASC : SortDirection.DESC
+								}
+								onRowDoubleClick={onRowClick}
+							>
+								{getListColumns(source).map(({ title, dataKey }) => (
+									<Column
+										key={dataKey}
+										label={title}
+										dataKey={dataKey}
+										width={1}
+									/>
+								))}
+							</Table>
+						)}
+					</AutoSizer>
+				</div>
+			</div>
 		);
 	}
 }

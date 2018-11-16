@@ -9,6 +9,7 @@ import makeStore from '../../lib/makeStore';
 import translations from '../../lib/translations';
 import { cloudGet } from '../../actions/cloud';
 import Navigation from '../Navigation';
+import Player from '../Player';
 import styles from './styles';
 
 if (isBrowser) {
@@ -25,13 +26,12 @@ class Page extends React.PureComponent {
 			store: { dispatch, getState },
 		} = this.props;
 		const {
-			cloud: { hasCloudStore },
 			settings: {
-				cloud: { key, path },
+				cloud: { key, path, isConnected },
 			},
 		} = getState();
 
-		if (!hasCloudStore && key && path) {
+		if (!isConnected && key && path) {
 			dispatch(cloudGet());
 		}
 	}

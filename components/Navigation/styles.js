@@ -3,7 +3,7 @@ import { colors, spacing, bps } from '../../lib/styling';
 
 export default css`
 	.container {
-		width: 280px;
+		width: 240px;
 		background: ${colors.a2};
 		display: grid;
 		grid-auto-flow: row;
@@ -34,6 +34,7 @@ export default css`
 		}
 		.item {
 			text-align: center;
+			padding: ${spacing.a4}px 0;
 		}
 		.item.playlists {
 			display: block;

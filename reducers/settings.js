@@ -9,6 +9,7 @@ export const getInitialState = () => ({
 		user: (hasCookies && Cookies.get('user')) || 'default',
 		date: undefined,
 		status: undefined,
+		isConnected: false,
 	},
 	player: {
 		source: 'audio',
@@ -28,8 +29,7 @@ export const getInitialState = () => ({
 const reducer = (state = getInitialState(), action) => {
 	switch (action.type) {
 		case 'SETTINGS_REPLACE': {
-			const { settings } = action.payload;
-			return settings || state;
+			return action.payload;
 		}
 		default:
 			return state;

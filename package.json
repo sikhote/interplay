@@ -25,16 +25,10 @@
 		],
 		"extends": "xo-react",
 		"rules": {
-			"unicorn/filename-case": 0
+			"unicorn/filename-case": 0,
+			"react/no-find-dom-node": 0
 		},
-		"overrides": [
-			{
-				"files": "components/Page/index.js",
-				"globals": [
-					"window"
-				]
-			}
-		]
+		"env": ["browser", "node"]
 	},
 	"dependencies": {
 		"@zeit/next-css": "^1.0.1",
@@ -64,7 +58,6 @@
 		"react-beautiful-dnd": "^8.0.7",
 		"react-dom": "16.3.1",
 		"react-intl": "^2.7.1",
-		"react-native-web": "^0.8.9",
 		"react-player": "^1.6.6",
 		"react-redux": "5.0.7",
 		"react-virtualized": "9.18.5",

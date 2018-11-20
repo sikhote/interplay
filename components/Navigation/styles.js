@@ -9,10 +9,12 @@ export default css`
 		grid-auto-flow: row;
 		align-content: start;
 		padding-top: ${spacing.a5}px;
+		grid-area: navigation;
 	}
 	.item {
 		color: ${colors.navigationItem};
 		padding: ${spacing.a4}px ${spacing.pageHorizontal}px;
+		text-decoration: none;
 	}
 	.item.active :global(.title),
 	.item.active :global(.icon) {

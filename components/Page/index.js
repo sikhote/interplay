@@ -51,6 +51,7 @@ class Page extends React.PureComponent {
 				>
 					<div className="container">
 						<style jsx>{styles}</style>
+						<Player />
 						<Navigation />
 						<div className="main">{children}</div>
 					</div>

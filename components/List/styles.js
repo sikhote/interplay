@@ -65,7 +65,7 @@ export default css`
 		background: linear-gradient(
 			to bottom,
 			transparent 0%,
-			rgba(0, 0, 0, 0.1) 100%
+			rgba(0, 0, 0, 0.08) 100%
 		);
 	}
 	:global(.ReactVirtualized__Table__headerColumn),

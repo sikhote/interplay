@@ -7,10 +7,10 @@ import screenfull from 'screenfull';
 import { Button, Slider, Switch, Icon, Tooltip } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import style from '../styles/player';
-import getFileInDirection from '../lib/getFileInDirection';
-import { settingsReplace } from '../actions/settings';
-import { filesGetUrl } from '../actions/files';
+import getFileInDirection from '../../lib/getFileInDirection';
+import { settingsReplace } from '../../actions/settings';
+import { filesGetUrl } from '../../actions/files';
+import styles from './styles';
 
 const prepareFile = throttle(callback => callback(), 10000, { leading: true });
 
@@ -131,7 +131,7 @@ class Player extends React.Component {
 
 		return (
 			<div className={`root ${type || ''}`}>
-				<style jsx>{style}</style>
+				<style jsx>{styles}</style>
 				<ReactPlayer {...config} />
 				<div className="main">
 					<div className="directions">

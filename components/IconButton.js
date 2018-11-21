@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from 'antd';
 
 const IconButton = ({ loading, children, ...props }) => (
-	<Button loading={loading} {...props}>
+	<Button shape="circle" loading={loading} type="primary" {...props}>
 		{!loading && children}
 	</Button>
 );

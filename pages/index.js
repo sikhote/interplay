@@ -123,44 +123,34 @@ const Settings = ({
 		<div className="icons">
 			{settings.cloud.status === 'syncing' && (
 				<IconButton
-					shape="circle"
-					type="primary"
 					onClick={() =>
 						settingsReplaceLocal(
 							set({ ...settings }, 'cloud.status', 'cancelled'),
 						)
 					}
 				>
-					<Icon color={colors.white} icon="cancel" />
+					<Icon icon="cancel" />
 				</IconButton>
 			)}
 			{Boolean(settings.cloud.key && settings.cloud.path) && (
 				<IconButton
 					loading={settings.cloud.status === 'syncing'}
-					shape="circle"
-					type="primary"
 					onClick={() => filesSync()}
 				>
 					<Icon color={colors.white} icon="arrows-ccw" />
 				</IconButton>
 			)}
 			{Boolean(settings.cloud.key && settings.cloud.path) && (
-				<IconButton
-					shape="circle"
-					type="primary"
-					onClick={() => cloudSaveOther()}
-				>
-					<Icon color={colors.white} icon="upload-cloud" />
+				<IconButton onClick={() => cloudSaveOther()}>
+					<Icon icon="upload-cloud" />
 				</IconButton>
 			)}
 			{Boolean(settings.cloud.key && settings.cloud.path) && (
-				<IconButton shape="circle" type="primary" onClick={() => cloudGet()}>
-					<Icon color={colors.white} icon="download-cloud" />
+				<IconButton onClick={() => cloudGet()}>
+					<Icon icon="download-cloud" />
 				</IconButton>
 			)}
 			<IconButton
-				shape="circle"
-				type="primary"
 				onClick={() => {
 					Cookies.set('key', '');
 					Cookies.set('path', '');
@@ -169,7 +159,7 @@ const Settings = ({
 					cloudDelete();
 				}}
 			>
-				<Icon color={colors.white} icon="trash" />
+				<Icon icon="trash" />
 			</IconButton>
 		</div>
 	</div>

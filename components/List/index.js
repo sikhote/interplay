@@ -123,7 +123,7 @@ class List extends React.Component {
 								sortDirection={
 									sortDirection ? SortDirection.ASC : SortDirection.DESC
 								}
-								onRowDoubleClick={onRowClick}
+								onRowClick={onRowClick}
 							>
 								{getListColumns(source).map(({ title, dataKey }) => (
 									<Column

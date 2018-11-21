@@ -4,12 +4,17 @@ import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
 import { merge, get, throttle } from 'lodash';
 import screenfull from 'screenfull';
-import { Button, Slider, Switch, Icon, Tooltip } from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import IconButton from '../IconButton';
+import Slider from '../Slider';
+import Switch from '../Switch';
+import Icon from '../Icon';
+import Text from '../Text';
 import getFileInDirection from '../../lib/getFileInDirection';
 import { settingsReplace } from '../../actions/settings';
 import { filesGetUrl } from '../../actions/files';
+import { colors, fontWeights, fontSizes } from '../../lib/styling';
 import styles from './styles';
 
 const prepareFile = throttle(callback => callback(), 10000, { leading: true });
@@ -130,82 +135,119 @@ class Player extends React.Component {
 		};
 
 		return (
-			<div className={`root ${type || ''}`}>
+			<div className={`container ${type || ''}`}>
 				<style jsx>{styles}</style>
 				<ReactPlayer {...config} />
 				<div className="main">
+					<div className="info">
+						{path ? (
+							<React.Fragment>
+								<Text fontWeight={fontWeights.bold}>{name}</Text>
+								<Text>{category}</Text>
+								<Text>{artist}</Text>
+								<Text>{album}</Text>
+							</React.Fragment>
+						) : (
+							<Text>Add credentials and play some media</Text>
+						)}
+					</div>
 					<div className="directions">
-						<Button
-							size="large"
-							type="primary"
-							shape="circle"
-							icon="backward"
-							onClick={() =>
-								filesGetUrl({
-									...getFileInDirection(
-										settings,
-										files,
-										playlists,
-										random ? 'random' : 'previous',
-									),
-									source,
-									shouldPlay: true,
-								})
-							}
-						/>
-						<Button
-							size="large"
-							type="primary"
-							shape="circle"
-							loading={loading}
-							icon={playing ? 'pause' : 'caret-right'}
-							onClick={() => {
-								if (!playing) {
-									filesGetUrl({ source, path, shouldPlay: true });
-								}
-
+						<Switch
+							checkedChildren={<Icon icon="loop" />}
+							unCheckedChildren={<Icon icon="loop" />}
+							checked={loop}
+							onChange={() =>
 								settingsReplace(
 									merge({}, settings, {
-										player: { playing: !playing },
+										player: { loop: !loop },
 									}),
-								);
-							}}
+								)
+							}
 						/>
-						<Button
-							size="large"
-							type="primary"
-							shape="circle"
-							icon="forward"
-							onClick={() =>
-								filesGetUrl({
-									...getFileInDirection(
-										settings,
-										files,
-										playlists,
-										random ? 'random' : 'next',
-									),
-									source,
-									shouldPlay: true,
-								})
+						<div className="buttons">
+							<IconButton
+								onClick={() =>
+									filesGetUrl({
+										...getFileInDirection(
+											settings,
+											files,
+											playlists,
+											random ? 'random' : 'previous',
+										),
+										source,
+										shouldPlay: true,
+									})
+								}
+							>
+								<Icon icon="fast-backward" />
+							</IconButton>
+							<IconButton
+								size="large"
+								loading={loading}
+								onClick={() => {
+									if (!playing) {
+										filesGetUrl({ source, path, shouldPlay: true });
+									}
+
+									settingsReplace(
+										merge({}, settings, {
+											player: { playing: !playing },
+										}),
+									);
+								}}
+							>
+								<Icon
+									fontSize={fontSizes.a4}
+									icon={playing ? 'pause' : 'play'}
+								/>
+							</IconButton>
+							<IconButton
+								onClick={() =>
+									filesGetUrl({
+										...getFileInDirection(
+											settings,
+											files,
+											playlists,
+											random ? 'random' : 'next',
+										),
+										source,
+										shouldPlay: true,
+									})
+								}
+							>
+								<Icon icon="fast-forward" />
+							</IconButton>
+						</div>
+						<Switch
+							checkedChildren={<Icon icon="shuffle" />}
+							unCheckedChildren={<Icon icon="shuffle" />}
+							checked={random}
+							onChange={() =>
+								settingsReplace(
+									merge({}, settings, {
+										player: { random: !random },
+									}),
+								)
 							}
 						/>
 					</div>
-					<div className="control sound">
-						<Tooltip placement="top" title="Mute">
-							<Switch
-								checkedChildren={<Icon type="sound" />}
-								unCheckedChildren={<Icon type="sound" />}
-								checked={muted}
-								onChange={() =>
-									settingsReplace(
-										merge({}, settings, {
-											player: { muted: !muted },
-										}),
-									)
-								}
-							/>
-						</Tooltip>
+					<div className="sound">
+						<Switch
+							color={colors.a3}
+							checkedChildren={<Icon icon="volume" />}
+							unCheckedChildren={<Icon icon="mute" />}
+							checked={!muted}
+							onChange={() =>
+								settingsReplace(
+									merge({}, settings, {
+										player: { muted: !muted },
+									}),
+								)
+							}
+						/>
 						<Slider
+							className="volume"
+							color={colors.a3}
 							value={volume}
 							min={0}
 							max={1}
@@ -220,35 +262,7 @@ class Player extends React.Component {
 							}
 						/>
 					</div>
-					<div className="control progress">
-						<Tooltip placement="top" title="Loop">
-							<Switch
-								checkedChildren={<Icon type="retweet" />}
-								unCheckedChildren={<Icon type="retweet" />}
-								checked={loop}
-								onChange={() =>
-									settingsReplace(
-										merge({}, settings, {
-											player: { loop: !loop },
-										}),
-									)
-								}
-							/>
-						</Tooltip>
-						<Tooltip placement="top" title="Random">
-							<Switch
-								checkedChildren={<Icon type="question" />}
-								unCheckedChildren={<Icon type="question" />}
-								checked={random}
-								onChange={() =>
-									settingsReplace(
-										merge({}, settings, {
-											player: { random: !random },
-										}),
-									)
-								}
-							/>
-						</Tooltip>
+					<div className="progress">
 						<Slider
 							value={played}
 							min={0}
@@ -262,14 +276,6 @@ class Player extends React.Component {
 							}
 							onChange={progress => this.player.seekTo(progress)}
 						/>
-					</div>
-					<div className="info">
-						{path
-							? (category ? `${category} — ` : '') +
-							  (artist ? `${artist} — ` : '') +
-							  (album ? `${album} — ` : '') +
-							  name
-							: 'Add credentials and play some media'}
 					</div>
 				</div>
 			</div>

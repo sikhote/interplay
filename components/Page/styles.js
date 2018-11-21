@@ -19,8 +19,8 @@ export default css`
 			grid-template-rows: auto auto 1fr;
 			grid-template-areas:
 				'navigation'
-				'player'
-				'main';
+				'main'
+				'player';
 		}
 	}
 `;

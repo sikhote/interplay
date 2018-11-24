@@ -133,6 +133,37 @@ class Player extends React.Component {
 				}),
 			onClick: () => screenfull.request(findDOMNode(this.player)),
 		};
+		const loopButton = (
+			<Switch
+				className="loop"
+				checkedChildren={<Icon icon="loop" />}
+				unCheckedChildren={<Icon icon="loop" />}
+				checked={loop}
+				onChange={() =>
+					settingsReplace(
+						merge({}, settings, {
+							player: { loop: !loop },
+						}),
+					)
+				}
+			/>
+		);
+		const shuffleButton = (
+			<Switch
+				className="shuffle"
+				checkedChildren={<Icon icon="shuffle" />}
+				unCheckedChildren={<Icon icon="shuffle" />}
+				checked={random}
+				onChange={() =>
+					settingsReplace(
+						merge({}, settings, {
+							player: { random: !random },
+						}),
+					)
+				}
+			/>
+		);
+		const divider = <Text className="divider"> - </Text>;
 
 		return (
 			<div className={`container ${type || ''}`}>
@@ -142,30 +173,35 @@ class Player extends React.Component {
 					<div className="info">
 						{path ? (
 							<React.Fragment>
-								<Text fontWeight={fontWeights.bold}>{name}</Text>
-								<Text>{category}</Text>
-								<Text>{artist}</Text>
-								<Text>{album}</Text>
+								<Text className="name">{name}</Text>
+								{category && (
+									<Text>
+										{divider}
+										{category}
+									</Text>
+								)}
+								{artist && (
+									<Text>
+										{divider}
+										{artist}
+									</Text>
+								)}
+								{album && (
+									<Text>
+										{divider}
+										{album}
+									</Text>
+								)}
 							</React.Fragment>
 						) : (
 							<Text>Add credentials and play some media</Text>
 						)}
 					</div>
 					<div className="directions">
-						<Switch
-							checkedChildren={<Icon icon="loop" />}
-							unCheckedChildren={<Icon icon="loop" />}
-							checked={loop}
-							onChange={() =>
-								settingsReplace(
-									merge({}, settings, {
-										player: { loop: !loop },
-									}),
-								)
-							}
-						/>
+						{loopButton}
 						<div className="buttons">
 							<IconButton
+								size="large"
 								onClick={() =>
 									filesGetUrl({
 										...getFileInDirection(
@@ -179,7 +215,7 @@ class Player extends React.Component {
 									})
 								}
 							>
-								<Icon icon="fast-backward" />
+								<Icon fontSize={fontSizes.a4} icon="fast-backward" />
 							</IconButton>
 							<IconButton
 								size="large"
@@ -202,6 +238,7 @@ class Player extends React.Component {
 								/>
 							</IconButton>
 							<IconButton
+								size="large"
 								onClick={() =>
 									filesGetUrl({
 										...getFileInDirection(
@@ -215,36 +252,29 @@ class Player extends React.Component {
 									})
 								}
 							>
-								<Icon icon="fast-forward" />
+								<Icon fontSize={fontSizes.a4} icon="fast-forward" />
 							</IconButton>
 						</div>
-						<Switch
-							checkedChildren={<Icon icon="shuffle" />}
-							unCheckedChildren={<Icon icon="shuffle" />}
-							checked={random}
-							onChange={() =>
-								settingsReplace(
-									merge({}, settings, {
-										player: { random: !random },
-									}),
-								)
-							}
-						/>
+						{shuffleButton}
 					</div>
 					<div className="sound">
-						<Switch
-							color={colors.a3}
-							checkedChildren={<Icon icon="volume" />}
-							unCheckedChildren={<Icon icon="mute" />}
-							checked={!muted}
-							onChange={() =>
-								settingsReplace(
-									merge({}, settings, {
-										player: { muted: !muted },
-									}),
-								)
-							}
-						/>
+						<div className="switches">
+							{shuffleButton}
+							{loopButton}
+							<Switch
+								color={colors.a3}
+								checkedChildren={<Icon icon="volume" />}
+								unCheckedChildren={<Icon icon="mute" />}
+								checked={!muted}
+								onChange={() =>
+									settingsReplace(
+										merge({}, settings, {
+											player: { muted: !muted },
+										}),
+									)
+								}
+							/>
+						</div>
 						<Slider
 							className="volume"
 							color={colors.a3}

@@ -16,7 +16,7 @@ export default css`
 	@media (max-width: ${bps.a2}px) {
 		.container {
 			grid-template-columns: 1fr;
-			grid-template-rows: auto auto 1fr;
+			grid-template-rows: auto 1fr auto;
 			grid-template-areas:
 				'navigation'
 				'main'

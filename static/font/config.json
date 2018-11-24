@@ -143,6 +143,12 @@
       "css": "search",
       "code": 59412,
       "src": "entypo"
+    },
+    {
+      "uid": "a42b598e4298f3319b25a2702a02e7ff",
+      "css": "location",
+      "code": 59414,
+      "src": "entypo"
     }
   ]
 }

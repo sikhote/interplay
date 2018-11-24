@@ -23,7 +23,7 @@ export default css`
 		display: grid;
 		grid-template-columns: 1fr auto;
 	}
-	.controls {
+	.side {
 		display: grid;
 		grid-auto-columns: auto;
 		grid-auto-flow: column;
@@ -72,6 +72,7 @@ export default css`
 	:global(.ReactVirtualized__Table__rowColumn) {
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		overflow: hidden;
 		outline: none;
 	}
 	:global(.ReactVirtualized__Table__headerColumn) {
@@ -99,9 +100,15 @@ export default css`
 			padding: ${spacing.pageA2}px;
 			padding-bottom: ${spacing.a3}px;
 			display: grid;
-			grid-template-columns: 1fr;
-			grid-template-rows: auto auto;
 			grid-gap: ${spacing.a4}px;
+		}
+		.side {
+			max-width: 125px;
+		}
+		:global(.ReactVirtualized__Table__row),
+		:global(.ReactVirtualized__Table__headerRow) {
+			padding: 0 ${spacing.a4}px;
+			grid-template-columns: 20px 1fr 1fr 1fr;
 		}
 	}
 `;

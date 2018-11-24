@@ -1,5 +1,5 @@
 import css from 'styled-jsx/css';
-import { spacing, bps } from '../../lib/styling';
+import { spacing, bps, fontWeights } from '../../lib/styling';
 
 export default css`
 	.container {
@@ -73,6 +73,10 @@ export default css`
 		grid-template-columns: auto 1fr;
 		align-items: center;
 	}
+	.sound :global(.loop),
+	.sound :global(.shuffle) {
+		display: none;
+	}
 	.info {
 		grid-area: info;
 		width: 100%;
@@ -85,6 +89,12 @@ export default css`
 		white-space: nowrap;
 		overflow: hidden;
 	}
+	:global(.name) {
+		font-weight: ${fontWeights.bold} !important;
+	}
+	:global(.divider) {
+		display: none;
+	}
 	:global(.progress) {
 		grid-area: progress;
 	}
@@ -92,24 +102,54 @@ export default css`
 	@media (max-width: ${bps.a2 - 1}px) {
 		.container {
 			padding: ${spacing.pageA2}px;
-			padding-bottom: 0;
 		}
 		.main {
 			grid-template-areas:
-				'directions info'
-				'progress info';
-			grid-template-columns: 1fr 1fr;
-			grid-template-rows: auto auto;
+				'sound sound'
+				'progress directions'
+				'info info';
+			grid-template-columns: 1fr auto;
+			grid-template-rows: auto auto auto;
 			grid-column-gap: ${spacing.a5}px;
+			grid-row-gap: ${spacing.a5}px;
 		}
 		.directions {
-			grid-gap: ${spacing.a2}px;
+			grid-gap: 0;
+		}
+		.directions :global(.loop),
+		.directions :global(.shuffle) {
+			display: none;
 		}
 		.buttons {
-			grid-gap: ${spacing.a2}px;
+			grid-gap: ${spacing.a3}px;
 		}
 		.sound {
-			display: none;
+			display: grid;
+			grid-gap: ${spacing.a5}px;
+			grid-area: sound;
+			grid-template-columns: auto 1fr;
+			align-items: center;
+		}
+		.sound :global(.loop),
+		.sound :global(.shuffle) {
+			display: block;
+		}
+		.switches {
+			display: grid;
+			grid-gap: ${spacing.a3}px;
+			grid-template-columns: auto auto auto;
+		}
+		.info {
+			display: block;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+		:global(.name) {
+			font-weight: ${fontWeights.normal} !important;
+		}
+		:global(.divider) {
+			display: inline;
 		}
 	}
 `;

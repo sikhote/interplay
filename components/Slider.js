@@ -22,7 +22,7 @@ const Slider = ({ color, ...props }) => (
 				margin: 0;
 			}
 			:global(.ant-slider-rail) {
-				background-color: rgba(0, 0, 0, 0.1);
+				background-color: rgba(0, 0, 0, 0.12);
 			}
 		`}</style>
 		<ASlider {...props} />

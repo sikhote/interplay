@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'next/router';
 import { get } from 'lodash';
-import { Button, Input } from 'antd';
+import { Input } from 'antd';
 import getSortedData from '../../lib/getSortedData';
 import getSearchedData from '../../lib/getSearchedData';
 import getSourcedData from '../../lib/getSourcedData';
@@ -15,6 +15,8 @@ import { titleToSlug } from '../../lib/playlists';
 import getDefaulListSettings from '../../lib/getDefaulListSettings';
 import H1 from '../H1';
 import InputIcon from '../InputIcon';
+import IconButton from '../IconButton';
+import Icon from '../Icon';
 import PageTitle from '../PageTitle';
 import ListRow from './ListRow';
 import styles from './styles';
@@ -68,7 +70,7 @@ class List extends React.Component {
 				<style jsx>{styles}</style>
 				<div className="header">
 					<H1>{header}</H1>
-					<div className="controls">
+					<div className="side">
 						<Input
 							prefix={<InputIcon icon="search" />}
 							placeholder="Search"
@@ -76,10 +78,8 @@ class List extends React.Component {
 							onChange={e => saveListSettings({ search: e.target.value })}
 						/>
 						{source !== 'playlists' && (
-							<Button
+							<IconButton
 								disabled={settings.player.source !== source}
-								className="save"
-								type="primary"
 								onClick={() => {
 									const file = get(this, 'props.settings.player.file', {});
 									const currentIndex = sortedData.findIndex(
@@ -88,8 +88,8 @@ class List extends React.Component {
 									this.table.scrollToRow(currentIndex);
 								}}
 							>
-								Current
-							</Button>
+								<Icon icon="location" />
+							</IconButton>
 						)}
 					</div>
 				</div>

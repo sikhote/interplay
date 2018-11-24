@@ -16,6 +16,10 @@ const styles = css.global`
 		padding: 0;
 		box-sizing: border-box;
 	}
+	.icon-play::before,
+	.icon-fast-forward::before {
+    margin-right: 0;
+	}
 `;
 
 class App extends NextApp {

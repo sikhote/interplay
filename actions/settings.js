@@ -1,11 +1,14 @@
-import { cloudSaveOther } from '../actions/cloud';
+import { cloudSaveOther } from './cloud';
 
-export const settingsReplace = settings => (dispatch, getState) => {
-  const { cloud } = getState();
-
+export const settingsReplace = payload => dispatch => {
   dispatch({
     type: 'SETTINGS_REPLACE',
-    payload: { settings },
+    payload,
   });
-  dispatch(cloudSaveOther({ settings, cloud }));
+  dispatch(cloudSaveOther());
 };
+
+export const settingsReplaceLocal = payload => ({
+  type: 'SETTINGS_REPLACE',
+  payload,
+});

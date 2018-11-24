@@ -1,8 +1,8 @@
-import { startCase, set, has, last } from 'lodash';
-import { message as notifier } from 'antd';
+import { startCase, has, get } from 'lodash';
 import Dropbox from 'dropbox';
 import moment from 'moment';
 import { getFileType } from '../lib/files';
+import notifier from '../lib/notifier';
 import { settingsReplace } from './settings';
 import { cloudSaveFiles } from './cloud';
 
@@ -12,40 +12,46 @@ export const filesUpdate = payload => ({
 });
 
 export const filesGetUrl = payload => (dispatch, getState) => {
-  const { source, path: filePath, shouldPlay } = payload;
+  const { path: filePath, shouldPlay } = payload;
   const { settings, files } = getState();
-  const fileIndex = files[source].findIndex(file => file.path === filePath);
-  const file = files[source][fileIndex];
-  const getNewSettings = (file, loading) => ({
-    ...settings,
-    [source]: {
-      ...settings[source],
-      position: fileIndex,
-    },
-    player: {
-      ...settings.player,
-      source,
-      file,
-      playing: true,
-      loading,
-    },
-  });
+  const fileIndex = files.findIndex(file => file.path === filePath);
+  const file = files[fileIndex];
+  const getNewSettings = newSettings => {
+    const { settings } = getState();
 
-  // If the current linkDate is not too old
+    return {
+      ...settings,
+      player: {
+        ...settings.player,
+        ...newSettings,
+      },
+    };
+  };
+
+  // Update state to indicate song was selected and URL is loading
+  if (shouldPlay) {
+    dispatch(
+      settingsReplace(
+        getNewSettings({
+          file,
+          position: fileIndex,
+          loading: true,
+          playing: true,
+        }),
+      ),
+    );
+  }
+
+  // If the current linkDate is not too old no need to load a new link
   if (
     has(file, 'urlDate') &&
     moment(file.urlDate).isAfter(moment().subtract(3, 'hours'))
   ) {
     if (shouldPlay) {
-      dispatch(settingsReplace(getNewSettings(file, false)));
+      dispatch(settingsReplace(getNewSettings({ loading: false })));
     }
 
     return Promise.resolve();
-  }
-
-  // Update state to indicate song was selected and URL is loading
-  if (shouldPlay) {
-    dispatch(settingsReplace(getNewSettings(file, true)));
   }
 
   const accessToken = settings.cloud.key;
@@ -54,21 +60,22 @@ export const filesGetUrl = payload => (dispatch, getState) => {
 
   return dropbox
     .filesGetTemporaryLink({ path: `${path}/${filePath}` })
-    .then(({ link: url }) =>
-      Promise.resolve({
+    .then(({ link: url }) => {
+      const newFile = {
         ...file,
         url,
         urlDate: Date.now(),
-      }),
-    )
-    .then(file => {
-      dispatch(filesUpdate({ file, source }));
+      };
+
+      dispatch(filesUpdate({ file: newFile }));
 
       if (shouldPlay) {
-        dispatch(settingsReplace(getNewSettings(file, false)));
+        dispatch(
+          settingsReplace(getNewSettings({ file: newFile, loading: false })),
+        );
       }
     })
-    .catch(() => notifier.error('Failed to get steaming URL'));
+    .catch(() => notifier.error('Failed to get streaming URL'));
 };
 
 export const filesReplace = files => ({
@@ -84,30 +91,31 @@ export const filesSync = () => (dispatch, getState) => {
 
   // Signal that syncing is starting
   dispatch(
-    settingsReplace(
-      set({ ...getState().settings }, 'cloud', {
+    settingsReplace({
+      ...getState().settings,
+      cloud: {
         ...settingsCloud,
         date: Date.now(),
         status: 'syncing',
-      }),
-    ),
+      },
+    }),
   );
 
-  const getEntries = options => {
-    const listPromise = options.cursor
-      ? dropbox.filesListFolderContinue({ cursor: options.cursor })
-      : dropbox.filesListFolder(options.list);
+  const getEntries = ({ cursor, list, entries }) => {
+    const listPromise = cursor
+      ? dropbox.filesListFolderContinue({ cursor })
+      : dropbox.filesListFolder(list);
 
     return listPromise.then(response => {
-      options.entries.push(...response.entries);
+      entries.push(...response.entries);
 
       if (getState().settings.cloud.status === 'cancelled') {
         return Promise.reject(new Error('cancelled'));
       }
 
       return response.has_more
-        ? getEntries({ ...options, cursor: response.cursor })
-        : options.entries;
+        ? getEntries({ list, entries, cursor: response.cursor })
+        : entries;
     });
   };
 
@@ -116,49 +124,47 @@ export const filesSync = () => (dispatch, getState) => {
     entries: [],
   })
     .then(entries =>
-      entries.reduce(
-        (files, entry) => {
-          if (entry['.tag'] === 'file') {
-            const filePath = entry.path_lower.replace(`${path}/`, '');
-            const parts = filePath.split('/');
-            const fileName = parts.pop().split('.');
-            const fileExt = fileName.pop();
-            const type = parts[0] === 'videos' ? 'video' : getFileType(fileExt);
-            let name = startCase(fileName.join('.'));
-            let track = null;
+      entries.reduce((files, entry) => {
+        if (entry['.tag'] === 'file') {
+          const filePath = entry.path_lower.replace(`${path}/`, '');
+          const parts = filePath.split('/').reverse();
+          const fileNameParts = parts[0].split('.');
+          const type = getFileType(fileNameParts.pop());
+          let name = startCase(fileNameParts.join('.'));
+          let track;
 
-            if (/^[0-9]{2}[" "]/.test(name)) {
-              track = Number(name.substring(0, 2));
-              name = name.substring(3);
-            }
-
-            if (type === 'audio') {
-              files.audio.push({
-                album: startCase(parts.pop()),
-                artist: startCase(parts.pop()),
-                name,
-                path: filePath,
-                track,
-                link: null,
-                linkDate: null,
-                type,
-              });
-            } else if (type === 'video') {
-              files.video.push({
-                name: startCase(fileName.join('.')),
-                category: parts.length > 1 ? startCase(last(parts)) : '',
-                path: filePath,
-                link: null,
-                linkDate: null,
-                type,
-              });
-            }
+          if (!type) {
+            return files;
           }
 
-          return files;
-        },
-        { audio: [], video: [] },
-      ),
+          if (type === 'audio' && /^\d{2}[" "]/.test(name)) {
+            track = Number(name.substring(0, 2));
+            name = name.substring(3);
+          }
+
+          files.push({
+            name,
+            path: filePath,
+            link: undefined,
+            linkDate: undefined,
+            type,
+            ...(type === 'audio'
+              ? {
+                  album: startCase(get(parts, '[1]', '')),
+                  artist: startCase(get(parts, '[2]', '')),
+                  track,
+                }
+              : {}),
+            ...(type === 'video'
+              ? {
+                  category: startCase(get(parts, '[1]', '')),
+                }
+              : {}),
+          });
+        }
+
+        return files;
+      }, []),
     )
     .then(files => {
       // Start using new files
@@ -166,36 +172,29 @@ export const filesSync = () => (dispatch, getState) => {
 
       // Signal that syncing was successful
       dispatch(
-        settingsReplace(
-          set({ ...getState().settings }, 'cloud', {
+        settingsReplace({
+          ...getState().settings,
+          cloud: {
             ...settingsCloud,
             date: Date.now(),
             status: 'success',
-          }),
-        ),
+          },
+        }),
       );
 
       // Save files to cloud
-      dispatch(cloudSaveFiles(files));
+      dispatch(cloudSaveFiles());
 
       notifier.success('Synced files successfully');
     })
     .catch(error => {
-      const cloud = { ...settingsCloud, date: Date.now(), status: 'error' };
+      const cloud = {
+        ...settingsCloud,
+        date: Date.now(),
+        status: error.message === 'cancelled' ? 'cancelled' : 'error',
+      };
 
-      if (error.message === 'cancelled') {
-        cloud.status = 'cancelled';
-      } else {
-        const errorMessage =
-          error.error && error.error.error_summary
-            ? error.error.error_summary
-            : 'Unknown error';
-        notifier.error(errorMessage);
-      }
-
-      // Signal that syncing was not successful
-      dispatch(
-        settingsReplace(set({ ...getState().settings }, 'cloud', cloud)),
-      );
+      dispatch(settingsReplace({ ...getState().settings, cloud }));
+      notifier.error(get(error, 'error.error_summary') || 'Unknown error');
     });
 };

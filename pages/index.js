@@ -1,168 +1,186 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Button, Tooltip, Alert, Icon } from 'antd';
 import moment from 'moment';
 import { set } from 'lodash';
 import { connect } from 'react-redux';
 import Cookies from 'js-cookie';
-import CustomHead from '../components/CustomHead';
-import { settingsReplace } from '../actions/settings';
+import css from 'styled-jsx/css';
+import { Button, Input } from 'antd';
+import { settingsReplaceLocal } from '../actions/settings';
 import { filesSync } from '../actions/files';
-import { cloudSaveOther, cloudGet } from '../actions/cloud';
-import { initialState } from '../reducers/settings';
-import style from '../styles/settings';
+import { cloudSaveOther, cloudGet, cloudDelete } from '../actions/cloud';
+import { getInitialState } from '../reducers/settings';
+import H1 from '../components/H1';
+import InputIcon from '../components/InputIcon';
+import Spacer from '../components/Spacer';
+import Text from '../components/Text';
+import Icon from '../components/Icon';
+import IconButton from '../components/IconButton';
+import { colors, spacing, bps } from '../lib/styling';
+
+const styles = css`
+  .container {
+    padding: ${spacing.pageVertical}px ${spacing.pageHorizontal}px;
+  }
+  .inputs {
+    max-width: 400px;
+  }
+  :global(.save) {
+    width: 100%;
+  }
+  .icons {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: auto;
+    justify-content: start;
+    grid-gap: ${spacing.a3}px;
+  }
+  .icons :global(.ant-btn) {
+  }
+
+  @media (max-width: ${bps.a2}px) {
+    .container {
+      padding: ${spacing.pageA2}px;
+    }
+  }
+`;
 
 const Settings = ({
-  settingsReplace,
   filesSync,
   cloudSaveOther,
   cloudGet,
+  cloudDelete,
   settings,
-  cloud,
+  settingsReplaceLocal,
 }) => (
-  <div className="root">
-    <style jsx>{style}</style>
-    <CustomHead />
-    <div>
-      <h1>Settings</h1>
-      This website allows streaming music and videos from a Dropbox account. The
-      purpose is to allow an easy way to play media, search, and create
-      playlists. To get started, enter a Dropbox API key and the path to the
-      Dropbox folder your media is located in. Optionally, enter a user
-      name—this allows users of the same Dropbox account to have different
-      playlists and settings. Audio files should be within an album folder,
-      which should be within an artist folder (iTunes will organize it this way
-      automatically). Video files will be categorized by the folder they are
-      within. All settings and playlists are stored in a folder within the
-      specified Dropbox folder.
-    </div>
+  <div className="container">
+    <style jsx>{styles}</style>
+    <H1>Settings</H1>
+    <Spacer />
+    <Text>
+      This website allows a user to easily create playslists and stream music
+      and videos from a Dropbox account. Enter a Dropbox API key and the path to
+      the Dropbox folder your media is located in. Optionally, enter a user
+      name. All settings and playlists are stored in folder within the specified
+      Dropbox folder.
+    </Text>
+    <Spacer />
     <div className="inputs">
       <Input
-        className="input"
-        prefix={<Icon type="user" />}
-        placeholder="default"
+        prefix={<InputIcon icon="user" />}
+        placeholder="person"
         value={settings.cloud.user}
-        onChange={({ target: { value } }) => {
-          Cookies.set('user', value);
-          settingsReplace(set({ ...settings }, 'cloud.user', value));
-        }}
-      />
-      <Input
-        className="input"
-        prefix={<Icon type="key" />}
-        placeholder="ABCD1234"
-        value={settings.cloud.key}
-        onChange={({ target: { value } }) => {
-          Cookies.set('key', value);
-          settingsReplace(set({ ...settings }, 'cloud.key', value));
-        }}
-      />
-      <Input
-        className="input"
-        prefix={<Icon type="folder" />}
-        placeholder="itunes/itunes music"
-        value={settings.cloud.path}
-        onChange={({ target: { value } }) => {
-          Cookies.set('path', value.toLowerCase());
-          settingsReplace(
-            set({ ...settings }, 'cloud.path', value.toLowerCase()),
+        onChange={e => {
+          Cookies.set('user', e.target.value);
+          settingsReplaceLocal(
+            set({ ...settings }, 'cloud.user', e.target.value),
           );
         }}
       />
-      <Alert
-        className="alert"
-        message={
-          (cloud.hasCloudStore ? 'Connected. ' : 'No connection. ') +
-          (settings.cloud.date
-            ? `Synced ${moment(settings.cloud.date).fromNow()}.`
-            : 'Never synced.')
-        }
-        type={cloud.hasCloudStore ? 'success' : 'error'}
+      <Spacer height={spacing.a2} />
+      <Input
+        prefix={<InputIcon icon="key" />}
+        placeholder="abc123"
+        value={settings.cloud.key}
+        onChange={e => {
+          Cookies.set('key', e.target.value);
+          settingsReplaceLocal(
+            set({ ...settings }, 'cloud.key', e.target.value),
+          );
+        }}
       />
-      <div className="actions">
-        {settings.cloud.status === 'syncing' && (
-          <Tooltip placement="top" title="Cancel sync">
-            <Button
-              type="danger"
-              shape="circle"
-              icon="close"
-              onClick={() =>
-                settingsReplace(
-                  set({ ...settings }, 'cloud.status', 'cancelled'),
-                )
-              }
-            />
-          </Tooltip>
-        )}
-        {settings.cloud.key &&
-          settings.cloud.path && (
-            <Tooltip
-              placement="top"
-              title={
-                settings.cloud.status === 'syncing'
-                  ? 'Syncing files'
-                  : 'Start files sync'
-              }
-            >
-              <Button
-                type="primary"
-                shape="circle"
-                icon="sync"
-                loading={settings.cloud.status === 'syncing'}
-                onClick={() => filesSync()}
-              />
-            </Tooltip>
-          )}
-        {settings.cloud.key &&
-          settings.cloud.path && (
-            <Tooltip placement="top" title="Save state to cloud">
-              <Button
-                type="primary"
-                shape="circle"
-                icon="cloud-upload"
-                onClick={() => cloudSaveOther({ settings, cloud })}
-              />
-            </Tooltip>
-          )}
-        {settings.cloud.key &&
-          settings.cloud.path && (
-            <Tooltip placement="top" title="Download state from cloud">
-              <Button
-                type="primary"
-                shape="circle"
-                icon="cloud-download"
-                onClick={() => cloudGet()}
-              />
-            </Tooltip>
-          )}
-        <Tooltip placement="top" title="Reset local settings">
-          <Button
-            type="primary"
-            shape="circle"
-            icon="delete"
-            onClick={() => settingsReplace(initialState)}
-          />
-        </Tooltip>
-      </div>
+      <Spacer height={spacing.a2} />
+      <Input
+        className="input"
+        prefix={<InputIcon icon="folder" />}
+        placeholder="itunes/itunes music"
+        value={settings.cloud.path}
+        onChange={e => {
+          Cookies.set('path', e.target.value.toLowerCase());
+          settingsReplaceLocal(
+            set({ ...settings }, 'cloud.path', e.target.value.toLowerCase()),
+          );
+        }}
+      />
+      <Spacer height={spacing.a2} />
+      <Button
+        disabled={!settings.cloud.key || !settings.cloud.path}
+        className="save"
+        type="primary"
+        onClick={() => cloudGet()}
+      >
+        Save
+      </Button>
+    </div>
+    <Spacer />
+    <Text>
+      {settings.cloud.isConnected ? 'Connected. ' : 'No connection. '}
+      {settings.cloud.isConnected && settings.cloud.date
+        ? `Synced ${moment(settings.cloud.date).fromNow()}.`
+        : 'Never synced.'}
+    </Text>
+    <Spacer />
+    <div className="icons">
+      {settings.cloud.status === 'syncing' && (
+        <IconButton
+          onClick={() =>
+            settingsReplaceLocal(
+              set({ ...settings }, 'cloud.status', 'cancelled'),
+            )
+          }
+        >
+          <Icon icon="cancel" />
+        </IconButton>
+      )}
+      {Boolean(settings.cloud.key && settings.cloud.path) && (
+        <IconButton
+          loading={settings.cloud.status === 'syncing'}
+          onClick={() => filesSync()}
+        >
+          <Icon color={colors.white} icon="arrows-ccw" />
+        </IconButton>
+      )}
+      {Boolean(settings.cloud.key && settings.cloud.path) && (
+        <IconButton onClick={() => cloudSaveOther()}>
+          <Icon icon="upload-cloud" />
+        </IconButton>
+      )}
+      {Boolean(settings.cloud.key && settings.cloud.path) && (
+        <IconButton onClick={() => cloudGet()}>
+          <Icon icon="download-cloud" />
+        </IconButton>
+      )}
+      <IconButton
+        onClick={() => {
+          Cookies.set('key', '');
+          Cookies.set('path', '');
+          Cookies.set('user', '');
+          settingsReplaceLocal(getInitialState());
+          cloudDelete();
+        }}
+      >
+        <Icon icon="trash" />
+      </IconButton>
     </div>
   </div>
 );
 
 Settings.propTypes = {
   settings: PropTypes.object.isRequired,
-  cloud: PropTypes.object.isRequired,
-  settingsReplace: PropTypes.func.isRequired,
+  settingsReplaceLocal: PropTypes.func.isRequired,
   filesSync: PropTypes.func.isRequired,
   cloudSaveOther: PropTypes.func.isRequired,
   cloudGet: PropTypes.func.isRequired,
+  cloudDelete: PropTypes.func.isRequired,
 };
 
 export default connect(
-  ({ settings, cloud }) => ({ settings, cloud }),
+  ({ settings }) => ({ settings }),
   dispatch => ({
-    settingsReplace: payload => dispatch(settingsReplace(payload)),
+    settingsReplaceLocal: payload => dispatch(settingsReplaceLocal(payload)),
     filesSync: () => dispatch(filesSync()),
-    cloudSaveOther: payload => dispatch(cloudSaveOther(payload)),
+    cloudSaveOther: () => dispatch(cloudSaveOther()),
     cloudGet: () => dispatch(cloudGet()),
+    cloudDelete: () => dispatch(cloudDelete()),
   }),
 )(Settings);

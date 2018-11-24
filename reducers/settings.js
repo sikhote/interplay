@@ -1,29 +1,18 @@
 import Cookies from 'js-cookie';
 
 const hasCookies = typeof window !== 'undefined';
-const key = (hasCookies && Cookies.get('key')) || '';
-const path = (hasCookies && Cookies.get('path')) || '';
-const user = (hasCookies && Cookies.get('user')) || 'default';
 
-export const initialState = {
+export const getInitialState = () => ({
   cloud: {
-    key,
-    path,
-    user,
+    key: (hasCookies && Cookies.get('key')) || '',
+    path: (hasCookies && Cookies.get('path')) || '',
+    user: (hasCookies && Cookies.get('user')) || 'default',
     date: undefined,
     status: undefined,
-  },
-  audio: {
-    position: 0,
-    sortBy: 'artist',
-    sortDirection: true,
-  },
-  video: {
-    position: 0,
-    sortBy: 'name',
-    sortDirection: true,
+    isConnected: false,
   },
   player: {
+    source: 'audio',
     volume: 0.1,
     muted: false,
     playing: false,
@@ -33,13 +22,14 @@ export const initialState = {
     played: 0,
     playedSeconds: 0,
   },
-};
+  // Stores position, sortBy, sortDirection, search for each list
+  lists: {},
+});
 
-const reducer = (state = initialState, action) => {
+const reducer = (state = getInitialState(), action) => {
   switch (action.type) {
     case 'SETTINGS_REPLACE': {
-      const { settings } = action.payload;
-      return settings || state;
+      return action.payload;
     }
     default:
       return state;

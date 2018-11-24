@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run: yarn
-      - run: yarn eslint
+      - run: yarn xo
       - run: yarn prettier -l
       - run: yarn export
       - deploy:

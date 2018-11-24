@@ -28,7 +28,8 @@
 			"unicorn/filename-case": 0,
 			"react/no-find-dom-node": 0
 		},
-		"env": ["browser", "node"]
+		"env": ["browser", "node"],
+    "space": 2
 	},
 	"dependencies": {
 		"@zeit/next-css": "^1.0.1",

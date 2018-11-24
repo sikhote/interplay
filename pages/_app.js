@@ -23,43 +23,43 @@ const styles = css.global`
 `;
 
 class App extends NextApp {
-	constructor(props) {
-		super(props);
-		this.state = {
-			synced: false,
-		};
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      synced: false,
+    };
+  }
 
-	componentDidMount() {
-		syncRouting(matches, pages, () => this.setState({ synced: true }));
-	}
+  componentDidMount() {
+    syncRouting(matches, pages, () => this.setState({ synced: true }));
+  }
 
-	render() {
-		const { Component, pageProps } = this.props;
-		const { synced } = this.state;
-		const currentPath = getCurrentPath();
-		const match = matches.find(m => m(currentPath));
-		const { page = '' } = match ? match(currentPath) : {};
+  render() {
+    const { Component, pageProps } = this.props;
+    const { synced } = this.state;
+    const currentPath = getCurrentPath();
+    const match = matches.find(m => m(currentPath));
+    const { page = '' } = match ? match(currentPath) : {};
 
-		return (
-			<Container>
-				<style jsx>{styles}</style>
-				{synced ? (
-					!match || !pages.includes(page) ? (
-						<Error statusCode={404} />
-					) : (
-						<Page>
-							<Component {...pageProps} />
-						</Page>
-					)
-				) : (
-					<Page>
-						<Empty />
-					</Page>
-				)}
-			</Container>
-		);
-	}
+    return (
+      <Container>
+        <style jsx>{styles}</style>
+        {synced ? (
+          !match || !pages.includes(page) ? (
+            <Error statusCode={404} />
+          ) : (
+            <Page>
+              <Component {...pageProps} />
+            </Page>
+          )
+        ) : (
+          <Page>
+            <Empty />
+          </Page>
+        )}
+      </Container>
+    );
+  }
 }
 
 export default App;

@@ -13,57 +13,57 @@ import Player from '../Player';
 import styles from './styles';
 
 if (isBrowser) {
-	addLocaleData(en);
+  addLocaleData(en);
 }
 
 class Page extends React.PureComponent {
-	componentDidMount() {
-		this.tryCloudGet();
-	}
+  componentDidMount() {
+    this.tryCloudGet();
+  }
 
-	tryCloudGet() {
-		const {
-			store: { dispatch, getState },
-		} = this.props;
-		const {
-			settings: {
-				cloud: { key, path, isConnected },
-			},
-		} = getState();
+  tryCloudGet() {
+    const {
+      store: { dispatch, getState },
+    } = this.props;
+    const {
+      settings: {
+        cloud: { key, path, isConnected },
+      },
+    } = getState();
 
-		if (!isConnected && key && path) {
-			dispatch(cloudGet());
-		}
-	}
+    if (!isConnected && key && path) {
+      dispatch(cloudGet());
+    }
+  }
 
-	render() {
-		const { children, store } = this.props;
-		const messages = translations[getLocale()];
-		const now = Date.now();
+  render() {
+    const { children, store } = this.props;
+    const messages = translations[getLocale()];
+    const now = Date.now();
 
-		return (
-			<ReduxProvider store={store}>
-				<IntlProvider
-					locale={getLocale()}
-					messages={messages}
-					initialNow={now}
-					textComponent={React.Fragment}
-				>
-					<div className="container">
-						<style jsx>{styles}</style>
-						<Player />
-						<Navigation />
-						<div className="main">{children}</div>
-					</div>
-				</IntlProvider>
-			</ReduxProvider>
-		);
-	}
+    return (
+      <ReduxProvider store={store}>
+        <IntlProvider
+          locale={getLocale()}
+          messages={messages}
+          initialNow={now}
+          textComponent={React.Fragment}
+        >
+          <div className="container">
+            <style jsx>{styles}</style>
+            <Player />
+            <Navigation />
+            <div className="main">{children}</div>
+          </div>
+        </IntlProvider>
+      </ReduxProvider>
+    );
+  }
 }
 
 Page.propTypes = {
-	children: PropTypes.any.isRequired,
-	store: PropTypes.object.isRequired,
+  children: PropTypes.any.isRequired,
+  store: PropTypes.object.isRequired,
 };
 
 export default withRedux(makeStore)(Page);

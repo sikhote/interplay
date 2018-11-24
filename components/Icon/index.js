@@ -5,14 +5,14 @@ import { colors } from '../../lib/styling';
 import styles from './styles';
 
 const Icon = ({ icon, ...props }) => (
-	<Text className="text" color={colors.white} {...props}>
-		<style jsx>{styles}</style>
-		<i className={`icon-${icon}`} />
-	</Text>
+  <Text className="text" color={colors.white} {...props}>
+    <style jsx>{styles}</style>
+    <i className={`icon-${icon}`} />
+  </Text>
 );
 
 Icon.propTypes = {
-	icon: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
 };
 
 export default Icon;

@@ -14,7 +14,7 @@ import Text from '../Text';
 import getFileInDirection from '../../lib/getFileInDirection';
 import { settingsReplace } from '../../actions/settings';
 import { filesGetUrl } from '../../actions/files';
-import { colors, fontWeights, fontSizes } from '../../lib/styling';
+import { colors, fontSizes } from '../../lib/styling';
 import styles from './styles';
 
 const prepareFile = throttle(callback => callback(), 10000, { leading: true });

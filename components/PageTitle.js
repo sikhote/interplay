@@ -6,8 +6,8 @@ import { injectIntl } from 'react-intl';
 const PageTitle = ({ title, intl }) => (
 	<Head>
 		<title>
-			{intl.formatMessage({ id: 'site_name' })}
-			{title ? `${intl.formatMessage({ id: 'site_divider' })}${title}` : ''}
+			{intl.formatMessage({ id: 'siteName' })}
+			{title ? `${intl.formatMessage({ id: 'siteDivider' })}${title}` : ''}
 		</title>
 	</Head>
 );

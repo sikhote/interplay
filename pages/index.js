@@ -103,12 +103,7 @@ const Settings = ({
         }}
       />
       <Spacer height={spacing.a2} />
-      <Button
-        disabled={!settings.cloud.key || !settings.cloud.path}
-        className="save"
-        type="primary"
-        onClick={() => cloudGet()}
-      >
+      <Button className="save" type="primary" onClick={() => cloudGet()}>
         Save
       </Button>
     </div>
@@ -132,24 +127,18 @@ const Settings = ({
           <Icon icon="cancel" />
         </IconButton>
       )}
-      {Boolean(settings.cloud.key && settings.cloud.path) && (
-        <IconButton
-          loading={settings.cloud.status === 'syncing'}
-          onClick={() => filesSync()}
-        >
-          <Icon color={colors.white} icon="arrows-ccw" />
-        </IconButton>
-      )}
-      {Boolean(settings.cloud.key && settings.cloud.path) && (
-        <IconButton onClick={() => cloudSaveOther()}>
-          <Icon icon="upload-cloud" />
-        </IconButton>
-      )}
-      {Boolean(settings.cloud.key && settings.cloud.path) && (
-        <IconButton onClick={() => cloudGet()}>
-          <Icon icon="download-cloud" />
-        </IconButton>
-      )}
+      <IconButton
+        loading={settings.cloud.status === 'syncing'}
+        onClick={() => filesSync()}
+      >
+        <Icon color={colors.white} icon="arrows-ccw" />
+      </IconButton>
+      <IconButton onClick={() => cloudSaveOther()}>
+        <Icon icon="upload-cloud" />
+      </IconButton>
+      <IconButton onClick={() => cloudGet()}>
+        <Icon icon="download-cloud" />
+      </IconButton>
       <IconButton
         onClick={() => {
           Cookies.set('key', '');

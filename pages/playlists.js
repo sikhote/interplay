@@ -1,32 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Error from 'next/error';
 import { get } from 'lodash';
 import List from '../components/List';
 import { titleToSlug } from '../lib/playlists';
 
-const Playlists = ({ alpha: slug, playlists: { playlists } }) => {
-  const playlist = playlists.find(({ name }) => titleToSlug(name) === slug);
+class Playlists extends React.Component {
+  static getInitialProps({ query: { id } }) {
+    return { id };
+  }
 
-  return (
-    <List
-      key={slug || 'playlists'}
-      title={get(playlist, 'name') || 'playlists'}
-      header={get(playlist, 'name') || 'Playlists'}
-      source={playlist ? playlist.name : 'playlists'}
-    />
-  );
-};
+  render() {
+    const { id, playlists } = this.props;
+    const playlist = playlists.find(({ name }) => titleToSlug(name) === id);
 
-Playlists.getInitialProps = ({ query: { alpha } }) => ({ alpha });
+    return id && !playlist ? (
+      <Error statusCode={404} />
+    ) : (
+      <List
+        key={id || 'playlists'}
+        title={get(playlist, 'name') || 'playlists'}
+        header={get(playlist, 'name') || 'Playlists'}
+        source={playlist ? playlist.name : 'playlists'}
+      />
+    );
+  }
+}
 
 Playlists.propTypes = {
-  alpha: PropTypes.string,
-  playlists: PropTypes.object.isRequired,
+  id: PropTypes.string,
+  playlists: PropTypes.array.isRequired,
 };
 
 Playlists.defaultProps = {
-  alpha: '',
+  id: '',
 };
 
 export default connect(({ playlists }) => ({ playlists }))(Playlists);

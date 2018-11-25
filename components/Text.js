@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
 import {
   colors,
   fontSizes,
@@ -8,6 +7,7 @@ import {
   lineHeights,
   fontWeights,
 } from '../lib/styling';
+import translations from '../lib/translations';
 
 const Text = ({
   children,
@@ -17,7 +17,6 @@ const Text = ({
   fontFamily,
   lineHeight,
   messageId,
-  messageValues,
   width,
   textAlign,
   style,
@@ -37,9 +36,7 @@ const Text = ({
     className={className || messageId}
   >
     {children}
-    {Boolean(messageId) && (
-      <FormattedMessage id={messageId} values={messageValues} />
-    )}
+    {messageId && translations[messageId]}
   </span>
 );
 
@@ -51,7 +48,6 @@ Text.propTypes = {
   fontFamily: PropTypes.string,
   lineHeight: PropTypes.string,
   messageId: PropTypes.string,
-  messageValues: PropTypes.object,
   width: PropTypes.any,
   textAlign: PropTypes.string,
   style: PropTypes.object,
@@ -66,7 +62,6 @@ Text.defaultProps = {
   fontFamily: fontFamilies.normal,
   lineHeight: lineHeights.normal,
   messageId: undefined,
-  messageValues: undefined,
   width: undefined,
   textAlign: 'left',
   style: {},

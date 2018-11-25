@@ -1,67 +1,67 @@
 {
-	"name": "interplay.app",
-	"description": "consume media from the cloud on a browser",
-	"author": "David Sinclair <david@sinclair.tech> (https://sinclair.tech)",
-	"homepage": "interplay.app",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"dev": "node server.js",
-		"build": "next build",
-		"start": "NODE_ENV=production node server.js",
-		"prettier": "prettier --write \"./**/*.js\""
-	},
-	"xo": {
-		"prettier": true,
-		"ignores": [
-			"lib/localization"
-		],
-		"extends": "xo-react",
-		"rules": {
-			"unicorn/filename-case": 0
-		},
-		"env": [
-			"browser",
-			"node"
-		],
-		"space": 2
-	},
-	"dependencies": {
-		"@zeit/next-css": "^1.0.1",
-		"antd": "^3.10.8",
-		"babel-eslint": "8.0.1",
-		"babel-plugin-import": "^1.11.0",
-		"dropbox": "2.5.9",
-		"eslint": "^5.8.0",
-		"eslint-config-xo": "^0.25.0",
-		"eslint-config-xo-react": "^0.17.0",
-		"eslint-plugin-prettier": "^3.0.0",
-		"eslint-plugin-react": "^7.11.1",
-		"file-loader": "^2.0.0",
-		"js-cookie": "^2.2.0",
-		"lodash": "4.17.5",
-		"memoize-one": "^4.0.2",
-		"moment": "2.22.0",
-		"next": "^7.0.2",
-		"next-redux-wrapper": "^2.0.0",
-		"now": "^12.1.5",
-		"path-match": "1.2.4",
-		"polished": "1.9.2",
-		"prettier": "^1.15.2",
-		"prop-types": "15.6.0",
-		"query-parse": "2.0.0",
-		"react": "^16.6.3",
-		"react-art": "^16.5.2",
-		"react-dom": "^16.6.3",
-		"react-player": "^1.6.6",
-		"react-redux": "5.0.7",
-		"react-virtualized": "9.18.5",
-		"redux": "3.7.2",
-		"redux-thunk": "^2.2.0",
-		"screenfull": "^3.3.3",
-		"styled-jsx": "^3.1.0",
-		"thenby": "1.2.3",
-		"url-loader": "^1.1.2",
-		"xo": "^0.23.0"
-	}
+  "name": "interplay.app",
+  "description": "consume media from the cloud on a browser",
+  "author": "David Sinclair <david@sinclair.tech> (https://sinclair.tech)",
+  "homepage": "interplay.app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "prettier": "prettier --write \"./**/*.js\""
+  },
+  "xo": {
+    "prettier": true,
+    "ignores": [
+      "lib/localization"
+    ],
+    "extends": "xo-react",
+    "rules": {
+      "unicorn/filename-case": 0
+    },
+    "env": [
+      "browser",
+      "node"
+    ],
+    "space": 2
+  },
+  "dependencies": {
+    "@zeit/next-css": "^1.0.1",
+    "antd": "^3.10.8",
+    "babel-eslint": "8.0.1",
+    "babel-plugin-import": "^1.11.0",
+    "dropbox": "2.5.9",
+    "eslint": "^5.8.0",
+    "eslint-config-xo": "^0.25.0",
+    "eslint-config-xo-react": "^0.17.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.1",
+    "file-loader": "^2.0.0",
+    "js-cookie": "^2.2.0",
+    "lodash": "4.17.5",
+    "memoize-one": "^4.0.2",
+    "moment": "2.22.0",
+    "next": "^7.0.2",
+    "next-redux-wrapper": "^2.0.0",
+    "now": "^12.1.5",
+    "path-match": "1.2.4",
+    "polished": "1.9.2",
+    "prettier": "^1.15.2",
+    "prop-types": "15.6.0",
+    "query-parse": "2.0.0",
+    "react": "^16.6.3",
+    "react-art": "^16.5.2",
+    "react-dom": "^16.6.3",
+    "react-player": "^1.6.6",
+    "react-redux": "5.0.7",
+    "react-virtualized": "9.18.5",
+    "redux": "3.7.2",
+    "redux-thunk": "^2.2.0",
+    "screenfull": "^3.3.3",
+    "styled-jsx": "^3.1.0",
+    "thenby": "1.2.3",
+    "url-loader": "^1.1.2",
+    "xo": "^0.23.0"
+  }
 }

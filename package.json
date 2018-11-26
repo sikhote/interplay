@@ -9,7 +9,6 @@
     "dev": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
-    "deploy": "yarn build && yarn now && yarn now alias",
     "prettier": "prettier --write \"./**/*.js\""
   },
   "xo": {

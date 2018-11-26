@@ -7,5 +7,5 @@ jobs:
     steps:
       - checkout
       - run: yarn
+      - run: yarn prettier --write \"./**/*.js\" -l
       - run: yarn xo
-      - run: yarn prettier -l

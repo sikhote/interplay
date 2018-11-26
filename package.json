@@ -8,8 +8,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
-    "prettier": "prettier --write \"./**/*.js\""
+    "start": "NODE_ENV=production node server.js"
   },
   "xo": {
     "prettier": true,

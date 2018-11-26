@@ -5639,13 +5639,6 @@ qs@^6.5.1:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
 
-query-parse@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/query-parse/-/query-parse-2.0.0.tgz#e996b28e7ea0343e5f8a2dc24069dac90eb24a43"
-  integrity sha512-mabTzsUZo6OnNvJ7zr6v0cCVtxZT7ZUw/39wJU33c8VOFYRqW9+eNkWNhsfGqTc2OKZaghbWjn6Cwtut+FzsdA==
-  dependencies:
-    lodash "^4.17.4"
-
 querystring-es3@^0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/querystring-es3/-/querystring-es3-0.2.1.tgz#9ec61f79049875707d69414596fd907a4d711e73"

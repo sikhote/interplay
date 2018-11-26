@@ -3,10 +3,7 @@ jobs:
   build:
     working_directory: ~/build
     docker:
-      - image: circleci/node:10
-        environment:
-          AWS_REGION: us-east-1
-          NODE_ENV: production
+      - image: circleci/node:10\
     steps:
       - checkout
       - run: yarn

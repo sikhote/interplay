@@ -1,11 +1,15 @@
 import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
-import { getLocale } from 'parlor';
+import NextDocument, { Head, Main, NextScript } from 'next/document';
 
-export default class IntlDocument extends Document {
+export default class Document extends NextDocument {
+  static async getInitialProps(ctx) {
+    const initialProps = await NextDocument.getInitialProps(ctx);
+    return { ...initialProps };
+  }
+
   render() {
     return (
-      <html lang={getLocale()}>
+      <html>
         <Head>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>

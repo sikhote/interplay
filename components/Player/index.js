@@ -131,6 +131,7 @@ class Player extends React.Component {
           source,
           shouldPlay: true,
         }),
+      // eslint-disable-next-line react/no-find-dom-node
       onClick: () => screenfull.request(findDOMNode(this.player)),
     };
     const loopButton = (

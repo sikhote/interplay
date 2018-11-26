@@ -28,7 +28,11 @@ ListRow.propTypes = {
   onRowClick: PropTypes.func.isRequired,
   rowData: PropTypes.any.isRequired,
   style: PropTypes.any.isRequired,
-  currentPath: PropTypes.string.isRequired,
+  currentPath: PropTypes.string,
+};
+
+ListRow.defaultProps = {
+  currentPath: '',
 };
 
 export default ListRow;

@@ -15,4 +15,3 @@ Play media from the cloud on a browser
 - `yarn dev` to develop
 - `yarn build` to build for production
 - `yarn start` to run in production mode
-- `yarn xo` to check code is clean

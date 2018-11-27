@@ -1,37 +1,19 @@
-const initialState = [
-  {
-    created: Date.now(),
-    updated: Date.now(),
-    name: 'Gimme More',
-    tracks: [],
-  },
-  {
-    created: 1529470943807,
-    updated: 1529470943807,
-    name: 'Buy Me Tacos',
-    tracks: [],
-  },
-];
+const initialState = [];
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'PLAYLISTS_UPDATE': {
       const newState = state.slice();
-      const { playlist } = action.payload;
-      const index = newState.findIndex(({ id }) => id === playlist.id);
-      newState[index] = playlist;
+      const index = newState.findIndex(({ id }) => id === action.payload.id);
+      newState[index] = action.payload;
       return newState;
     }
     case 'PLAYLISTS_ADD': {
-      const newState = state.slice();
-      const { playlist } = action.payload;
-      newState.push(playlist);
-      return newState;
+      return state.concat(action.payload);
     }
     case 'PLAYLISTS_REMOVE': {
       const newState = state.slice();
-      const { playlist } = action.payload;
-      const index = newState.findIndex(({ id }) => id === playlist.id);
+      const index = newState.findIndex(({ id }) => id === action.payload.id);
       newState.splice(index, 1);
       return newState;
     }

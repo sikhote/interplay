@@ -11,7 +11,7 @@ import Slider from '../Slider';
 import Switch from '../Switch';
 import Icon from '../Icon';
 import Text from '../Text';
-import getFileInDirection from '../../lib/getFileInDirection';
+import getFileInDirection from '../../lib/get-file-in-direction';
 import { settingsReplace } from '../../actions/settings';
 import { filesGetUrl } from '../../actions/files';
 import { colors, fontSizes } from '../../lib/styling';

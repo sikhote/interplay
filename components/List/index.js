@@ -2,7 +2,7 @@ import React from 'react';
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'next/router';
+import Router from 'next/router';
 import { get } from 'lodash';
 import { Input } from 'antd';
 import getSortedData from '../../lib/getSortedData';
@@ -21,9 +21,8 @@ import PageTitle from '../PageTitle';
 import ListRow from './ListRow';
 import styles from './styles';
 
-class List extends React.Component {
+class List extends React.PureComponent {
   render() {
-    this.temp = 1;
     const {
       source,
       settings,
@@ -33,7 +32,6 @@ class List extends React.Component {
       files,
       playlists,
       filesGetUrl,
-      router,
     } = this.props;
     const { position, sortBy, sortDirection, search } =
       settings.lists[source] || getDefaulListSettings();
@@ -57,7 +55,7 @@ class List extends React.Component {
 
       if (source === 'playlists') {
         const slug = titleToSlug(get(playlists, `[${position}].name`));
-        router.push(`/playlists/${slug}`);
+        Router.push(`/playlists/${slug}`);
       } else {
         filesGetUrl({ source, path, shouldPlay: true, position });
       }
@@ -151,19 +149,16 @@ List.propTypes = {
   filesGetUrl: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   header: PropTypes.string.isRequired,
-  router: PropTypes.object.isRequired,
 };
 
-export default withRouter(
-  connect(
-    ({ files, settings, playlists }) => ({
-      files,
-      settings,
-      playlists,
-    }),
-    dispatch => ({
-      settingsReplace: payload => dispatch(settingsReplace(payload)),
-      filesGetUrl: payload => dispatch(filesGetUrl(payload)),
-    }),
-  )(List),
-);
+export default connect(
+  ({ files, settings, playlists }) => ({
+    files,
+    settings,
+    playlists,
+  }),
+  dispatch => ({
+    settingsReplace: payload => dispatch(settingsReplace(payload)),
+    filesGetUrl: payload => dispatch(filesGetUrl(payload)),
+  }),
+)(List);

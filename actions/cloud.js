@@ -63,7 +63,7 @@ export const cloudGet = () => (dispatch, getState) => {
     )
     .then(cloudState => {
       const state = getState();
-      const newState = merge(state, cloudState, {
+      const newState = merge(cloudState, {
         settings: {
           cloud: {
             key: get(state, 'settings.cloud.key') || '',

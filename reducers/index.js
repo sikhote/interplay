@@ -11,7 +11,7 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.type === 'APP_CHANGE') {
-    return appReducer(action.payload, action);
+    state = action.payload;
   }
 
   return appReducer(state, action);

@@ -78,9 +78,9 @@ export const filesGetUrl = payload => (dispatch, getState) => {
     .catch(() => notifier.error('Failed to get streaming URL'));
 };
 
-export const filesReplace = files => ({
+export const filesReplace = payload => ({
   type: 'FILES_REPLACE',
-  payload: { files },
+  payload,
 });
 
 export const filesSync = () => (dispatch, getState) => {

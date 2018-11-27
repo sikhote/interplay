@@ -123,7 +123,7 @@ class Player extends React.Component {
       onEnded: () =>
         filesGetUrl({
           ...getFileInDirection(
-            settings,
+            this.props.settings,
             files,
             playlists,
             random ? 'random' : 'next',

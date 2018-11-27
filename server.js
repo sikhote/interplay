@@ -19,7 +19,6 @@ app.prepare().then(() => {
       handle(req, res);
       return;
     }
-    console.log(playlistsParams);
 
     app.render(req, res, '/playlists', Object.assign(playlistsParams, query));
   }).listen(port, err => {

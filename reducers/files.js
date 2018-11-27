@@ -12,8 +12,7 @@ const reducer = (state = initialState, action) => {
       return newState;
     }
     case 'FILES_REPLACE': {
-      const { files } = action.payload;
-      return files || state;
+      return action.payload || state;
     }
     default:
       return state;

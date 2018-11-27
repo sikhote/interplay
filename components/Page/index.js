@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider as ReduxProvider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
-import makeStore from '../../lib/makeStore';
+import makeStore from '../../lib/make-store';
 import { cloudGet } from '../../actions/cloud';
 import Navigation from '../Navigation';
 import Player from '../Player';

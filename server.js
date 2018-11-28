@@ -13,14 +13,14 @@ const playlistsMatch = route('/playlists/:id');
 app.prepare().then(() => {
   createServer((req, res) => {
     const { pathname, query } = parse(req.url, true);
-    const playlistsParams = playlistsMatch(pathname);
+    const params = playlistsMatch(pathname);
 
-    if (playlistsParams === false) {
+    if (params === false) {
       handle(req, res);
       return;
     }
 
-    app.render(req, res, '/playlists', Object.assign(playlistsParams, query));
+    app.render(req, res, '/playlists', Object.assign(params, query));
   }).listen(port, err => {
     if (err) throw err;
     console.log(`> Ready on http://localhost:${port}`);

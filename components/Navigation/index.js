@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Router from 'next/router';
+import { withRouter } from 'next/router';
 import Link from 'next/link';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -12,41 +12,33 @@ import { playlistsAdd } from '../../actions/playlists';
 import styles from './styles';
 
 const Navigation = ({ router, playlists, playlistsAdd }) => {
-  const alpha = get(router.query, 'alpha');
-  const path = `${router.pathname}${alpha ? `/${alpha}` : ''}`;
+  const id = get(router.query, 'id');
+  const path = `${router.pathname}${id ? `/${id}` : ''}`;
   const items = [
-    { key: '/', title: 'Settings', icon: 'cog' },
-    { key: '/audio', title: 'Audio', icon: 'audio' },
-    { key: '/video', title: 'Video', icon: 'video' },
-    {
-      key: '/playlists',
-      title: 'Playlists',
-      icon: 'star',
-      className: 'playlists',
-    },
+    { id: '/', title: 'Settings', icon: 'cog' },
+    { id: '/audio', title: 'Audio', icon: 'audio' },
+    { id: '/video', title: 'Video', icon: 'video' },
+    { id: '/playlists', title: 'Playlists', icon: 'star' },
     ...playlists.map(({ name }) => ({
-      key: `/playlists/${titleToSlug(name)}`,
+      href: `/playlists?id=${titleToSlug(name)}`,
+      id: `/playlists/${titleToSlug(name)}`,
       title: name,
       icon: 'star',
       className: 'playlist',
     })),
     {
-      key: 'playlist-add',
-      title: '',
+      id: 'playlist-add',
+      title: 'Add',
       icon: 'list-add',
       className: 'playlist-add',
-      onClick: () => {
-        playlistsAdd().then(({ name }) =>
-          Router.push(`/playlists/${titleToSlug(name)}`),
-        );
-      },
+      onClick: () => playlistsAdd(),
     },
   ];
 
   return (
     <div className="container">
       <style jsx>{styles}</style>
-      {items.map(({ key, title, icon, className = '', onClick }) => {
+      {items.map(({ id, href, title, icon, className = '', onClick }) => {
         const inner = (
           <React.Fragment>
             <Icon icon={icon} color={colors.navigationItem} className="icon" />
@@ -57,12 +49,12 @@ const Navigation = ({ router, playlists, playlistsAdd }) => {
         );
 
         return onClick ? (
-          <div key={key} className="item" onClick={onClick}>
+          <div key={id} className="item" onClick={onClick}>
             {inner}
           </div>
         ) : (
-          <Link key={key} href={`${key}`}>
-            <a className={`item ${className} ${path === key ? 'active' : ''}`}>
+          <Link key={id} as={id} href={href || id}>
+            <a className={`item ${className} ${path === id ? 'active' : ''}`}>
               {inner}
             </a>
           </Link>
@@ -78,11 +70,13 @@ Navigation.propTypes = {
   playlistsAdd: PropTypes.func.isRequired,
 };
 
-export default connect(
-  ({ playlists }) => ({
-    playlists,
-  }),
-  dispatch => ({
-    playlistsAdd: () => dispatch(playlistsAdd()),
-  }),
-)(Navigation);
+export default withRouter(
+  connect(
+    ({ playlists }) => ({
+      playlists,
+    }),
+    dispatch => ({
+      playlistsAdd: () => dispatch(playlistsAdd()),
+    }),
+  )(Navigation),
+);

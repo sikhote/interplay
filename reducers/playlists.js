@@ -4,7 +4,9 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'PLAYLISTS_UPDATE': {
       const newState = state.slice();
-      const index = newState.findIndex(({ id }) => id === action.payload.id);
+      const index = newState.findIndex(
+        ({ name }) => name === action.payload.name,
+      );
       newState[index] = action.payload;
       return newState;
     }
@@ -13,7 +15,9 @@ const reducer = (state = initialState, action) => {
     }
     case 'PLAYLISTS_REMOVE': {
       const newState = state.slice();
-      const index = newState.findIndex(({ id }) => id === action.payload.id);
+      const index = newState.findIndex(
+        ({ name }) => name === action.payload.name,
+      );
       newState.splice(index, 1);
       return newState;
     }

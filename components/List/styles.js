@@ -47,7 +47,7 @@ export default css`
   }
   :global(.table.playlists .ReactVirtualized__Table__row),
   :global(.table.playlists .ReactVirtualized__Table__headerRow) {
-    grid-template-columns: 1fr 90px 90px 60px;
+    grid-template-columns: 1fr 90px 60px;
   }
   :global(.table.video .ReactVirtualized__Table__row),
   :global(.table.video .ReactVirtualized__Table__headerRow) {
@@ -58,6 +58,9 @@ export default css`
   }
   :global(.ReactVirtualized__Table__row.active) {
     background: ${transparentize(0.8, colors.a1)};
+  }
+  :global(.ReactVirtualized__Table__row.selected) {
+    background: ${transparentize(0.8, colors.a3)};
   }
   :global(.ReactVirtualized__Table__headerRow) {
     border-top: 1px solid ${lighten(0.07, colors.border)};
@@ -109,6 +112,10 @@ export default css`
     :global(.ReactVirtualized__Table__headerRow) {
       padding: 0 ${spacing.a4}px;
       grid-template-columns: 20px 1fr 1fr 1fr;
+    }
+    :global(.table.playlists .ReactVirtualized__Table__row),
+    :global(.table.playlists .ReactVirtualized__Table__headerRow) {
+      grid-template-columns: 1fr 80px 50px;
     }
   }
 `;

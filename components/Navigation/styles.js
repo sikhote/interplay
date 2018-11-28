@@ -15,6 +15,9 @@ export default css`
     color: ${colors.navigationItem};
     padding: ${spacing.a4}px ${spacing.pageHorizontal}px;
     text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
   .item.active :global(.title),
   .item.active :global(.icon) {
@@ -22,9 +25,6 @@ export default css`
   }
   .item :global(.title) {
     padding-left: ${spacing.a5}px;
-  }
-  .item.playlists {
-    display: none;
   }
 
   @media (max-width: ${bps.a2}px) {
@@ -37,9 +37,6 @@ export default css`
     .item {
       text-align: center;
       padding: ${spacing.a4}px 0;
-    }
-    .item.playlists {
-      display: block;
     }
     .item.playlist,
     .item.playlist-add,

@@ -1,25 +1,28 @@
 import { getNewPlaylist } from '../lib/playlists';
 import { cloudSavePlaylists } from './cloud';
 
-export const playlistsAdd = () => dispatch => {
-  const payload = getNewPlaylist();
+export const playlistsAdd = () => (dispatch, getState) => {
+  const { playlists } = getState();
+  const payload = getNewPlaylist(playlists);
   dispatch({
     type: 'PLAYLISTS_ADD',
     payload,
   });
-  return Promise.resolve(payload);
+  dispatch(cloudSavePlaylists());
 };
 
 export const playlistsRemove = payload => dispatch => {
   dispatch({
     type: 'PLAYLISTS_REMOVE',
     payload,
-  }).then(() => dispatch(cloudSavePlaylists()));
+  });
+  dispatch(cloudSavePlaylists());
 };
 
 export const playlistsUpdate = payload => dispatch => {
   dispatch({
     type: 'PLAYLISTS_UPDATE',
     payload,
-  }).then(() => dispatch(cloudSavePlaylists()));
+  });
+  dispatch(cloudSavePlaylists());
 };

@@ -10,6 +10,10 @@ import getSearchedData from '../../lib/get-searched-data';
 import getSourcedData from '../../lib/get-sourced-data';
 import { settingsReplace } from '../../actions/settings';
 import { filesGetUrl } from '../../actions/files';
+import {
+  selectionsToggle,
+  selectionsRemoveAll,
+} from '../../actions/selections';
 import getListColumns from '../../lib/get-list-columns';
 import { titleToSlug } from '../../lib/playlists';
 import getDefaulListSettings from '../../lib/get-default-list-settings';
@@ -22,6 +26,11 @@ import ListRow from './ListRow';
 import styles from './styles';
 
 class List extends React.PureComponent {
+  componentDidMount() {
+    const { selectionsRemoveAll } = this.props;
+    selectionsRemoveAll();
+  }
+
   render() {
     const {
       source,
@@ -32,6 +41,8 @@ class List extends React.PureComponent {
       files,
       playlists,
       filesGetUrl,
+      selections,
+      selectionsToggle,
     } = this.props;
     const { position, sortBy, sortDirection, search } =
       settings.lists[source] || getDefaulListSettings();
@@ -49,13 +60,19 @@ class List extends React.PureComponent {
           },
         },
       });
-    const onRowClick = arg => {
+    const onRowClick = arg =>
+      selectionsToggle(
+        source === 'playlists'
+          ? get(arg, 'rowData.name')
+          : get(arg, 'rowData.path'),
+      );
+    const onRowDoubleClick = arg => {
       const position = get(arg, 'index');
       const path = get(arg, 'rowData.path');
 
       if (source === 'playlists') {
         const slug = titleToSlug(get(playlists, `[${position}].name`));
-        Router.push(`/playlists/${slug}`);
+        Router.push(`/playlists?id=${slug}`, `/playlists/${slug}`);
       } else {
         filesGetUrl({ source, path, shouldPlay: true, position });
       }
@@ -89,6 +106,15 @@ class List extends React.PureComponent {
                 <Icon icon="location" />
               </IconButton>
             )}
+            {Boolean(selections.length) && (
+              <IconButton
+                onClick={() => {
+                  console.log('show side panel!');
+                }}
+              >
+                <Icon icon="switch" />
+              </IconButton>
+            )}
           </div>
         </div>
         <div className={`table ${source}`}>
@@ -100,11 +126,13 @@ class List extends React.PureComponent {
                 }}
                 height={height}
                 headerHeight={30}
-                noRowsRenderer={() => (
-                  <div className="no-data">So empty *sigh*</div>
-                )}
                 rowRenderer={args => (
-                  <ListRow {...args} currentPath={currentPath} />
+                  <ListRow
+                    {...args}
+                    currentPath={currentPath}
+                    selections={selections}
+                    source={source}
+                  />
                 )}
                 rowCount={sortedData.length}
                 rowGetter={({ index }) => sortedData[index]}
@@ -122,6 +150,7 @@ class List extends React.PureComponent {
                   sortDirection ? SortDirection.ASC : SortDirection.DESC
                 }
                 onRowClick={onRowClick}
+                onRowDoubleClick={onRowDoubleClick}
               >
                 {getListColumns(source).map(({ title, dataKey }) => (
                   <Column
@@ -149,16 +178,22 @@ List.propTypes = {
   filesGetUrl: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   header: PropTypes.string.isRequired,
+  selections: PropTypes.array.isRequired,
+  selectionsToggle: PropTypes.func.isRequired,
+  selectionsRemoveAll: PropTypes.func.isRequired,
 };
 
 export default connect(
-  ({ files, settings, playlists }) => ({
+  ({ files, settings, playlists, selections }) => ({
     files,
     settings,
     playlists,
+    selections,
   }),
   dispatch => ({
     settingsReplace: payload => dispatch(settingsReplace(payload)),
     filesGetUrl: payload => dispatch(filesGetUrl(payload)),
+    selectionsToggle: payload => dispatch(selectionsToggle(payload)),
+    selectionsRemoveAll: () => dispatch(selectionsRemoveAll()),
   }),
 )(List);

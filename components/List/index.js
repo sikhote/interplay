@@ -87,6 +87,7 @@ class List extends React.PureComponent {
           <H1>{header}</H1>
           <div className="side">
             <Input
+              className="search"
               prefix={<InputIcon icon="search" />}
               placeholder="Search"
               value={search}

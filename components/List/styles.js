@@ -30,7 +30,9 @@ export default css`
     grid-gap: ${spacing.a3}px;
     position: relative;
     bottom: ${spacing.a3}px;
-    max-width: 275px;
+  }
+  :global(.search) {
+    max-width: 240px;
   }
   :global(.ReactVirtualized__Grid) {
     outline: none;
@@ -105,8 +107,8 @@ export default css`
       display: grid;
       grid-gap: ${spacing.a4}px;
     }
-    .side {
-      max-width: 125px;
+    :global(.search) {
+      max-width: 90px;
     }
     :global(.ReactVirtualized__Table__row),
     :global(.ReactVirtualized__Table__headerRow) {

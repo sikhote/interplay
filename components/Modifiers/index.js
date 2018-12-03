@@ -3,15 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Select } from 'antd';
 import { at, difference } from 'lodash';
-import getSortedData from '../../lib/get-sorted-data';
-import getSearchedData from '../../lib/get-searched-data';
-import getSourcedData from '../../lib/get-sourced-data';
-import getDefaulListSettings from '../../lib/get-default-list-settings';
 import IconButton from '../IconButton';
 import Icon from '../Icon';
 import H2 from '../H2';
 import Spacer from '../Spacer';
 import { playlistsRemove, playlistsUpdate } from '../../actions/playlists';
+import { getSortedPlaylist } from '../../lib/playlists';
 import {
   modifiersSelectionsRemoveAll,
   modifiersShowUpdate,
@@ -42,14 +39,6 @@ class Modifiers extends React.PureComponent {
     } = this.props;
     const { selectedPlaylist } = this.state;
     const show = modifiersShow && modifiersSelections.length > 0;
-    const getSortedPlaylist = () => {
-      const { sortBy, sortDirection, search } =
-        settings.lists[source] || getDefaulListSettings();
-      const sourcedData = getSourcedData(files, source, playlists);
-      const searchedData = getSearchedData(sourcedData, source, search);
-      const sortedData = getSortedData(searchedData, sortBy, sortDirection);
-      return sortedData.map(({ path }) => path);
-    };
     const deletePlaylists = () => {
       playlistsRemove(modifiersSelections);
       modifiersSelectionsRemoveAll();
@@ -71,7 +60,10 @@ class Modifiers extends React.PureComponent {
     };
     const deleteFromPlaylist = () => {
       const playlist = playlists.find(({ name }) => name === source);
-      const tracksToDelete = at(getSortedPlaylist(), modifiersSelections);
+      const tracksToDelete = at(
+        getSortedPlaylist({ settings, source, files, playlists }),
+        modifiersSelections,
+      );
       playlist.tracks = difference(playlist.tracks, tracksToDelete);
       playlistsUpdate(playlist);
     };

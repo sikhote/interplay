@@ -155,6 +155,12 @@
       "css": "switch",
       "code": 59413,
       "src": "entypo"
+    },
+    {
+      "uid": "70370693ada58ef0a60fa0984fe8d52a",
+      "css": "plus",
+      "code": 59415,
+      "src": "entypo"
     }
   ]
 }

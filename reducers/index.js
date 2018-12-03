@@ -2,13 +2,13 @@ import { combineReducers } from 'redux';
 import settings from './settings';
 import files from './files';
 import playlists from './playlists';
-import selections from './selections';
+import modifiers from './modifiers';
 
 const appReducer = combineReducers({
   settings,
   files,
   playlists,
-  selections,
+  modifiers,
 });
 
 const rootReducer = (state, action) => {

@@ -1,5 +1,5 @@
 import css from 'styled-jsx/css';
-import { lighten, transparentize } from 'polished';
+import { transparentize } from 'polished';
 import {
   spacing,
   bps,
@@ -30,7 +30,12 @@ export default css`
     grid-gap: ${spacing.a3}px;
     position: relative;
     bottom: ${spacing.a3}px;
-    max-width: 275px;
+  }
+  :global(.search) {
+    max-width: 240px;
+  }
+  :global(.table) {
+    overflow: hidden;
   }
   :global(.ReactVirtualized__Grid) {
     outline: none;
@@ -63,7 +68,7 @@ export default css`
     background: ${transparentize(0.8, colors.a3)};
   }
   :global(.ReactVirtualized__Table__headerRow) {
-    border-top: 1px solid ${lighten(0.07, colors.border)};
+    border-top: 1px solid ${colors.border};
     border-bottom: 1px solid ${colors.border};
     background: linear-gradient(
       to bottom,
@@ -105,8 +110,8 @@ export default css`
       display: grid;
       grid-gap: ${spacing.a4}px;
     }
-    .side {
-      max-width: 125px;
+    :global(.search) {
+      max-width: 90px;
     }
     :global(.ReactVirtualized__Table__row),
     :global(.ReactVirtualized__Table__headerRow) {

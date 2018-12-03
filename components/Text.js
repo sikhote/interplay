@@ -21,6 +21,7 @@ const Text = ({
   textAlign,
   style,
   className,
+  uppercase,
 }) => (
   <span
     style={{
@@ -31,6 +32,7 @@ const Text = ({
       lineHeight,
       width,
       textAlign,
+      textTransform: uppercase ? 'uppercase' : 'none',
       ...style,
     }}
     className={className || messageId}
@@ -52,6 +54,7 @@ Text.propTypes = {
   textAlign: PropTypes.string,
   style: PropTypes.object,
   className: PropTypes.string,
+  uppercase: PropTypes.bool,
 };
 
 Text.defaultProps = {
@@ -66,6 +69,7 @@ Text.defaultProps = {
   textAlign: 'left',
   style: {},
   className: '',
+  uppercase: false,
 };
 
 export default Text;

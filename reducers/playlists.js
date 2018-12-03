@@ -14,12 +14,7 @@ const reducer = (state = initialState, action) => {
       return state.concat(action.payload);
     }
     case 'PLAYLISTS_REMOVE': {
-      const newState = state.slice();
-      const index = newState.findIndex(
-        ({ name }) => name === action.payload.name,
-      );
-      newState.splice(index, 1);
-      return newState;
+      return state.filter(({ name }) => !action.payload.includes(name));
     }
     default:
       return state;

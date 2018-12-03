@@ -16,7 +16,9 @@ const ListRow = ({
   const isSelected =
     source === 'playlists'
       ? selections.includes(rowData.name)
-      : selections.includes(rowData.path);
+      : ['video', 'audio'].includes(source)
+      ? selections.includes(rowData.path)
+      : selections.includes(index);
   className += isSelected ? ' selected' : '';
   className += rowData.path === currentPath ? ' active' : '';
 

@@ -11,9 +11,10 @@ import getSourcedData from '../../lib/get-sourced-data';
 import { settingsReplace } from '../../actions/settings';
 import { filesGetUrl } from '../../actions/files';
 import {
-  selectionsToggle,
-  selectionsRemoveAll,
-} from '../../actions/selections';
+  modifiersSelectionsToggle,
+  modifiersSelectionsRemoveAll,
+  modifiersShowUpdate,
+} from '../../actions/modifiers';
 import getListColumns from '../../lib/get-list-columns';
 import { titleToSlug } from '../../lib/playlists';
 import getDefaulListSettings from '../../lib/get-default-list-settings';
@@ -22,13 +23,15 @@ import InputIcon from '../InputIcon';
 import IconButton from '../IconButton';
 import Icon from '../Icon';
 import PageTitle from '../PageTitle';
+import Modifiers from '../Modifiers';
 import ListRow from './ListRow';
 import styles from './styles';
 
 class List extends React.PureComponent {
   componentDidMount() {
-    const { selectionsRemoveAll } = this.props;
-    selectionsRemoveAll();
+    const { modifiersSelectionsRemoveAll, modifiersShowUpdate } = this.props;
+    modifiersSelectionsRemoveAll();
+    modifiersShowUpdate(false);
   }
 
   render() {
@@ -41,8 +44,11 @@ class List extends React.PureComponent {
       files,
       playlists,
       filesGetUrl,
-      selections,
-      selectionsToggle,
+      modifiersSelections,
+      modifiersSelectionsToggle,
+      modifiersSelectionsRemoveAll,
+      modifiersShowUpdate,
+      modifiersShow,
     } = this.props;
     const { position, sortBy, sortDirection, search } =
       settings.lists[source] || getDefaulListSettings();
@@ -61,10 +67,12 @@ class List extends React.PureComponent {
         },
       });
     const onRowClick = arg =>
-      selectionsToggle(
+      modifiersSelectionsToggle(
         source === 'playlists'
           ? get(arg, 'rowData.name')
-          : get(arg, 'rowData.path'),
+          : ['video', 'audio'].includes(source)
+          ? get(arg, 'rowData.path')
+          : arg.index,
       );
     const onRowDoubleClick = arg => {
       const position = get(arg, 'index');
@@ -107,18 +115,25 @@ class List extends React.PureComponent {
                 <Icon icon="location" />
               </IconButton>
             )}
-            {Boolean(selections.length) && (
+            {Boolean(modifiersSelections.length) && (
               <IconButton
                 onClick={() => {
-                  console.log('show side panel!');
+                  modifiersSelectionsRemoveAll();
+                  modifiersShowUpdate(false);
                 }}
               >
+                <Icon icon="cancel" />
+              </IconButton>
+            )}
+            {Boolean(modifiersSelections.length) && (
+              <IconButton onClick={() => modifiersShowUpdate(!modifiersShow)}>
                 <Icon icon="switch" />
               </IconButton>
             )}
           </div>
         </div>
         <div className={`table ${source}`}>
+          <Modifiers source={source} />
           <AutoSizer>
             {({ height, width }) => (
               <Table
@@ -131,7 +146,7 @@ class List extends React.PureComponent {
                   <ListRow
                     {...args}
                     currentPath={currentPath}
-                    selections={selections}
+                    selections={modifiersSelections}
                     source={source}
                   />
                 )}
@@ -179,22 +194,28 @@ List.propTypes = {
   filesGetUrl: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   header: PropTypes.string.isRequired,
-  selections: PropTypes.array.isRequired,
-  selectionsToggle: PropTypes.func.isRequired,
-  selectionsRemoveAll: PropTypes.func.isRequired,
+  modifiersSelections: PropTypes.array.isRequired,
+  modifiersSelectionsToggle: PropTypes.func.isRequired,
+  modifiersSelectionsRemoveAll: PropTypes.func.isRequired,
+  modifiersShowUpdate: PropTypes.func.isRequired,
+  modifiersShow: PropTypes.bool.isRequired,
 };
 
 export default connect(
-  ({ files, settings, playlists, selections }) => ({
+  ({ files, settings, playlists, modifiers }) => ({
     files,
     settings,
     playlists,
-    selections,
+    modifiersShow: modifiers.show,
+    modifiersSelections: modifiers.selections,
   }),
   dispatch => ({
     settingsReplace: payload => dispatch(settingsReplace(payload)),
     filesGetUrl: payload => dispatch(filesGetUrl(payload)),
-    selectionsToggle: payload => dispatch(selectionsToggle(payload)),
-    selectionsRemoveAll: () => dispatch(selectionsRemoveAll()),
+    modifiersSelectionsToggle: payload =>
+      dispatch(modifiersSelectionsToggle(payload)),
+    modifiersSelectionsRemoveAll: () =>
+      dispatch(modifiersSelectionsRemoveAll()),
+    modifiersShowUpdate: payload => dispatch(modifiersShowUpdate(payload)),
   }),
 )(List);

@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import { connect } from 'react-redux';
-import { Button, Select } from 'antd';
+import { Button, Select, Input } from 'antd';
 import { at, difference } from 'lodash';
 import IconButton from '../IconButton';
 import Icon from '../Icon';
 import H2 from '../H2';
 import Spacer from '../Spacer';
 import { playlistsRemove, playlistsUpdate } from '../../actions/playlists';
-import { getSortedPlaylist } from '../../lib/playlists';
+import { getSortedPlaylist, titleToSlug } from '../../lib/playlists';
 import {
   modifiersSelectionsRemoveAll,
   modifiersShowUpdate,
@@ -21,6 +22,7 @@ class Modifiers extends React.PureComponent {
     super(props);
     this.state = {
       selectedPlaylist: undefined,
+      playlistName: undefined,
     };
   }
 
@@ -37,8 +39,7 @@ class Modifiers extends React.PureComponent {
       playlists,
       playlistsUpdate,
     } = this.props;
-    const { selectedPlaylist } = this.state;
-    const show = modifiersShow && modifiersSelections.length > 0;
+    const { selectedPlaylist, playlistName } = this.state;
     const deletePlaylists = () => {
       playlistsRemove(modifiersSelections);
       modifiersSelectionsRemoveAll();
@@ -67,21 +68,50 @@ class Modifiers extends React.PureComponent {
       playlist.tracks = difference(playlist.tracks, tracksToDelete);
       playlistsUpdate(playlist);
     };
+    const editPlaylistName = () => {
+      const slug = titleToSlug(playlistName);
+      const playlist = playlists.find(({ name }) => name === source);
+      playlist.name = playlistName;
+      playlistsUpdate(playlist);
+      Router.push(`/playlists?id=${slug}`, `/playlists/${slug}`);
+    };
 
     return (
-      <div className={`container ${show ? 'show' : ''}`}>
+      <div className={`container ${modifiersShow ? 'show' : ''}`}>
         <style jsx>{styles}</style>
-        {source === 'playlists' && (
+        {Boolean(modifiersSelections.length) && (
+          <Button type="primary" onClick={() => modifiersSelectionsRemoveAll()}>
+            Delect All
+          </Button>
+        )}
+        {Boolean(modifiersSelections.length) && source === 'playlists' && (
           <Button type="primary" onClick={deletePlaylists}>
-            Delete Playlists
+            Delete Playlist(s)
           </Button>
         )}
         {!['video', 'audio', 'playlists'].includes(source) && (
-          <Button type="primary" onClick={deleteFromPlaylist}>
-            Delete
-          </Button>
+          <div>
+            <H2>Edit name</H2>
+            <Spacer height={spacing.a2} />
+            <div className="name">
+              <Input
+                placeholder="Name"
+                value={playlistName === undefined ? source : playlistName}
+                onChange={e => this.setState({ playlistName: e.target.value })}
+              />
+              <IconButton onClick={() => editPlaylistName()}>
+                <Icon icon="check" />
+              </IconButton>
+            </div>
+          </div>
         )}
-        {source !== 'playlists' && (
+        {Boolean(modifiersSelections.length) &&
+          !['video', 'audio', 'playlists'].includes(source) && (
+            <Button type="primary" onClick={deleteFromPlaylist}>
+              Delete
+            </Button>
+          )}
+        {Boolean(modifiersSelections.length) && source !== 'playlists' && (
           <div>
             <H2>Add to playlist</H2>
             <Spacer height={spacing.a2} />

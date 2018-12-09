@@ -12,7 +12,7 @@ export const filesUpdate = payload => ({
 });
 
 export const filesGetUrl = payload => (dispatch, getState) => {
-  const { path: filePath, shouldPlay } = payload;
+  const { source, path: filePath, shouldPlay } = payload;
   const { settings, files } = getState();
   const fileIndex = files.findIndex(file => file.path === filePath);
   const file = files[fileIndex];
@@ -33,6 +33,7 @@ export const filesGetUrl = payload => (dispatch, getState) => {
     dispatch(
       settingsReplace(
         getNewSettings({
+          source,
           file,
           position: fileIndex,
           loading: true,

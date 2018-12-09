@@ -46,7 +46,6 @@ class List extends React.PureComponent {
       filesGetUrl,
       modifiersSelections,
       modifiersSelectionsToggle,
-      modifiersSelectionsRemoveAll,
       modifiersShowUpdate,
       modifiersShow,
     } = this.props;
@@ -101,9 +100,8 @@ class List extends React.PureComponent {
               value={search}
               onChange={e => saveListSettings({ search: e.target.value })}
             />
-            {source !== 'playlists' && (
+            {source !== 'playlists' && settings.player.source === source && (
               <IconButton
-                disabled={settings.player.source !== source}
                 onClick={() => {
                   const file = get(this, 'props.settings.player.file', {});
                   const currentIndex = sortedData.findIndex(
@@ -115,21 +113,9 @@ class List extends React.PureComponent {
                 <Icon icon="location" />
               </IconButton>
             )}
-            {Boolean(modifiersSelections.length) && (
-              <IconButton
-                onClick={() => {
-                  modifiersSelectionsRemoveAll();
-                  modifiersShowUpdate(false);
-                }}
-              >
-                <Icon icon="cancel" />
-              </IconButton>
-            )}
-            {Boolean(modifiersSelections.length) && (
-              <IconButton onClick={() => modifiersShowUpdate(!modifiersShow)}>
-                <Icon icon="switch" />
-              </IconButton>
-            )}
+            <IconButton onClick={() => modifiersShowUpdate(!modifiersShow)}>
+              <Icon icon="switch" />
+            </IconButton>
           </div>
         </div>
         <div className={`table ${source}`}>

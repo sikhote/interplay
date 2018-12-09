@@ -15,14 +15,22 @@ export default css`
     transition: all ease ${speeds.a1}s;
     transform: translateX(100%);
     width: 300px;
+    display: grid;
+    grid-template-rows: auto;
+    grid-gap: ${spacing.a6}px;
+    grid-auto-rows: auto;
+    grid-auto-flow: row;
+    align-content: start;
   }
   .container.show {
     transform: translateX(0);
   }
-  .container > *:nth-child(n + 2) {
-    margin-top: ${spacing.a5}px;
-  }
   .playlists {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: ${spacing.a4}px;
+  }
+  .name {
     display: grid;
     grid-template-columns: 1fr auto;
     grid-gap: ${spacing.a4}px;

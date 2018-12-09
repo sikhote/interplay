@@ -53,7 +53,7 @@ const Navigation = ({ router, playlists, playlistsAdd }) => {
             {inner}
           </div>
         ) : (
-          <Link key={id} as={id} href={href || id}>
+          <Link key={id} prefetch as={id} href={href || id}>
             <a className={`item ${className} ${path === id ? 'active' : ''}`}>
               {inner}
             </a>

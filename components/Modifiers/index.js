@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { connect } from 'react-redux';
 import { Button, Select, Input } from 'antd';
 import { at, difference } from 'lodash';
+import arrayMove from 'array-move';
 import IconButton from '../IconButton';
 import Icon from '../Icon';
 import H2 from '../H2';
@@ -13,6 +14,7 @@ import { getSortedPlaylist, titleToSlug } from '../../lib/playlists';
 import {
   modifiersSelectionsRemoveAll,
   modifiersShowUpdate,
+  modifiersSelectionsToggle,
 } from '../../actions/modifiers';
 import { spacing } from '../../lib/styling';
 import styles from './styles';
@@ -33,6 +35,7 @@ class Modifiers extends React.PureComponent {
       files,
       modifiersSelections,
       modifiersSelectionsRemoveAll,
+      modifiersSelectionsToggle,
       modifiersShow,
       modifiersShowUpdate,
       playlistsRemove,
@@ -40,6 +43,7 @@ class Modifiers extends React.PureComponent {
       playlistsUpdate,
     } = this.props;
     const { selectedPlaylist, playlistName } = this.state;
+    const hasSelections = Boolean(modifiersSelections.length);
     const deletePlaylists = () => {
       playlistsRemove(modifiersSelections);
       modifiersSelectionsRemoveAll();
@@ -67,6 +71,7 @@ class Modifiers extends React.PureComponent {
       );
       playlist.tracks = difference(playlist.tracks, tracksToDelete);
       playlistsUpdate(playlist);
+      modifiersSelectionsRemoveAll();
     };
     const editPlaylistName = () => {
       const slug = titleToSlug(playlistName);
@@ -75,23 +80,60 @@ class Modifiers extends React.PureComponent {
       playlistsUpdate(playlist);
       Router.push(`/playlists?id=${slug}`, `/playlists/${slug}`);
     };
+    const moveTracks = isMovingUp => {
+      const playlist = playlists.find(({ name }) => name === source);
+      let newTracks = playlist.tracks.slice();
+
+      // Get selections in sequence, but reverse depending on direction
+      const sortedSelections = isMovingUp
+        ? modifiersSelections.slice().sort()
+        : modifiersSelections
+            .slice()
+            .sort()
+            .reverse();
+
+      // Find paths based on indexes
+      const paths = sortedSelections.map(i => playlist.tracks[i]);
+
+      // Move each track individually
+      paths.forEach(path => {
+        const index = newTracks.findIndex(p => p === path);
+        const newIndex = index + (isMovingUp ? -1 : 1);
+        newTracks = arrayMove(
+          newTracks,
+          index,
+          newIndex === newTracks.length ? 0 : newIndex,
+        );
+      });
+
+      // Save tracks
+      playlist.tracks = newTracks;
+      playlistsUpdate(playlist);
+
+      // Reset selections to new indexes
+      modifiersSelectionsRemoveAll();
+      const newSelections = paths.map(path =>
+        newTracks.findIndex(p => p === path),
+      );
+      newSelections.forEach(index => modifiersSelectionsToggle(index));
+    };
 
     return (
       <div className={`container ${modifiersShow ? 'show' : ''}`}>
         <style jsx>{styles}</style>
-        {Boolean(modifiersSelections.length) && (
-          <Button type="primary" onClick={() => modifiersSelectionsRemoveAll()}>
+        {hasSelections && (
+          <Button type="primary" onClick={modifiersSelectionsRemoveAll}>
             Delect All
           </Button>
         )}
-        {Boolean(modifiersSelections.length) && source === 'playlists' && (
+        {hasSelections && source === 'playlists' && (
           <Button type="primary" onClick={deletePlaylists}>
             Delete Playlist(s)
           </Button>
         )}
         {!['video', 'audio', 'playlists'].includes(source) && (
           <div>
-            <H2>Edit name</H2>
+            <H2>Edit playlist name</H2>
             <Spacer height={spacing.a2} />
             <div className="name">
               <Input
@@ -105,13 +147,22 @@ class Modifiers extends React.PureComponent {
             </div>
           </div>
         )}
-        {Boolean(modifiersSelections.length) &&
-          !['video', 'audio', 'playlists'].includes(source) && (
-            <Button type="primary" onClick={deleteFromPlaylist}>
-              Delete
+        {hasSelections && !['video', 'audio', 'playlists'].includes(source) && (
+          <div className="moving">
+            <Button type="primary" onClick={() => moveTracks(true)}>
+              Move Up
             </Button>
-          )}
-        {Boolean(modifiersSelections.length) && source !== 'playlists' && (
+            <Button type="primary" onClick={() => moveTracks(false)}>
+              Move Down
+            </Button>
+          </div>
+        )}
+        {hasSelections && !['video', 'audio', 'playlists'].includes(source) && (
+          <Button type="primary" onClick={deleteFromPlaylist}>
+            Delete
+          </Button>
+        )}
+        {hasSelections && source !== 'playlists' && (
           <div>
             <H2>Add to playlist</H2>
             <Spacer height={spacing.a2} />
@@ -150,6 +201,7 @@ Modifiers.propTypes = {
   modifiersShow: PropTypes.bool.isRequired,
   modifiersSelections: PropTypes.array.isRequired,
   modifiersSelectionsRemoveAll: PropTypes.func.isRequired,
+  modifiersSelectionsToggle: PropTypes.func.isRequired,
   modifiersShowUpdate: PropTypes.func.isRequired,
 };
 
@@ -167,5 +219,7 @@ export default connect(
     modifiersSelectionsRemoveAll: () =>
       dispatch(modifiersSelectionsRemoveAll()),
     modifiersShowUpdate: payload => dispatch(modifiersShowUpdate(payload)),
+    modifiersSelectionsToggle: payload =>
+      dispatch(modifiersSelectionsToggle(payload)),
   }),
 )(Modifiers);

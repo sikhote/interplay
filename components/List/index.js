@@ -17,7 +17,7 @@ import {
 } from '../../actions/modifiers';
 import getListColumns from '../../lib/get-list-columns';
 import { titleToSlug } from '../../lib/playlists';
-import getDefaulListSettings from '../../lib/get-default-list-settings';
+import getDefaultListSettings from '../../lib/get-default-list-settings';
 import H1 from '../H1';
 import InputIcon from '../InputIcon';
 import IconButton from '../IconButton';
@@ -50,7 +50,7 @@ class List extends React.PureComponent {
       modifiersShow,
     } = this.props;
     const { position, sortBy, sortDirection, search } =
-      settings.lists[source] || getDefaulListSettings();
+      settings.lists[source] || getDefaultListSettings(source);
     const sourcedData = getSourcedData(files, source, playlists);
     const searchedData = getSearchedData(sourcedData, source, search);
     const sortedData = getSortedData(searchedData, sortBy, sortDirection);
@@ -60,7 +60,7 @@ class List extends React.PureComponent {
         lists: {
           ...settings.lists,
           [source]: {
-            ...(settings.lists[source] || getDefaulListSettings()),
+            ...(settings.lists[source] || getDefaultListSettings(source)),
             ...listSettings,
           },
         },

@@ -35,6 +35,11 @@ export default css`
     grid-template-columns: 1fr auto;
     grid-gap: ${spacing.a4}px;
   }
+  .moving {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: ${spacing.a4}px;
+  }
 
   @media (max-width: ${bps.a2}px) {
   }

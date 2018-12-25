@@ -20,7 +20,7 @@ import { colors, spacing, bps } from '../lib/styling';
 
 const styles = css`
   .container {
-    padding: ${spacing.pageVertical}px ${spacing.pageHorizontal}px;
+    padding: ${spacing.page}px;
   }
   .inputs {
     max-width: 400px;

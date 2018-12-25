@@ -7,7 +7,6 @@ export default css`
     position: absolute;
     top: 0;
     right: 0;
-    padding: ${spacing.pageVertical}px ${spacing.pageHorizontal}px;
     background: ${colors.modifiersBg};
     height: 100%;
     border-top: 1px solid ${colors.border};
@@ -16,14 +15,36 @@ export default css`
     transform: translateX(100%);
     width: 300px;
     display: grid;
+    grid-template-rows: auto auto;
+  }
+  .container.show {
+    transform: translateX(0);
+  }
+  .options-container {
+    overflow-y: auto;
+  }
+  .options {
+    display: grid;
     grid-template-rows: auto;
     grid-gap: ${spacing.a6}px;
     grid-auto-rows: auto;
     grid-auto-flow: row;
     align-content: start;
+    padding: ${spacing.page}px;
   }
-  .container.show {
-    transform: translateX(0);
+  .selections {
+    border-bottom: 1px solid ${colors.border};
+    max-height: 100px;
+    overflow-y: auto;
+  }
+  .selections > * {
+    padding: ${spacing.a3}px ${spacing.a4}px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .selections > *:nth-child(even) {
+    background: ${colors.alternatingBg};
   }
   .playlists {
     display: grid;

@@ -13,7 +13,7 @@ export default css`
   }
   .item {
     color: ${colors.navigationItem};
-    padding: ${spacing.a4}px ${spacing.pageHorizontal}px;
+    padding: ${spacing.a4}px ${spacing.page}px;
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -3,7 +3,7 @@ import { spacing, bps, fontWeights } from '../../lib/styling';
 
 export default css`
   .container {
-    padding: ${spacing.a5}px ${spacing.pageHorizontal}px;
+    padding: ${spacing.a5}px ${spacing.page}px;
     background: linear-gradient(
       to top,
       transparent 50%,

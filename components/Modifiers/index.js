@@ -3,17 +3,16 @@ import PropTypes from 'prop-types';
 import Router from 'next/router';
 import { connect } from 'react-redux';
 import { Button, Select, Input } from 'antd';
-import { at, difference } from 'lodash';
+import { at, get } from 'lodash';
 import arrayMove from 'array-move';
 import IconButton from '../IconButton';
 import Icon from '../Icon';
 import H2 from '../H2';
 import Spacer from '../Spacer';
 import { playlistsRemove, playlistsUpdate } from '../../actions/playlists';
-import { getSortedPlaylist, titleToSlug } from '../../lib/playlists';
+import { titleToSlug } from '../../lib/playlists';
 import {
   modifiersSelectionsRemoveAll,
-  modifiersShowUpdate,
   modifiersSelectionsToggle,
 } from '../../actions/modifiers';
 import { spacing } from '../../lib/styling';
@@ -31,58 +30,63 @@ class Modifiers extends React.PureComponent {
   render() {
     const {
       source,
-      settings,
-      files,
       modifiersSelections,
       modifiersSelectionsRemoveAll,
       modifiersSelectionsToggle,
       modifiersShow,
-      modifiersShowUpdate,
       playlistsRemove,
       playlists,
       playlistsUpdate,
+      files,
     } = this.props;
     const { selectedPlaylist, playlistName } = this.state;
     const hasSelections = Boolean(modifiersSelections.length);
+    const currentPlaylist = playlists.find(({ name }) => name === source);
     const deletePlaylists = () => {
-      playlistsRemove(modifiersSelections);
+      const deletingCurrent = !['video', 'audio', 'playlists'].includes(source);
+      const playlistsToRemove = deletingCurrent
+        ? [source]
+        : modifiersSelections;
+
+      playlistsRemove(playlistsToRemove);
       modifiersSelectionsRemoveAll();
-      modifiersShowUpdate(false);
+
+      if (deletingCurrent) {
+        Router.push('/playlists');
+      }
     };
     const addToPlaylist = () => {
       const playlist = playlists.find(({ name }) => name === selectedPlaylist);
-      let tracksToAdd;
-
-      if (['video', 'audio'].includes(source)) {
-        tracksToAdd = modifiersSelections;
-      } else {
-        const currentPlaylist = playlists.find(({ name }) => name === source);
-        tracksToAdd = at(currentPlaylist.tracks, modifiersSelections);
-      }
+      const tracksToAdd = ['video', 'audio'].includes(source)
+        ? modifiersSelections
+        : at(currentPlaylist.tracks, modifiersSelections);
 
       playlist.tracks = playlist.tracks.concat(tracksToAdd);
       playlistsUpdate(playlist);
+      modifiersSelectionsRemoveAll();
     };
     const deleteFromPlaylist = () => {
       const playlist = playlists.find(({ name }) => name === source);
-      const tracksToDelete = at(
-        getSortedPlaylist({ settings, source, files, playlists }),
-        modifiersSelections,
-      );
-      playlist.tracks = difference(playlist.tracks, tracksToDelete);
+      const newTracks = playlist.tracks.slice();
+      const paths = modifiersSelections.map(i => playlist.tracks[i]);
+
+      paths.forEach(path => {
+        const deleteIndex = newTracks.findIndex(track => track === path);
+        newTracks.splice(deleteIndex, 1);
+      });
+
+      playlist.tracks = newTracks;
       playlistsUpdate(playlist);
       modifiersSelectionsRemoveAll();
     };
     const editPlaylistName = () => {
       const slug = titleToSlug(playlistName);
-      const playlist = playlists.find(({ name }) => name === source);
-      playlist.name = playlistName;
-      playlistsUpdate(playlist);
+      currentPlaylist.name = playlistName;
+      playlistsUpdate(currentPlaylist);
       Router.push(`/playlists?id=${slug}`, `/playlists/${slug}`);
     };
     const moveTracks = isMovingUp => {
-      const playlist = playlists.find(({ name }) => name === source);
-      let newTracks = playlist.tracks.slice();
+      let newTracks = currentPlaylist.tracks.slice();
 
       // Get selections in sequence, but reverse depending on direction
       const sortedSelections = isMovingUp
@@ -93,7 +97,7 @@ class Modifiers extends React.PureComponent {
             .reverse();
 
       // Find paths based on indexes
-      const paths = sortedSelections.map(i => playlist.tracks[i]);
+      const paths = sortedSelections.map(i => currentPlaylist.tracks[i]);
 
       // Move each track individually
       paths.forEach(path => {
@@ -107,8 +111,8 @@ class Modifiers extends React.PureComponent {
       });
 
       // Save tracks
-      playlist.tracks = newTracks;
-      playlistsUpdate(playlist);
+      currentPlaylist.tracks = newTracks;
+      playlistsUpdate(currentPlaylist);
 
       // Reset selections to new indexes
       modifiersSelectionsRemoveAll();
@@ -117,75 +121,114 @@ class Modifiers extends React.PureComponent {
       );
       newSelections.forEach(index => modifiersSelectionsToggle(index));
     };
+    const selections =
+      source === 'playlists'
+        ? modifiersSelections.map(name => ({
+            key: name,
+            name,
+          }))
+        : ['video', 'audio'].includes(source)
+        ? modifiersSelections.map(path => ({
+            key: path,
+            name: get(files.find(file => file.path === path), 'name', ''),
+          }))
+        : modifiersSelections.map(index => ({
+            key: index,
+            name: get(
+              files.find(file => file.path === currentPlaylist.tracks[index]),
+              'name',
+              '',
+            ),
+          }));
 
     return (
       <div className={`container ${modifiersShow ? 'show' : ''}`}>
         <style jsx>{styles}</style>
-        {hasSelections && (
-          <Button type="primary" onClick={modifiersSelectionsRemoveAll}>
-            Delect All
-          </Button>
-        )}
-        {hasSelections && source === 'playlists' && (
-          <Button type="primary" onClick={deletePlaylists}>
-            Delete Playlist(s)
-          </Button>
-        )}
-        {!['video', 'audio', 'playlists'].includes(source) && (
-          <div>
-            <H2>Edit playlist name</H2>
-            <Spacer height={spacing.a2} />
-            <div className="name">
-              <Input
-                placeholder="Name"
-                value={playlistName === undefined ? source : playlistName}
-                onChange={e => this.setState({ playlistName: e.target.value })}
-              />
-              <IconButton onClick={() => editPlaylistName()}>
-                <Icon icon="check" />
-              </IconButton>
-            </div>
+        <div className="selections">
+          {selections.map(({ name, key }) => (
+            <div key={key}>{name}</div>
+          ))}
+        </div>
+        <div className="options-container">
+          <div className="options">
+            {hasSelections && (
+              <Button type="primary" onClick={modifiersSelectionsRemoveAll}>
+                Delect All
+              </Button>
+            )}
+            {!['video', 'audio', 'playlists'].includes(source) && (
+              <div>
+                <H2>Edit playlist name</H2>
+                <Spacer height={spacing.a2} />
+                <div className="name">
+                  <Input
+                    placeholder="Name"
+                    value={playlistName === undefined ? source : playlistName}
+                    onChange={e =>
+                      this.setState({ playlistName: e.target.value })
+                    }
+                  />
+                  <IconButton onClick={() => editPlaylistName()}>
+                    <Icon icon="check" />
+                  </IconButton>
+                </div>
+              </div>
+            )}
+            {hasSelections &&
+              !['video', 'audio', 'playlists'].includes(source) && (
+                <div className="moving">
+                  <Button type="primary" onClick={() => moveTracks(true)}>
+                    Move Up
+                  </Button>
+                  <Button type="primary" onClick={() => moveTracks(false)}>
+                    Move Down
+                  </Button>
+                </div>
+              )}
+            {hasSelections && source !== 'playlists' && (
+              <div>
+                <H2>Add to playlist</H2>
+                <Spacer height={spacing.a2} />
+                <div className="playlists">
+                  <Select
+                    value={selectedPlaylist}
+                    onChange={value =>
+                      this.setState({ selectedPlaylist: value })
+                    }
+                  >
+                    {playlists.map(({ name }) => (
+                      <Select.Option key={name} value={name}>
+                        {name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                  <IconButton
+                    disabled={selectedPlaylist === undefined}
+                    onClick={addToPlaylist}
+                  >
+                    <Icon icon="plus" />
+                  </IconButton>
+                </div>
+              </div>
+            )}
+            {hasSelections &&
+              !['video', 'audio', 'playlists'].includes(source) && (
+                <Button type="primary" onClick={deleteFromPlaylist}>
+                  Delete
+                </Button>
+              )}
+            {hasSelections && source === 'playlists' && (
+              <Button type="primary" onClick={deletePlaylists}>
+                Delete Playlist(s)
+              </Button>
+            )}
+            {!['video', 'audio', 'playlists'].includes(source) && (
+              <Button type="primary" onClick={deletePlaylists}>
+                Delete Playlist
+              </Button>
+            )}
           </div>
-        )}
-        {hasSelections && !['video', 'audio', 'playlists'].includes(source) && (
-          <div className="moving">
-            <Button type="primary" onClick={() => moveTracks(true)}>
-              Move Up
-            </Button>
-            <Button type="primary" onClick={() => moveTracks(false)}>
-              Move Down
-            </Button>
-          </div>
-        )}
-        {hasSelections && !['video', 'audio', 'playlists'].includes(source) && (
-          <Button type="primary" onClick={deleteFromPlaylist}>
-            Delete
-          </Button>
-        )}
-        {hasSelections && source !== 'playlists' && (
-          <div>
-            <H2>Add to playlist</H2>
-            <Spacer height={spacing.a2} />
-            <div className="playlists">
-              <Select
-                value={selectedPlaylist}
-                onChange={value => this.setState({ selectedPlaylist: value })}
-              >
-                {playlists.map(({ name }) => (
-                  <Select.Option key={name} value={name}>
-                    {name}
-                  </Select.Option>
-                ))}
-              </Select>
-              <IconButton
-                disabled={selectedPlaylist === undefined}
-                onClick={addToPlaylist}
-              >
-                <Icon icon="plus" />
-              </IconButton>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     );
   }
@@ -193,8 +236,6 @@ class Modifiers extends React.PureComponent {
 
 Modifiers.propTypes = {
   source: PropTypes.string.isRequired,
-  files: PropTypes.array.isRequired,
-  settings: PropTypes.object.isRequired,
   playlists: PropTypes.array.isRequired,
   playlistsRemove: PropTypes.func.isRequired,
   playlistsUpdate: PropTypes.func.isRequired,
@@ -202,23 +243,21 @@ Modifiers.propTypes = {
   modifiersSelections: PropTypes.array.isRequired,
   modifiersSelectionsRemoveAll: PropTypes.func.isRequired,
   modifiersSelectionsToggle: PropTypes.func.isRequired,
-  modifiersShowUpdate: PropTypes.func.isRequired,
+  files: PropTypes.array.isRequired,
 };
 
 export default connect(
-  ({ modifiers, playlists, files, settings }) => ({
-    files,
-    settings,
+  ({ modifiers, playlists, files }) => ({
     playlists,
     modifiersShow: modifiers.show,
     modifiersSelections: modifiers.selections,
+    files,
   }),
   dispatch => ({
     playlistsRemove: payload => dispatch(playlistsRemove(payload)),
     playlistsUpdate: payload => dispatch(playlistsUpdate(payload)),
     modifiersSelectionsRemoveAll: () =>
       dispatch(modifiersSelectionsRemoveAll()),
-    modifiersShowUpdate: payload => dispatch(modifiersShowUpdate(payload)),
     modifiersSelectionsToggle: payload =>
       dispatch(modifiersSelectionsToggle(payload)),
   }),

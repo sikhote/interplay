@@ -16,8 +16,8 @@ export default css`
     grid-template-rows: auto 1fr;
   }
   .header {
-    padding-top: ${spacing.pageVertical}px;
-    padding-left: ${spacing.pageHorizontal}px;
+    padding-top: ${spacing.page}px;
+    padding-left: ${spacing.page}px;
     padding-bottom: ${spacing.a3}px;
     padding-right: ${spacing.a4}px;
     display: grid;
@@ -59,7 +59,7 @@ export default css`
     grid-template-columns: 1fr 1fr;
   }
   :global(.ReactVirtualized__Table__row:nth-child(even)) {
-    background: rgba(0, 0, 0, 0.03);
+    background: ${colors.alternatingBg};
   }
   :global(.ReactVirtualized__Table__row.active) {
     background: ${transparentize(0.8, colors.a1)};

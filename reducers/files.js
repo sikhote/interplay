@@ -11,9 +11,11 @@ const reducer = (state = initialState, action) => {
       Object.assign(file, { url, urlDate });
       return newState;
     }
+
     case 'FILES_REPLACE': {
       return action.payload || state;
     }
+
     default:
       return state;
   }

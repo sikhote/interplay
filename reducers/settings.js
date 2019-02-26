@@ -31,6 +31,7 @@ const reducer = (state = getInitialState(), action) => {
     case 'SETTINGS_REPLACE': {
       return action.payload;
     }
+
     default:
       return state;
   }

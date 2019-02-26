@@ -40,12 +40,12 @@ const Navigation = ({ router, playlists, playlistsAdd }) => {
       <style jsx>{styles}</style>
       {items.map(({ id, href, title, icon, className = '', onClick }) => {
         const inner = (
-          <React.Fragment>
+          <>
             <Icon icon={icon} color={colors.navigationItem} className="icon" />
             <Text color={colors.navigationItem} className="title">
               {title}
             </Text>
-          </React.Fragment>
+          </>
         );
 
         return onClick ? (

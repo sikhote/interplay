@@ -173,7 +173,7 @@ class Player extends React.Component {
         <div className="main">
           <div className="info">
             {path ? (
-              <React.Fragment>
+              <>
                 <Text className="name">{name}</Text>
                 {category && (
                   <Text>
@@ -193,7 +193,7 @@ class Player extends React.Component {
                     {album}
                   </Text>
                 )}
-              </React.Fragment>
+              </>
             ) : (
               <Text>Add credentials and play some media</Text>
             )}

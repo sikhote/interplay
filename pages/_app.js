@@ -1,6 +1,6 @@
+import css from 'styled-jsx/css';
 import React from 'react';
 import NextApp, { Container } from 'next/app';
-import css from 'styled-jsx/css';
 import Page from '../components/Page';
 
 const styles = css.global`

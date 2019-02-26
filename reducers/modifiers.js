@@ -18,12 +18,15 @@ const reducer = (state = initialState, action) => {
 
       return { ...state, selections };
     }
+
     case 'MODIFIERS_SELECTIONS_REMOVE_ALL': {
       return { ...state, selections: initialState.selections };
     }
+
     case 'MODIFIERS_SHOW_UPDATE': {
       return { ...state, show: action.payload };
     }
+
     default:
       return state;
   }

@@ -84,6 +84,7 @@ class List extends React.PureComponent {
         filesGetUrl({ source, path, shouldPlay: true, position });
       }
     };
+
     const currentPath = get(settings, 'player.file.path');
 
     return (

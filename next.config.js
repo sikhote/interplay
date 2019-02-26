@@ -1,4 +1,5 @@
 const withCSS = require('@zeit/next-css');
+const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
 
 if (typeof require !== 'undefined') {
   // eslint-disable-next-line node/no-deprecated-api
@@ -7,16 +8,12 @@ if (typeof require !== 'undefined') {
 
 module.exports = withCSS({
   webpack: config => {
-    config.module.rules.push({
-      test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif)$/,
-      use: {
-        loader: 'url-loader',
-        options: {
-          limit: 100000,
-          name: '[name].[ext]',
-        },
-      },
-    });
+    config.plugins.push(
+      new FilterWarningsPlugin({
+        exclude: /mini-css-extract-plugin[^]*Conflicting order between:/,
+      }),
+    );
+
     return config;
   },
 });

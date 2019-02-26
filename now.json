@@ -1,8 +1,10 @@
 {
-  "version": 1,
-  "type": "docker",
-  "features": {
-    "cloud": "v2"
-  },
+  "version": 2,
+  "builds": [
+    { "src": "package.json", "use": "@now/next" }
+  ],
+  "routes": [
+    { "src": "/playlists/(?<id>[^/]+)$", "dest": "/playlists?id=$id" }
+  ],
   "alias": "interplay.app"
 }

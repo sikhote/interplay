@@ -1,10 +1,10 @@
+import css from 'styled-jsx/css';
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { set } from 'lodash';
 import { connect } from 'react-redux';
 import Cookies from 'js-cookie';
-import css from 'styled-jsx/css';
 import { Button, Input } from 'antd';
 import { settingsReplaceLocal } from '../actions/settings';
 import { filesSync } from '../actions/files';

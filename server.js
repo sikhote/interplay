@@ -1,28 +1,29 @@
 const { createServer } = require('http');
-const { parse } = require('url');
 const next = require('next');
-const pathMatch = require('path-match');
+const { playlistsMatch } = require('./lib/routing');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
-const route = pathMatch();
-const playlistsMatch = route('/playlists/:id');
 
-app.prepare().then(() => {
+app.prepare().then(() =>
   createServer((req, res) => {
-    const { pathname, query } = parse(req.url, true);
-    const params = playlistsMatch(pathname);
+    const { pathname, searchParams } = new URL(
+      req.url,
+      `http://localhost:${port}`,
+    );
+    const playlistsParams = playlistsMatch(pathname);
 
-    if (params === false) {
+    if (playlistsParams) {
+      app.render(req, res, '/pages', { ...playlistsParams, ...searchParams });
+    } else {
       handle(req, res);
-      return;
     }
-
-    app.render(req, res, '/playlists', Object.assign(params, query));
   }).listen(port, err => {
     if (err) throw err;
+
+    // eslint-disable-next-line no-console
     console.log(`> Ready on http://localhost:${port}`);
-  });
-});
+  }),
+);

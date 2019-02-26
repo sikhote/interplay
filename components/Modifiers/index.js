@@ -55,6 +55,7 @@ class Modifiers extends React.PureComponent {
         Router.push('/playlists');
       }
     };
+
     const addToPlaylist = () => {
       const playlist = playlists.find(({ name }) => name === selectedPlaylist);
       const tracksToAdd = ['video', 'audio'].includes(source)
@@ -65,6 +66,7 @@ class Modifiers extends React.PureComponent {
       playlistsUpdate(playlist);
       modifiersSelectionsRemoveAll();
     };
+
     const deleteFromPlaylist = () => {
       const playlist = playlists.find(({ name }) => name === source);
       const newTracks = playlist.tracks.slice();
@@ -79,12 +81,14 @@ class Modifiers extends React.PureComponent {
       playlistsUpdate(playlist);
       modifiersSelectionsRemoveAll();
     };
+
     const editPlaylistName = () => {
       const slug = titleToSlug(playlistName);
       currentPlaylist.name = playlistName;
       playlistsUpdate(currentPlaylist);
       Router.push(`/playlists?id=${slug}`, `/playlists/${slug}`);
     };
+
     const moveTracks = isMovingUp => {
       let newTracks = currentPlaylist.tracks.slice();
 
@@ -121,6 +125,7 @@ class Modifiers extends React.PureComponent {
       );
       newSelections.forEach(index => modifiersSelectionsToggle(index));
     };
+
     const selections =
       source === 'playlists'
         ? modifiersSelections.map(name => ({

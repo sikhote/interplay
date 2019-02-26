@@ -4,7 +4,7 @@
     { "src": "package.json", "use": "@now/next" }
   ],
   "routes": [
-    { "src": "/playlists/(?<id>[^/]+)$", "dest": "/playlists?id=$id" },
+    { "src": "/playlists/(?<id>[^/]+)$", "dest": "/playlists?id=$id" }
   ],
   "alias": "interplay.app"
 }

@@ -7,6 +7,7 @@ if (typeof require !== 'undefined') {
 }
 
 module.exports = withCSS({
+  target: 'serverless',
   webpack: config => {
     config.plugins.push(
       new FilterWarningsPlugin({

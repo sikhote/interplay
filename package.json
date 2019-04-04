@@ -44,7 +44,7 @@
     "lodash": "4.17.11",
     "memoize-one": "5.0.0",
     "moment": "2.24.0",
-    "next": "8.0.3",
+    "next": "^8.0.4",
     "next-redux-wrapper": "3.0.0-alpha.1",
     "path-match": "1.2.4",
     "polished": "3.0.0",

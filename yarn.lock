@@ -4759,10 +4759,10 @@ netmask@^1.0.6:
   resolved "https://registry.yarnpkg.com/netmask/-/netmask-1.0.6.tgz#20297e89d86f6f6400f250d9f4f6b4c1945fcd35"
   integrity sha1-ICl+idhvb2QA8lDZ9Pa0wZRfzTU=
 
-next-redux-wrapper@3.0.0-alpha.1:
-  version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/next-redux-wrapper/-/next-redux-wrapper-3.0.0-alpha.1.tgz#79d56457f874e94804f735163b7a52f3b4ddf41c"
-  integrity sha512-sMA7iAKek7vvNaFPah29adgyfTHGvFYEeUbFZQbfCBof/6YQqcZmEHu0OlyMsmYphflAvPH/pIeIGxGIYWO4+A==
+next-redux-wrapper@^3.0.0-alpha.2:
+  version "3.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/next-redux-wrapper/-/next-redux-wrapper-3.0.0-alpha.2.tgz#ccbcd362e9998a9f582abcc8bfad665686d09cc4"
+  integrity sha512-mObX94qAq/1Wno2RF5pHGaH9ZnZ6+1nvjyC7KRRCfrD4AE1KtbavVAHZS48UkPXf25VwTZq98XjVC1qP1CYLTA==
 
 next-server@8.0.4:
   version "8.0.4"

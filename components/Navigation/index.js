@@ -38,28 +38,34 @@ const Navigation = ({ router, playlists, playlistsAdd }) => {
   return (
     <div className="container">
       <style jsx>{styles}</style>
-      {items.map(({ id, href, title, icon, className = '', onClick }) => {
-        const inner = (
-          <>
-            <Icon icon={icon} color={colors.navigationItem} className="icon" />
-            <Text color={colors.navigationItem} className="title">
-              {title}
-            </Text>
-          </>
-        );
+      <div className="container-inner">
+        {items.map(({ id, href, title, icon, className = '', onClick }) => {
+          const inner = (
+            <>
+              <Icon
+                icon={icon}
+                color={colors.navigationItem}
+                className="icon"
+              />
+              <Text color={colors.navigationItem} className="title">
+                {title}
+              </Text>
+            </>
+          );
 
-        return onClick ? (
-          <div key={id} className="item" onClick={onClick}>
-            {inner}
-          </div>
-        ) : (
-          <Link key={id} as={id} href={href || id}>
-            <a className={`item ${className} ${path === id ? 'active' : ''}`}>
+          return onClick ? (
+            <div key={id} className="item" onClick={onClick}>
               {inner}
-            </a>
-          </Link>
-        );
-      })}
+            </div>
+          ) : (
+            <Link key={id} as={id} href={href || id}>
+              <a className={`item ${className} ${path === id ? 'active' : ''}`}>
+                {inner}
+              </a>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };

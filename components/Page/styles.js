@@ -12,6 +12,9 @@ export default css`
       'player player';
     height: 100vh;
   }
+  .main {
+    overflow-y: auto;
+  }
 
   @media (max-width: ${bps.a2}px) {
     .container {

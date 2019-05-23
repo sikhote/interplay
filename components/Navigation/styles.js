@@ -5,11 +5,15 @@ export default css`
   .container {
     width: 240px;
     background: ${colors.a2};
+    overflow-y: auto;
+    height: 100%;
+    grid-area: navigation;
+  }
+  .container-inner {
+    padding: ${spacing.a5}px 0;
     display: grid;
     grid-auto-flow: row;
     align-content: start;
-    padding-top: ${spacing.a5}px;
-    grid-area: navigation;
   }
   .item {
     color: ${colors.navigationItem};
@@ -17,7 +21,7 @@ export default css`
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;
-    overflow: hidden;
+    overflow-x: hidden;
   }
   .item.active :global(.title),
   .item.active :global(.icon) {
@@ -30,6 +34,8 @@ export default css`
   @media (max-width: ${bps.a2}px) {
     .container {
       width: 100%;
+    }
+    .container-inner {
       grid-auto-flow: column;
       align-content: stretch;
       padding-top: 0;

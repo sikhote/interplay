@@ -11,7 +11,7 @@ import { titleToSlug } from '../../lib/playlists';
 import { playlistsAdd } from '../../actions/playlists';
 import styles from './styles';
 
-const Navigation = ({ router, playlists, playlistsAdd }) => {
+const Navigation = ({ router, store: { playlists }, playlistsAdd }) => {
   const id = get(router.query, 'id');
   const path = `${router.pathname}${id ? `/${id}` : ''}`;
   const items = [
@@ -76,13 +76,4 @@ Navigation.propTypes = {
   playlistsAdd: PropTypes.func.isRequired,
 };
 
-export default withRouter(
-  connect(
-    ({ playlists }) => ({
-      playlists,
-    }),
-    dispatch => ({
-      playlistsAdd: () => dispatch(playlistsAdd()),
-    }),
-  )(Navigation),
-);
+export default withRouter(Navigation);

@@ -5,7 +5,6 @@ import ReactPlayer from 'react-player';
 import { merge, get, throttle } from 'lodash';
 import screenfull from 'screenfull';
 import moment from 'moment';
-import { connect } from 'react-redux';
 import IconButton from '../IconButton';
 import Slider from '../Slider';
 import Switch from '../Switch';
@@ -78,7 +77,7 @@ class Player extends React.Component {
       settingsReplace,
       filesGetUrl,
       playlists,
-    } = this.props;
+    } = this.props.store;
     const { player } = settings;
     const {
       source,
@@ -322,14 +321,4 @@ Player.propTypes = {
   playlists: PropTypes.array.isRequired,
 };
 
-export default connect(
-  ({ files, settings, playlists }) => ({
-    files,
-    settings,
-    playlists,
-  }),
-  dispatch => ({
-    settingsReplace: payload => dispatch(settingsReplace(payload)),
-    filesGetUrl: payload => dispatch(filesGetUrl(payload)),
-  }),
-)(Player);
+export default Player;

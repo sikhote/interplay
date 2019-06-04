@@ -1,52 +1,71 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { Provider as ReduxProvider } from 'react-redux';
-import withRedux from 'next-redux-wrapper';
-import makeStore from '../../lib/make-store';
-import { cloudGet } from '../../actions/cloud';
+import { Global } from '@emotion/core';
+import Head from 'next/head';
 import Navigation from '../Navigation';
 import Player from '../Player';
+import { reducer, initialState } from '../../lib/state-management';
 import styles from './styles';
 
-class Page extends React.PureComponent {
-  componentDidMount() {
-    this.tryCloudGet();
-  }
+const Page = ({ Component, pageProps }) => {
+  const [store, dispatch] = useReducer(reducer, initialState);
 
-  tryCloudGet() {
-    const {
-      store: { dispatch, getState },
-    } = this.props;
-    const {
-      settings: {
-        cloud: { key, path, isConnected },
-      },
-    } = getState();
-
-    if (!isConnected && key && path) {
-      dispatch(cloudGet());
-    }
-  }
-
-  render() {
-    const { children, store } = this.props;
-
-    return (
-      <ReduxProvider store={store}>
-        <div className="container">
-          <style jsx>{styles}</style>
-          <Player />
-          <Navigation />
-          <div className="main">{children}</div>
+  return (
+    <div>
+      <Head>
+        <link rel="stylesheet" href="/static/css/fontello.css" />
+      </Head>
+      <Global styles={styles.global} />
+      <div css={styles.container}>
+        <Player {...{ store, dispatch }} />
+        <Navigation {...{ store, dispatch }} />
+        <div css={styles.main}>
+          <Component {...{ pageProps, store, dispatch }} />
         </div>
-      </ReduxProvider>
-    );
-  }
-}
+      </div>
+    </div>
+  );
+};
 
 Page.propTypes = {
   children: PropTypes.any.isRequired,
-  store: PropTypes.object.isRequired,
+  Component: PropTypes.any.isRequired,
+  pageProps: PropTypes.object,
 };
 
-export default withRedux(makeStore)(Page);
+Page.defaultProps = {
+  pageProps: {},
+};
+
+export default Page;
+
+// class Page extends React.PureComponent {
+//   componentDidMount() {
+//     this.tryCloudGet();
+//   }
+
+//   tryCloudGet() {
+//     const {
+//       store: { dispatch, getState },
+//     } = this.props;
+//     const {
+//       settings: {
+//         cloud: { key, path, isConnected },
+//       },
+//     } = getState();
+
+//     if (!isConnected && key && path) {
+//       dispatch(cloudGet());
+//     }
+//   }
+
+//   render() {
+//     const { children, store } = this.props;
+
+//     return (
+//       <ReduxProvider store={store}>
+
+//       </ReduxProvider>
+//     );
+//   }
+// }

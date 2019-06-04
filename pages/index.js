@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { set } from 'lodash';
-import { connect } from 'react-redux';
 import Cookies from 'js-cookie';
 import { Button, Input } from 'antd';
 import { settingsReplaceLocal } from '../actions/settings';
@@ -50,7 +49,9 @@ const Settings = ({
   cloudSaveOther,
   cloudGet,
   cloudDelete,
-  settings,
+  store: {
+    settings,
+  },
   settingsReplaceLocal,
 }) => (
   <div className="container">
@@ -163,13 +164,4 @@ Settings.propTypes = {
   cloudDelete: PropTypes.func.isRequired,
 };
 
-export default connect(
-  ({ settings }) => ({ settings }),
-  dispatch => ({
-    settingsReplaceLocal: payload => dispatch(settingsReplaceLocal(payload)),
-    filesSync: () => dispatch(filesSync()),
-    cloudSaveOther: () => dispatch(cloudSaveOther()),
-    cloudGet: () => dispatch(cloudGet()),
-    cloudDelete: () => dispatch(cloudDelete()),
-  }),
-)(Settings);
+export default Settings;

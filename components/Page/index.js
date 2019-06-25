@@ -4,11 +4,12 @@ import { Global } from '@emotion/core';
 import Head from 'next/head';
 import Navigation from '../Navigation';
 import Player from '../Player';
-import { reducer, initialState } from '../../lib/state-management';
+import reducer from '../../lib/reducer';
+import getInitialState from '../../lib/get-initial-state';
 import styles from './styles';
 
 const Page = ({ Component, pageProps }) => {
-  const [store, dispatch] = useReducer(reducer, initialState);
+  const [store, dispatch] = useReducer(reducer, null, getInitialState);
 
   return (
     <div>

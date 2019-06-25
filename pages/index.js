@@ -8,7 +8,7 @@ import { Button, Input } from 'antd';
 import { settingsReplaceLocal } from '../actions/settings';
 import { filesSync } from '../actions/files';
 import { cloudSaveOther, cloudGet, cloudDelete } from '../actions/cloud';
-import { getInitialState } from '../reducers/settings';
+import getInitialState from '../lib/get-initial-state';
 import H1 from '../components/H1';
 import InputIcon from '../components/InputIcon';
 import Spacer from '../components/Spacer';

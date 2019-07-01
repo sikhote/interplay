@@ -64,23 +64,18 @@ export const filesGetUrl = ({
     .catch(() => notifier.error('Failed to get streaming URL'));
 };
 
-export const filesSync = () => (dispatch, getState) => {
-  const settingsCloud = getState().settings.cloud;
-  const accessToken = settingsCloud.key;
-  const path = `/${settingsCloud.path}`;
+export const filesSync = ({ dispatch, store }) => {
+  const {
+    cloud: { key: accessToken, path },
+  } = store;
+  const fullPath = `/${path}`;
   const dropbox = new Dropbox({ accessToken });
 
   // Signal that syncing is starting
-  dispatch(
-    settingsReplace({
-      ...getState().settings,
-      cloud: {
-        ...settingsCloud,
-        date: Date.now(),
-        status: 'syncing',
-      },
-    }),
-  );
+  dispatch({
+    type: 'cloud-update-many',
+    payload: { date: Date.now(), status: 'syncing' },
+  });
 
   const getEntries = ({ cursor, list, entries }) => {
     const listPromise = cursor
@@ -90,7 +85,7 @@ export const filesSync = () => (dispatch, getState) => {
     return listPromise.then(response => {
       entries.push(...response.entries);
 
-      if (getState().settings.cloud.status === 'cancelled') {
+      if (store.cloud.status === 'cancelled') {
         return Promise.reject(new Error('cancelled'));
       }
 
@@ -101,13 +96,13 @@ export const filesSync = () => (dispatch, getState) => {
   };
 
   return getEntries({
-    list: { path, recursive: true },
+    list: { path: fullPath, recursive: true },
     entries: [],
   })
     .then(entries =>
       entries.reduce((files, entry) => {
         if (entry['.tag'] === 'file') {
-          const filePath = entry.path_lower.replace(`${path}/`, '');
+          const filePath = entry.path_lower.replace(`${fullPath}/`, '');
           const parts = filePath.split('/').reverse();
           const fileNameParts = parts[0].split('.');
           const type = getFileType(fileNameParts.pop());
@@ -148,34 +143,22 @@ export const filesSync = () => (dispatch, getState) => {
       }, []),
     )
     .then(files => {
-      // Start using new files
-      dispatch(filesReplace(files));
-
-      // Signal that syncing was successful
-      dispatch(
-        settingsReplace({
-          ...getState().settings,
-          cloud: {
-            ...settingsCloud,
-            date: Date.now(),
-            status: 'success',
-          },
-        }),
-      );
-
-      // Save files to cloud
-      dispatch(cloudSaveFiles());
-
+      dispatch({ type: 'files-replace', payload: files });
+      dispatch({
+        type: 'cloud-update-many',
+        payload: { date: Date.now(), status: 'success' },
+      });
+      cloudSaveFiles({ store: { ...store, files } });
       notifier.success('Synced files successfully');
     })
     .catch(error => {
-      const cloud = {
-        ...settingsCloud,
-        date: Date.now(),
-        status: error.message === 'cancelled' ? 'cancelled' : 'error',
-      };
-
-      dispatch(settingsReplace({ ...getState().settings, cloud }));
-      notifier.error(get(error, 'error.error_summary') || 'Unknown error');
+      dispatch({
+        type: 'cloud-update-many',
+        payload: {
+          date: Date.now(),
+          status: get(error, 'message') === 'cancelled' ? 'cancelled' : 'error',
+        },
+      });
+      notifier.error(get(error, 'error.message') || 'Unknown error');
     });
 };

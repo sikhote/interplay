@@ -2,16 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
-import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { colors } from '../../lib/styling';
 import Icon from '../Icon';
 import Text from '../Text';
 import { titleToSlug } from '../../lib/playlists';
-import { playlistsAdd } from '../../actions/playlists';
 import styles from './styles';
 
-const Navigation = ({ router, store: { playlists }, playlistsAdd }) => {
+const Navigation = ({ router, playlists, dispatch }) => {
   const id = get(router.query, 'id');
   const path = `${router.pathname}${id ? `/${id}` : ''}`;
   const items = [
@@ -31,7 +29,7 @@ const Navigation = ({ router, store: { playlists }, playlistsAdd }) => {
       title: 'Add',
       icon: 'list-add',
       className: 'playlist-add',
-      onClick: () => playlistsAdd(),
+      onClick: () => dispatch({ type: 'playlists-add' }),
     },
   ];
 
@@ -73,7 +71,7 @@ const Navigation = ({ router, store: { playlists }, playlistsAdd }) => {
 Navigation.propTypes = {
   router: PropTypes.object.isRequired,
   playlists: PropTypes.array.isRequired,
-  playlistsAdd: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default withRouter(Navigation);

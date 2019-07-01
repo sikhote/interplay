@@ -2,7 +2,7 @@ import React from 'react';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
-import { merge, get, throttle } from 'lodash';
+import { get, throttle } from 'lodash';
 import screenfull from 'screenfull';
 import moment from 'moment';
 import IconButton from '../IconButton';
@@ -71,7 +71,8 @@ class Player extends React.Component {
 
   render() {
     const { played, playedSeconds, path, isFullscreen } = this.state;
-    const { files, player, playlists, lists } = this.props;
+    const { dispatch, store } = this.props;
+    const { files, player, playlists, lists } = store;
     const {
       source,
       volume,
@@ -114,6 +115,8 @@ class Player extends React.Component {
       },
       onEnded: () =>
         filesGetUrl({
+          dispatch,
+          store,
           ...getFileInDirection(
             player,
             lists,
@@ -134,11 +137,7 @@ class Player extends React.Component {
         unCheckedChildren={<Icon icon="loop" />}
         checked={loop}
         onChange={() =>
-          settingsReplace(
-            merge({}, settings, {
-              player: { loop: !loop },
-            }),
-          )
+          dispatch({ type: 'player-update', payload: ['loop', !loop] })
         }
       />
     );
@@ -149,11 +148,7 @@ class Player extends React.Component {
         unCheckedChildren={<Icon icon="shuffle" />}
         checked={random}
         onChange={() =>
-          settingsReplace(
-            merge({}, settings, {
-              player: { random: !random },
-            }),
-          )
+          dispatch({ type: 'player-update', payload: ['random', !random] })
         }
       />
     );
@@ -198,6 +193,8 @@ class Player extends React.Component {
                 size="large"
                 onClick={() =>
                   filesGetUrl({
+                    dispatch,
+                    store,
                     ...getFileInDirection(
                       player,
                       lists,
@@ -217,14 +214,19 @@ class Player extends React.Component {
                 loading={loading}
                 onClick={() => {
                   if (!playing) {
-                    filesGetUrl({ source, path, shouldPlay: true });
+                    filesGetUrl({
+                      dispatch,
+                      store,
+                      source,
+                      path,
+                      shouldPlay: true,
+                    });
                   }
 
-                  settingsReplace(
-                    merge({}, settings, {
-                      player: { playing: !playing },
-                    }),
-                  );
+                  dispatch({
+                    type: 'player-update',
+                    payload: ['playing', !playing],
+                  });
                 }}
               >
                 <Icon
@@ -236,6 +238,8 @@ class Player extends React.Component {
                 size="large"
                 onClick={() =>
                   filesGetUrl({
+                    dispatch,
+                    store,
                     ...getFileInDirection(
                       player,
                       lists,
@@ -263,11 +267,10 @@ class Player extends React.Component {
                 unCheckedChildren={<Icon icon="mute" />}
                 checked={!muted}
                 onChange={() =>
-                  settingsReplace(
-                    merge({}, settings, {
-                      player: { muted: !muted },
-                    }),
-                  )
+                  dispatch({
+                    type: 'player-update',
+                    payload: ['muted', !muted],
+                  })
                 }
               />
             </div>
@@ -280,11 +283,10 @@ class Player extends React.Component {
               step={0.01}
               tipFormatter={volume => `Volume: ${Math.round(volume * 100)}%`}
               onChange={volume =>
-                settingsReplace(
-                  merge({}, settings, {
-                    player: { volume },
-                  }),
-                )
+                dispatch({
+                  type: 'player-update',
+                  payload: ['volume', volume],
+                })
               }
             />
           </div>

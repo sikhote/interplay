@@ -1,32 +1,33 @@
 import Dropbox from 'dropbox';
-import { merge, get, throttle } from 'lodash';
+import { throttle } from 'lodash';
 import notifier from '../lib/notifier';
-import { appChange } from './app';
-import { settingsReplaceLocal } from './settings';
+import packageJson from '../package';
 
-export const cloudGet = () => (dispatch, getState) => {
-  const {
-    settings: {
-      cloud: { key: accessToken, path, user },
-    },
-  } = getState();
+const { version } = packageJson;
+
+export const cloudGet = ({
+  dispatch,
+  store: {
+    cloud: { key: accessToken, path, user },
+  },
+}) => {
   const dropbox = new Dropbox({ accessToken });
 
   return Promise.all([
     dropbox.filesGetMetadata({ path: `/${path}` }),
     dropbox
       .filesDownload({
-        path: `/${path}/interplay/${user}/other.json`,
+        path: `/${path}/interplay/${user}/other-${version}.json`,
       })
       .catch(() => Promise.resolve({})),
     dropbox
       .filesDownload({
-        path: `/${path}/interplay/${user}/files.json`,
+        path: `/${path}/interplay/${user}/files-${version}.json`,
       })
       .catch(() => Promise.resolve([])),
     dropbox
       .filesDownload({
-        path: `/${path}/interplay/${user}/playlists.json`,
+        path: `/${path}/interplay/${user}/playlists-${version}.json`,
       })
       .catch(() => Promise.resolve([])),
   ])
@@ -57,35 +58,11 @@ export const cloudGet = () => (dispatch, getState) => {
       }),
     )
     .then(cloudState => {
-      const state = getState();
-      const newState = merge(cloudState, {
-        settings: {
-          cloud: {
-            key: get(state, 'settings.cloud.key') || '',
-            path: get(state, 'settings.cloud.path') || '',
-            user: get(state, 'settings.cloud.user') || '',
-            isConnected: true,
-          },
-          player: {
-            playing: false,
-            loading: false,
-          },
-        },
-      });
-
-      dispatch(appChange(newState));
+      dispatch({ type: 'store-replace', payload: cloudState });
       notifier.success('Successfully downloaded from cloud');
     })
     .catch(() => {
-      const { settings } = getState();
-      const newSettings = {
-        ...settings,
-        cloud: {
-          ...settings.cloud,
-          isConnected: false,
-        },
-      };
-      dispatch(settingsReplaceLocal(newSettings));
+      dispatch({ type: 'cloud-update', payload: ['isConnected', false] });
       notifier.error('Failed to download from cloud');
     });
 };
@@ -94,35 +71,35 @@ const throttledCloudSaveOther = throttle(callback => callback(), 5000, {
   trailing: true,
 });
 
-export const cloudSaveOther = () => (dispatch, getState) =>
+export const cloudSaveOther = ({
+  store: { modifiers, cloud, player, lists },
+}) =>
   throttledCloudSaveOther(() => {
-    const { settings, cloud } = getState();
-    const { key: accessToken, path, user } = settings.cloud;
+    const { key: accessToken, path, user } = cloud;
     const dropbox = new Dropbox({ accessToken });
 
     return dropbox
       .filesUpload({
-        contents: JSON.stringify({ settings, cloud }),
-        path: `/${path}/interplay/${user}/other.json`,
+        contents: JSON.stringify({ modifiers, cloud, player, lists }),
+        path: `/${path}/interplay/${user}/other-${version}.json`,
         mode: { '.tag': 'overwrite' },
         mute: true,
       })
       .catch(() => notifier.error('Failed to save to cloud'));
   });
 
-export const cloudSaveFiles = () => (dispatch, getState) => {
-  const {
-    settings: {
-      cloud: { key: accessToken, path, user },
-    },
+export const cloudSaveFiles = ({
+  store: {
     files,
-  } = getState();
+    cloud: { key: accessToken, path, user },
+  },
+}) => {
   const dropbox = new Dropbox({ accessToken });
 
   return dropbox
     .filesUpload({
       contents: JSON.stringify(files),
-      path: `/${path}/interplay/${user}/files.json`,
+      path: `/${path}/interplay/${user}/files-${version}.json`,
       mode: { '.tag': 'overwrite' },
       mute: true,
     })
@@ -134,32 +111,30 @@ const throttledCloudSavePlaylists = throttle(callback => callback(), 5000, {
   trailing: true,
 });
 
-export const cloudSavePlaylists = () => (dispatch, getState) =>
+export const cloudSavePlaylists = ({
+  store: {
+    cloud: { key: accessToken, path, user },
+    playlists,
+  },
+}) =>
   throttledCloudSavePlaylists(() => {
-    const {
-      settings: {
-        cloud: { key: accessToken, path, user },
-      },
-      playlists,
-    } = getState();
     const dropbox = new Dropbox({ accessToken });
 
     dropbox
       .filesUpload({
         contents: JSON.stringify(playlists),
-        path: `/${path}/interplay/${user}/playlists.json`,
+        path: `/${path}/interplay/${user}/playlists-${version}.json`,
         mode: { '.tag': 'overwrite' },
         mute: true,
       })
       .catch(() => notifier.error('Failed to save to cloud'));
   });
 
-export const cloudDelete = () => (dispatch, getState) => {
-  const {
-    settings: {
-      cloud: { key: accessToken, path, user },
-    },
-  } = getState();
+export const cloudDelete = ({
+  store: {
+    cloud: { key: accessToken, path, user },
+  },
+}) => {
   const dropbox = new Dropbox({ accessToken });
 
   dropbox

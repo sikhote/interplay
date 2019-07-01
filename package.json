@@ -3,7 +3,7 @@
   "description": "consume media from the cloud on a browser",
   "author": "David Sinclair <david@sinclair.tech> (https://sinclair.tech)",
   "homepage": "https://interplay.app",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "node server.js",

@@ -10,6 +10,7 @@ import styles from './styles';
 
 const Page = ({ Component, pageProps }) => {
   const [store, dispatch] = useReducer(reducer, null, getInitialState);
+  const { files, playlists, modifiers, cloud, player, lists } = store;
 
   return (
     <div>
@@ -18,7 +19,7 @@ const Page = ({ Component, pageProps }) => {
       </Head>
       <Global styles={styles.global} />
       <div css={styles.container}>
-        <Player {...{ store, dispatch }} />
+        <Player {...{ playlists, player, files, cloud, lists, dispatch }} />
         <Navigation {...{ store, dispatch }} />
         <div css={styles.main}>
           <Component {...{ pageProps, store, dispatch }} />

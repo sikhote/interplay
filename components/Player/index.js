@@ -11,8 +11,7 @@ import Switch from '../Switch';
 import Icon from '../Icon';
 import Text from '../Text';
 import getFileInDirection from '../../lib/get-file-in-direction';
-import { settingsReplace } from '../../actions/settings';
-import { filesGetUrl } from '../../actions/files';
+import { filesGetUrl } from '../../requests/files';
 import { colors, fontSizes } from '../../lib/styling';
 import styles from './styles';
 
@@ -21,7 +20,7 @@ const prepareFile = throttle(callback => callback(), 10000, { leading: true });
 class Player extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const oldPath = get(prevState, 'path');
-    const path = get(nextProps, 'settings.player.file.path');
+    const path = get(nextProps, 'player.file.path');
 
     if (oldPath !== path) {
       return {
@@ -49,15 +48,16 @@ class Player extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { settings, filesGetUrl } = this.props;
+    const { store, dispatch } = this.props;
     const { path } = this.state;
-    const source = get(settings, 'player.source');
-    const playing = get(settings, 'player.playing');
-    const isConnected = get(settings, 'isConnected');
-    const isConnectedPrev = get(prevProps.settings, 'isConnected');
+    const {
+      player: { source, playing },
+      cloud: { isConnected },
+    } = store;
+    const isConnectedPrev = get(prevProps, 'store.cloud.isConnected');
 
     if (isConnected !== isConnectedPrev && playing && source && path) {
-      filesGetUrl({ source, path, shouldPlay: true });
+      filesGetUrl({ dispatch, store, source, path, shouldPlay: true });
     }
   }
 
@@ -71,14 +71,7 @@ class Player extends React.Component {
 
   render() {
     const { played, playedSeconds, path, isFullscreen } = this.state;
-    const {
-      files,
-      settings,
-      settingsReplace,
-      filesGetUrl,
-      playlists,
-    } = this.props.store;
-    const { player } = settings;
+    const { files, player, playlists, lists } = this.props;
     const {
       source,
       volume,
@@ -114,7 +107,7 @@ class Player extends React.Component {
           prepareFile(() =>
             filesGetUrl({
               source,
-              ...getFileInDirection(settings, files, playlists),
+              ...getFileInDirection(player, lists, files, playlists),
             }),
           );
         }
@@ -122,7 +115,8 @@ class Player extends React.Component {
       onEnded: () =>
         filesGetUrl({
           ...getFileInDirection(
-            this.props.settings,
+            player,
+            lists,
             files,
             playlists,
             random ? 'random' : 'next',
@@ -205,7 +199,8 @@ class Player extends React.Component {
                 onClick={() =>
                   filesGetUrl({
                     ...getFileInDirection(
-                      settings,
+                      player,
+                      lists,
                       files,
                       playlists,
                       random ? 'random' : 'previous',
@@ -242,7 +237,8 @@ class Player extends React.Component {
                 onClick={() =>
                   filesGetUrl({
                     ...getFileInDirection(
-                      settings,
+                      player,
+                      lists,
                       files,
                       playlists,
                       random ? 'random' : 'next',
@@ -314,11 +310,8 @@ class Player extends React.Component {
 }
 
 Player.propTypes = {
-  files: PropTypes.array.isRequired,
-  settings: PropTypes.object.isRequired,
-  settingsReplace: PropTypes.func.isRequired,
-  filesGetUrl: PropTypes.func.isRequired,
-  playlists: PropTypes.array.isRequired,
+  store: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default Player;

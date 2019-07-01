@@ -3,44 +3,30 @@ import Dropbox from 'dropbox';
 import moment from 'moment';
 import { getFileType } from '../lib/files';
 import notifier from '../lib/notifier';
-import { settingsReplace } from './settings';
 import { cloudSaveFiles } from './cloud';
 
-export const filesUpdate = payload => ({
-  type: 'FILES_UPDATE',
-  payload,
-});
-
-export const filesGetUrl = payload => (dispatch, getState) => {
-  const { source, path: filePath, shouldPlay } = payload;
-  const { settings, files } = getState();
+export const filesGetUrl = ({
+  dispatch,
+  store: { files, cloud },
+  source,
+  path: filePath,
+  shouldPlay,
+}) => {
   const fileIndex = files.findIndex(file => file.path === filePath);
   const file = files[fileIndex];
-  const getNewSettings = newSettings => {
-    const { settings } = getState();
-
-    return {
-      ...settings,
-      player: {
-        ...settings.player,
-        ...newSettings,
-      },
-    };
-  };
 
   // Update state to indicate song was selected and URL is loading
   if (shouldPlay) {
-    dispatch(
-      settingsReplace(
-        getNewSettings({
-          source,
-          file,
-          position: fileIndex,
-          loading: true,
-          playing: true,
-        }),
-      ),
-    );
+    dispatch({
+      type: 'player-update-many',
+      payload: {
+        source,
+        file,
+        position: fileIndex,
+        loading: true,
+        playing: true,
+      },
+    });
   }
 
   // If the current linkDate is not too old no need to load a new link
@@ -49,18 +35,16 @@ export const filesGetUrl = payload => (dispatch, getState) => {
     moment(file.urlDate).isAfter(moment().subtract(3, 'hours'))
   ) {
     if (shouldPlay) {
-      dispatch(settingsReplace(getNewSettings({ loading: false })));
+      dispatch({ type: 'player-update', payload: ['loading', false] });
     }
 
     return Promise.resolve();
   }
 
-  const accessToken = settings.cloud.key;
-  const path = `/${settings.cloud.path}`;
-  const dropbox = new Dropbox({ accessToken });
+  const dropbox = new Dropbox({ accessToken: cloud.key });
 
   return dropbox
-    .filesGetTemporaryLink({ path: `${path}/${filePath}` })
+    .filesGetTemporaryLink({ path: `/${cloud.path}/${filePath}` })
     .then(({ link: url }) => {
       const newFile = {
         ...file,
@@ -68,21 +52,17 @@ export const filesGetUrl = payload => (dispatch, getState) => {
         urlDate: Date.now(),
       };
 
-      dispatch(filesUpdate({ file: newFile }));
+      dispatch({ type: 'files-update', payload: { file: newFile } });
 
       if (shouldPlay) {
-        dispatch(
-          settingsReplace(getNewSettings({ file: newFile, loading: false })),
-        );
+        dispatch({
+          type: 'player-update-many',
+          payload: { file: newFile, loading: false },
+        });
       }
     })
     .catch(() => notifier.error('Failed to get streaming URL'));
 };
-
-export const filesReplace = payload => ({
-  type: 'FILES_REPLACE',
-  payload,
-});
 
 export const filesSync = () => (dispatch, getState) => {
   const settingsCloud = getState().settings.cloud;

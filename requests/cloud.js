@@ -4,11 +4,6 @@ import notifier from '../lib/notifier';
 import { appChange } from './app';
 import { settingsReplaceLocal } from './settings';
 
-export const cloudConnectedChange = payload => ({
-  type: 'CLOUD_CONNECTED_CHANGE',
-  payload,
-});
-
 export const cloudGet = () => (dispatch, getState) => {
   const {
     settings: {

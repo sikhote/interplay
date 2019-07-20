@@ -1,5 +1,5 @@
 import Dropbox from 'dropbox';
-import { throttle } from 'lodash';
+import { throttle, merge } from 'lodash';
 import notifier from '../lib/notifier';
 import packageJson from '../package';
 
@@ -12,6 +12,16 @@ export const cloudGet = ({
   },
 }) => {
   const dropbox = new Dropbox({ accessToken });
+  const cloud = { status: 'tried' };
+  const setStatusAndPassData = (key, downloaded, defaultData) => data => {
+    Object.assign(cloud, {
+      [key]: {
+        status: downloaded ? 'downloaded' : 'failed',
+        date: Date.now(),
+      },
+    });
+    return Promise.resolve(downloaded ? data : defaultData);
+  };
 
   return Promise.all([
     dropbox.filesGetMetadata({ path: `/${path}` }),
@@ -19,17 +29,20 @@ export const cloudGet = ({
       .filesDownload({
         path: `/${path}/interplay/${user}/other-${version}.json`,
       })
-      .catch(() => Promise.resolve({})),
+      .then(setStatusAndPassData('other', true))
+      .catch(setStatusAndPassData('other', false, {})),
     dropbox
       .filesDownload({
         path: `/${path}/interplay/${user}/files-${version}.json`,
       })
-      .catch(() => Promise.resolve([])),
+      .then(setStatusAndPassData('files', true))
+      .catch(setStatusAndPassData('files', false, [])),
     dropbox
       .filesDownload({
         path: `/${path}/interplay/${user}/playlists-${version}.json`,
       })
-      .catch(() => Promise.resolve([])),
+      .then(setStatusAndPassData('playlists', true))
+      .catch(setStatusAndPassData('playlists', false, [])),
   ])
     .then(values =>
       Promise.all(
@@ -51,18 +64,23 @@ export const cloudGet = ({
       ),
     )
     .then(values =>
-      Promise.resolve({
-        ...values[1],
-        files: values[2],
-        playlists: values[3],
-      }),
+      Promise.resolve(
+        merge(
+          {
+            ...values[1],
+            files: values[2],
+            playlists: values[3],
+          },
+          { cloud },
+        ),
+      ),
     )
     .then(cloudState => {
       dispatch({ type: 'store-replace', payload: cloudState });
       notifier.success('Successfully downloaded from cloud');
     })
     .catch(() => {
-      dispatch({ type: 'cloud-update', payload: ['isConnected', false] });
+      dispatch({ type: 'cloud-update', payload: ['status', 'tried'] });
       notifier.error('Failed to download from cloud');
     });
 };

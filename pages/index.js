@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import Cookies from 'js-cookie';
 import { Button, Input } from 'antd';
+import { capitalize } from 'lodash';
 import { filesSync } from '../requests/files';
 import { cloudSaveOther, cloudGet, cloudDelete } from '../requests/cloud';
 import getInitialState from '../lib/get-initial-state';
@@ -44,7 +45,7 @@ const styles = css`
 
 const Settings = ({ store, dispatch }) => {
   const {
-    cloud: { user, key, path, isConnected, date, status },
+    cloud: { user, key, path, status },
   } = store;
 
   return (
@@ -96,7 +97,7 @@ const Settings = ({ store, dispatch }) => {
             Cookies.set('path', e.target.value.toLowerCase());
             dispatch({
               type: 'cloud-update',
-              payload: ['path', e.target.value],
+              payload: ['path', e.target.value.toLowerCase()],
             });
           }}
         />
@@ -106,16 +107,27 @@ const Settings = ({ store, dispatch }) => {
           type="primary"
           onClick={() => cloudGet({ dispatch, store })}
         >
-          Save
+          Download from Cloud
         </Button>
       </div>
       <Spacer />
-      <Text>
-        {isConnected ? 'Settings connected. ' : 'Settings not connected. '}
-        {status === 'success'
-          ? `Files synced ${moment(date).fromNow()}.`
-          : 'Files never synced.'}
-      </Text>
+      {['files', 'playlists', 'other'].map((key, index) => {
+        const { status, date } = store.cloud[key];
+        const success = ['downloaded', 'synced'].includes(status);
+
+        return (
+          <React.Fragment key={key}>
+            {index > 0 && <br />}
+            <Text>
+              <Icon
+                icon={success ? 'check' : 'cancel'}
+                color={success ? colors.a1 : colors.a3}
+              />
+              {capitalize(key)} {status} {date && moment(date).fromNow()}
+            </Text>
+          </React.Fragment>
+        );
+      })}
       <Spacer />
       <div className="icons">
         {status === 'syncing' && (

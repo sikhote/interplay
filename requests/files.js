@@ -146,7 +146,11 @@ export const filesSync = ({ dispatch, store }) => {
       dispatch({ type: 'files-replace', payload: files });
       dispatch({
         type: 'cloud-update-many',
-        payload: { date: Date.now(), status: 'success' },
+        payload: {
+          date: Date.now(),
+          files: { status: 'synced', date: Date.now() },
+          status: 'connected',
+        },
       });
       cloudSaveFiles({ store: { ...store, files } });
       notifier.success('Synced files successfully');

@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Global } from '@emotion/core';
 import Head from 'next/head';
@@ -6,11 +6,21 @@ import Navigation from '../Navigation';
 import Player from '../Player';
 import reducer from '../../lib/reducer';
 import getInitialState from '../../lib/get-initial-state';
+import { cloudGet } from '../../requests/cloud';
 import styles from './styles';
 
 const Page = ({ Component, pageProps }) => {
   const [store, dispatch] = useReducer(reducer, null, getInitialState);
+  const {
+    cloud: { key, path, status },
+  } = store;
   const { playlists } = store;
+
+  useEffect(() => {
+    if (status === 'not-tried' && key && path) {
+      cloudGet({ store, dispatch });
+    }
+  }, [store, status, key, path]);
 
   return (
     <div>
@@ -39,34 +49,3 @@ Page.defaultProps = {
 };
 
 export default Page;
-
-// class Page extends React.PureComponent {
-//   componentDidMount() {
-//     this.tryCloudGet();
-//   }
-
-//   tryCloudGet() {
-//     const {
-//       store: { dispatch, getState },
-//     } = this.props;
-//     const {
-//       settings: {
-//         cloud: { key, path, isConnected },
-//       },
-//     } = getState();
-
-//     if (!isConnected && key && path) {
-//       dispatch(cloudGet());
-//     }
-//   }
-
-//   render() {
-//     const { children, store } = this.props;
-
-//     return (
-//       <ReduxProvider store={store}>
-
-//       </ReduxProvider>
-//     );
-//   }
-// }

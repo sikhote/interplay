@@ -24,7 +24,7 @@ export default {
       'player player'
     `,
     height: '100vh',
-    [`@media (max-width: ${bps.a2}px)`]: {
+    [`@media (max-width: ${bps.b}px)`]: {
       gridTemplateColumns: '1fr',
       gridTemplateRows: 'auto 1fr auto',
       gridTemplateAreas: `

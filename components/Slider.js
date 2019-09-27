@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Slider as ASlider } from 'antd';
 
 const Slider = ({ color, ...props }) => (
   <div className={color && 'custom'}>
@@ -25,7 +24,7 @@ const Slider = ({ color, ...props }) => (
         background-color: rgba(0, 0, 0, 0.12);
       }
     `}</style>
-    <ASlider {...props} />
+    {/* <ASlider {...props} /> */}
   </div>
 );
 

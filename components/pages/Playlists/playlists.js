@@ -37,4 +37,4 @@ Playlists.defaultProps = {
   id: '',
 };
 
-export default connect(({ playlists }) => ({ playlists }))(Playlists);
+export default Playlists;

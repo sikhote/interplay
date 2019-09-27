@@ -6,8 +6,7 @@ import {
   fontFamilies,
   lineHeights,
   fontWeights,
-} from '../lib/styling';
-import translations from '../lib/translations';
+} from '../../lib/styling';
 
 const Text = ({
   children,
@@ -16,60 +15,54 @@ const Text = ({
   fontWeight,
   fontFamily,
   lineHeight,
-  messageId,
   width,
   textAlign,
-  style,
-  className,
-  uppercase,
+  textTransform,
+  ...props
 }) => (
-  <span
-    style={{
-      fontSize,
-      color,
-      fontWeight,
-      fontFamily,
-      lineHeight,
+  <div
+    css={{
+      fontSize: fontSizes[fontSize],
+      color: colors[color],
+      fontWeight: fontWeights[fontWeight],
+      fontFamily: fontFamilies[fontFamily],
+      lineHeight: lineHeights[lineHeight],
       width,
       textAlign,
-      textTransform: uppercase ? 'uppercase' : 'none',
-      ...style,
+      textTransform,
     }}
-    className={className || messageId}
+    {...props}
   >
     {children}
-    {messageId && translations[messageId]}
-  </span>
+  </div>
 );
 
 Text.propTypes = {
   children: PropTypes.any,
   color: PropTypes.string,
-  fontSize: PropTypes.number,
+  fontSize: PropTypes.string,
   fontWeight: PropTypes.string,
   fontFamily: PropTypes.string,
   lineHeight: PropTypes.string,
-  messageId: PropTypes.string,
   width: PropTypes.any,
   textAlign: PropTypes.string,
   style: PropTypes.object,
   className: PropTypes.string,
-  uppercase: PropTypes.bool,
+  textTransform: PropTypes.string,
 };
 
 Text.defaultProps = {
   children: null,
-  color: colors.text,
-  fontSize: fontSizes.a3,
-  fontWeight: fontWeights.normal,
-  fontFamily: fontFamilies.normal,
-  lineHeight: lineHeights.normal,
-  messageId: undefined,
+  color: 'text',
+  fontSize: 'c',
+  fontWeight: 'normal',
+  fontFamily: 'normal',
+  lineHeight: 'normal',
   width: undefined,
   textAlign: 'left',
   style: {},
   className: '',
-  uppercase: false,
+  textTransform: '',
 };
 
 export default Text;

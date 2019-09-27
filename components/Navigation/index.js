@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
-import { get } from 'lodash';
-import { colors } from '../../lib/styling';
+import { get, merge } from 'lodash';
 import Icon from '../Icon';
 import Text from '../Text';
 import { titleToSlug } from '../../lib/playlists';
@@ -22,42 +21,57 @@ const Navigation = ({ router, playlists, dispatch }) => {
       id: `/playlists/${titleToSlug(name)}`,
       title: name,
       icon: 'star',
-      className: 'playlist',
+      css: styles.itemPlaylist,
     })),
     {
       id: 'playlist-add',
       title: 'Add',
       icon: 'list-add',
-      className: 'playlist-add',
+      css: styles.itemPlaylist,
       onClick: () => dispatch({ type: 'playlists-add' }),
     },
   ];
 
   return (
-    <div className="container">
-      <style jsx>{styles}</style>
-      <div className="container-inner">
-        {items.map(({ id, href, title, icon, className = '', onClick }) => {
+    <div css={styles.root}>
+      <div css={styles.inner}>
+        {items.map(({ id, href, title, icon, css = {}, onClick }) => {
           const inner = (
-            <>
-              <Icon
-                icon={icon}
-                color={colors.navigationItem}
-                className="icon"
-              />
-              <Text color={colors.navigationItem} className="title">
-                {title}
-              </Text>
-            </>
+            <Text
+              css={merge(
+                {},
+                styles.itemText,
+                path === id ? styles.itemTextActive : {},
+              )}
+            >
+              <Icon css={styles.itemTextIcon} icon={icon} />
+              <span css={styles.itemTextContent}>{title}</span>
+            </Text>
           );
 
           return onClick ? (
-            <div key={id} className="item" onClick={onClick}>
+            <div
+              key={id}
+              css={merge(
+                {},
+                styles.item,
+                css,
+                path === id ? styles.itemActive : {},
+              )}
+              onClick={onClick}
+            >
               {inner}
             </div>
           ) : (
             <Link key={id} as={id} href={href || id}>
-              <a className={`item ${className} ${path === id ? 'active' : ''}`}>
+              <a
+                css={merge(
+                  {},
+                  styles.item,
+                  css,
+                  path === id ? styles.itemActive : {},
+                )}
+              >
                 {inner}
               </a>
             </Link>

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Switch as ASwitch } from 'antd';
 
 const Slider = ({ color, ...props }) => (
   <div className={color && 'custom'}>
@@ -9,7 +8,7 @@ const Slider = ({ color, ...props }) => (
         background-color: ${color};
       }
     `}</style>
-    <ASwitch {...props} />
+    {/* <ASwitch {...props} /> */}
   </div>
 );
 

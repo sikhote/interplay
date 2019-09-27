@@ -1,10 +1,9 @@
 import React from 'react';
 import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Router from 'next/router';
 import { get } from 'lodash';
-import { Input } from 'antd';
+import Input from '../Input';
 import getSortedData from '../../lib/get-sorted-data';
 import getSearchedData from '../../lib/get-searched-data';
 import getSourcedData from '../../lib/get-sourced-data';
@@ -188,21 +187,4 @@ List.propTypes = {
   modifiersShow: PropTypes.bool.isRequired,
 };
 
-export default connect(
-  ({ files, settings, playlists, modifiers }) => ({
-    files,
-    settings,
-    playlists,
-    modifiersShow: modifiers.show,
-    modifiersSelections: modifiers.selections,
-  }),
-  dispatch => ({
-    settingsReplace: payload => dispatch(settingsReplace(payload)),
-    filesGetUrl: payload => dispatch(filesGetUrl(payload)),
-    modifiersSelectionsToggle: payload =>
-      dispatch(modifiersSelectionsToggle(payload)),
-    modifiersSelectionsRemoveAll: () =>
-      dispatch(modifiersSelectionsRemoveAll()),
-    modifiersShowUpdate: payload => dispatch(modifiersShowUpdate(payload)),
-  }),
-)(List);
+export default List;

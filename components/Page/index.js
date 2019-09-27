@@ -25,6 +25,7 @@ const Page = ({ Component, pageProps }) => {
   return (
     <div>
       <Head>
+        <link rel="stylesheet" href="/static/css/animation.css" />
         <link rel="stylesheet" href="/static/css/fontello.css" />
       </Head>
       <Global styles={styles.global} />

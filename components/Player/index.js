@@ -5,7 +5,7 @@ import ReactPlayer from 'react-player';
 import { get, throttle } from 'lodash';
 import screenfull from 'screenfull';
 import moment from 'moment';
-import IconButton from '../IconButton';
+import Button from '../Button';
 import Slider from '../Slider';
 import Switch from '../Switch';
 import Icon from '../Icon';
@@ -155,8 +155,7 @@ class Player extends React.Component {
     const divider = <Text className="divider"> - </Text>;
 
     return (
-      <div className={`container ${type || ''}`}>
-        <style jsx>{styles}</style>
+      <div css={styles.root} className={`container ${type || ''}`}>
         <ReactPlayer {...config} />
         <div className="main">
           <div className="info">
@@ -189,7 +188,7 @@ class Player extends React.Component {
           <div className="directions">
             {loopButton}
             <div className="buttons">
-              <IconButton
+              <Button
                 size="large"
                 onClick={() =>
                   filesGetUrl({
@@ -208,8 +207,8 @@ class Player extends React.Component {
                 }
               >
                 <Icon fontSize={fontSizes.a4} icon="fast-backward" />
-              </IconButton>
-              <IconButton
+              </Button>
+              <Button
                 size="large"
                 loading={loading}
                 onClick={() => {
@@ -233,8 +232,8 @@ class Player extends React.Component {
                   fontSize={fontSizes.a4}
                   icon={playing ? 'pause' : 'play'}
                 />
-              </IconButton>
-              <IconButton
+              </Button>
+              <Button
                 size="large"
                 onClick={() =>
                   filesGetUrl({
@@ -253,7 +252,7 @@ class Player extends React.Component {
                 }
               >
                 <Icon fontSize={fontSizes.a4} icon="fast-forward" />
-              </IconButton>
+              </Button>
             </div>
             {shuffleButton}
           </div>

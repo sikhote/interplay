@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
-import { connect } from 'react-redux';
-import { Button, Select, Input } from 'antd';
 import { at, get } from 'lodash';
 import arrayMove from 'array-move';
+import Button from '../Button';
+import Select from '../Select';
+import Input from '../Input';
 import IconButton from '../IconButton';
 import Icon from '../Icon';
 import H2 from '../H2';
@@ -251,19 +252,4 @@ Modifiers.propTypes = {
   files: PropTypes.array.isRequired,
 };
 
-export default connect(
-  ({ modifiers, playlists, files }) => ({
-    playlists,
-    modifiersShow: modifiers.show,
-    modifiersSelections: modifiers.selections,
-    files,
-  }),
-  dispatch => ({
-    playlistsRemove: payload => dispatch(playlistsRemove(payload)),
-    playlistsUpdate: payload => dispatch(playlistsUpdate(payload)),
-    modifiersSelectionsRemoveAll: () =>
-      dispatch(modifiersSelectionsRemoveAll()),
-    modifiersSelectionsToggle: payload =>
-      dispatch(modifiersSelectionsToggle(payload)),
-  }),
-)(Modifiers);
+export default Modifiers;

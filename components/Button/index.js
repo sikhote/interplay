@@ -5,7 +5,7 @@ import Text from '../Text';
 import Icon from '../Icon';
 import styles from './styles';
 
-const Button = ({ children, icon, shape, loading, ...props }) => (
+const Button = ({ children, icon, shape, loading, size, ...props }) => (
   <div
     role="button"
     css={merge(
@@ -13,6 +13,8 @@ const Button = ({ children, icon, shape, loading, ...props }) => (
       styles.root,
       loading ? styles.rootIsLoading : {},
       shape === 'circle' ? styles.rootIsCircle : {},
+      size === 'small' ? styles.rootIsSmall : {},
+      size === 'small' && shape === 'circle' ? styles.rootIsSmallCircle : {},
     )}
     {...props}
   >
@@ -32,6 +34,7 @@ Button.propTypes = {
   loading: PropTypes.bool,
   icon: PropTypes.string,
   shape: PropTypes.string,
+  size: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -39,6 +42,7 @@ Button.defaultProps = {
   loading: false,
   icon: '',
   shape: 'rectangle',
+  size: 'medium',
 };
 
 export default Button;

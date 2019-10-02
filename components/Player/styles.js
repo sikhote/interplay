@@ -1,8 +1,8 @@
-import { spacing, bps, fontWeights } from '../../lib/styling';
+import { spacing, bps } from '../../lib/styling';
 
 export default {
   root: {
-    padding:`${spacing.a5}px ${spacing.page}px`,
+    padding: `${spacing.e}px ${spacing.page}px`,
     background: `linear-gradient(
       to top,
       transparent 50%,
@@ -12,24 +12,78 @@ export default {
     display: 'grid',
     gridTemplateColumns: '0px 1fr',
     gridArea: 'player',
-    // [`@media (max-width: '${bps.b}px)`]: '{
-    //   padding: 'spacing.pageMobile,
-    // },
+    [`@media (max-width: '${bps.b}px)`]: {
+      padding: spacing.pageMobile,
+    },
   },
-}
+  player: {
+    overflow: 'hidden',
+    cursor: 'pointer',
+    background: 'black',
+  },
+  main: {
+    display: 'grid',
+    gridColumnGap: spacing.i,
+    gridRowGap: spacing.e,
+    gridTemplateColumns: '0.7fr 1fr 0.7fr',
+    gridTemplateRows: 'auto auto',
+    gridTemplateAreas: `"info directions sound" "info progress sound"`,
+    alignItems: 'center',
+    justifyItems: 'stretch',
+  },
+  info: {
+    gridArea: 'info',
+    width: '100%',
+    display: 'grid',
+    gridTemplateRows: '1fr',
+    gridAutoFlow: 'row',
+    '& > *': {
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+    },
+  },
+  divider: {
+    display: 'none',
+  },
+  directions: {
+    display: 'grid',
+    gridAutoColumns: 'auto',
+    gridAutoFlow: 'column',
+    alignItems: 'center',
+    gridArea: 'directions',
+    gridGap: spacing.f,
+    justifySelf: 'center',
+  },
+  buttons: {
+    display: 'grid',
+    gridAutoColumns: 'auto',
+    gridAutoFlow: 'column',
+    gridGap: spacing.d,
+    alignItems: 'center',
+  },
+  sound: {
+    display: 'grid',
+    gridGap: spacing.e,
+    gridArea: 'sound',
+    gridTemplateColumns: 'auto 1fr',
+    alignItems: 'center',
+  },
+  shuffleSound: {
+    display: 'none',
+  },
+  loopSound: {
+    display: 'none',
+  },
+  switches: {
+    [`@media (max-width: '${bps.b}px)`]: {
+      display: 'grid',
+      gridGap: spacing.c,
+      gridTemplateColumns: 'auto auto auto',
+    },
+  },
+};
 
-// export default css`
-//   .container {
-    // padding: '${spacing.a5}px ${spacing.page}px',
-    // background: 'linear-gradient(
-    //   to top,
-    //   transparent 50%,
-    //   rgba(0, 0, 0, 0.1) 100%
-    // )',
-    // border-top: '1px solid rgba(0, 0, 0, 0.15)',
-    // display: 'grid',
-    // grid-template-columns: '0px 1fr',
-    // grid-area: 'player',
 //   }
 //   .video {
 //     grid-gap: '${spacing.a5}px',
@@ -45,81 +99,17 @@ export default {
 //     text-align: 'center',
 //     max-width: '100%',
 //   }
-//   :global(.player) {
-//     overflow: 'hidden',
-//     cursor: 'pointer',
-//     background: 'black',
-//   }
 //   :global(.player video) {
 //     object-fit: 'contain',
 //     width: '100% !important',
 //     height: '100% !important',
 //   }
-//   .main {
-//     display: 'grid',
-//     grid-column-gap: '${spacing.a9}px',
-//     grid-row-gap: '${spacing.a5}px',
-//     grid-template-columns: '0.7fr 1fr 0.7fr',
-//     grid-template-rows: 'auto auto',
-//     grid-template-areas:
-//       'info directions sound'
-//       'info progress sound'',
-//     align-items: 'center',
-//     justify-items: 'stretch',
-//   }
-//   .directions {
-//     display: 'grid',
-//     grid-auto-columns: 'auto',
-//     grid-auto-flow: 'column',
-//     align-items: 'center',
-//     grid-area: 'directions',
-//     grid-gap: '${spacing.a7}px',
-//     justify-self: 'center',
-//   }
-//   .buttons {
-//     display: 'grid',
-//     grid-auto-columns: 'auto',
-//     grid-auto-flow: 'column',
-//     grid-gap: '${spacing.a4}px',
-//     align-items: 'center',
-//   }
-//   .sound {
-//     display: 'grid',
-//     grid-gap: '${spacing.a5}px',
-//     grid-area: 'sound',
-//     grid-template-columns: 'auto 1fr',
-//     align-items: 'center',
-//   }
-//   .sound :global(.loop),
-//   .sound :global(.shuffle) {
-//     display: 'none',
-//   }
-//   .info {
-//     grid-area: 'info',
-//     width: '100%',
-//     display: 'grid',
-//     grid-template-rows: '1fr',
-//     grid-auto-flow: 'row',
-//   }
-//   .info :global(span) {
-//     text-overflow: 'ellipsis',
-//     white-space: 'nowrap',
-//     overflow: 'hidden',
-//   }
-//   :global(.name) {
-//     font-weight: '${fontWeights.bold} !important',
-//   }
-//   :global(.divider) {
-//     display: 'none',
-//   }
+//
+
 //   :global(.progress) {
 //     grid-area: 'progress',
 //   }
-
 //   @media (max-width: '${bps.a2 - 1}px) {
-//     .container {
-//       padding: '${spacing.pageA2}px',
-//     }
 //     .main {
 //       grid-template-areas:
 //         'sound sound'
@@ -151,11 +141,7 @@ export default {
 //     .sound :global(.shuffle) {
 //       display: 'block',
 //     }
-//     .switches {
-//       display: 'grid',
-//       grid-gap: '${spacing.a3}px',
-//       grid-template-columns: 'auto auto auto',
-//     }
+//
 //     .info {
 //       display: 'block',
 //       text-overflow: 'ellipsis',

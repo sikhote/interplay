@@ -8,14 +8,14 @@ import moment from 'moment';
 import Button from '../Button';
 import Slider from '../Slider';
 import Switch from '../Switch';
-import Icon from '../Icon';
 import Text from '../Text';
 import getFileInDirection from '../../lib/get-file-in-direction';
 import { filesGetUrl } from '../../requests/files';
-import { colors, fontSizes } from '../../lib/styling';
+import { colors } from '../../lib/styling';
 import styles from './styles';
 
 const prepareFile = throttle(callback => callback(), 10000, { leading: true });
+const Divider = () => <Text css={styles.divider}> - </Text>;
 
 class Player extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -85,7 +85,7 @@ class Player extends React.Component {
     } = player;
     const { url, album, artist, name, type, category } = file;
     const config = {
-      className: 'player',
+      css: styles.player,
       loop,
       muted,
       width: type === 'video' ? 124 : 0,
@@ -130,53 +130,52 @@ class Player extends React.Component {
       // eslint-disable-next-line react/no-find-dom-node
       onClick: () => screenfull.request(findDOMNode(this.player)),
     };
-    const loopButton = (
+    const LoopButton = props => (
       <Switch
-        className="loop"
-        checkedChildren={<Icon icon="loop" />}
-        unCheckedChildren={<Icon icon="loop" />}
+        checkedIcon="loop"
+        unCheckedIcon="loop"
         checked={loop}
         onChange={() =>
           dispatch({ type: 'player-update', payload: ['loop', !loop] })
         }
+        {...props}
       />
     );
-    const shuffleButton = (
+    const ShuffleButton = props => (
       <Switch
-        className="shuffle"
-        checkedChildren={<Icon icon="shuffle" />}
-        unCheckedChildren={<Icon icon="shuffle" />}
+        checkedIcon="shuffle"
+        unCheckedIcon="shuffle"
         checked={random}
         onChange={() =>
           dispatch({ type: 'player-update', payload: ['random', !random] })
         }
+        {...props}
       />
     );
-    const divider = <Text className="divider"> - </Text>;
 
     return (
-      <div css={styles.root} className={`container ${type || ''}`}>
+      <div css={styles.root}>
         <ReactPlayer {...config} />
-        <div className="main">
-          <div className="info">
+        <div css={styles.main}>
+          <div css={styles.info}>
             {path ? (
               <>
-                <Text className="name">{name}</Text>
+                <Text fontWeight="bold">{name}</Text>
                 {category && (
                   <Text>
-                    {divider}
+                    <Divider />
                     {category}
                   </Text>
                 )}
                 {artist && (
                   <Text>
-                    {divider}
+                    <Divider />
                     {artist}
                   </Text>
                 )}
                 {album && (
                   <Text>
-                    {divider}
+                    <Divider />
                     {album}
                   </Text>
                 )}
@@ -185,11 +184,12 @@ class Player extends React.Component {
               <Text>Add credentials and play some media</Text>
             )}
           </div>
-          <div className="directions">
-            {loopButton}
-            <div className="buttons">
+          <div css={styles.directions}>
+            <LoopButton />
+            <div css={styles.buttons}>
               <Button
-                size="large"
+                shape="circle"
+                icon="fast-backward"
                 onClick={() =>
                   filesGetUrl({
                     dispatch,
@@ -205,11 +205,10 @@ class Player extends React.Component {
                     shouldPlay: true,
                   })
                 }
-              >
-                <Icon fontSize={fontSizes.a4} icon="fast-backward" />
-              </Button>
+              />
               <Button
-                size="large"
+                shape="circle"
+                icon={playing ? 'pause' : 'play'}
                 loading={loading}
                 onClick={() => {
                   if (!playing) {
@@ -227,14 +226,10 @@ class Player extends React.Component {
                     payload: ['playing', !playing],
                   });
                 }}
-              >
-                <Icon
-                  fontSize={fontSizes.a4}
-                  icon={playing ? 'pause' : 'play'}
-                />
-              </Button>
+              />
               <Button
-                size="large"
+                shape="circle"
+                icon="fast-forward"
                 onClick={() =>
                   filesGetUrl({
                     dispatch,
@@ -250,20 +245,18 @@ class Player extends React.Component {
                     shouldPlay: true,
                   })
                 }
-              >
-                <Icon fontSize={fontSizes.a4} icon="fast-forward" />
-              </Button>
+              />
             </div>
-            {shuffleButton}
+            <ShuffleButton />
           </div>
-          <div className="sound">
-            <div className="switches">
-              {shuffleButton}
-              {loopButton}
+          <div css={styles.sound}>
+            <div css={styles.switches}>
+              <ShuffleButton css={styles.shuffleSound} />
+              <LoopButton css={styles.loopSound} />
               <Switch
-                color={colors.a3}
-                checkedChildren={<Icon icon="volume" />}
-                unCheckedChildren={<Icon icon="mute" />}
+                color={colors.c}
+                checkedIcon="volume"
+                unCheckedIcon="mute"
                 checked={!muted}
                 onChange={() =>
                   dispatch({
@@ -275,12 +268,11 @@ class Player extends React.Component {
             </div>
             <Slider
               className="volume"
-              color={colors.a3}
+              color={colors.c}
               value={volume}
               min={0}
               max={1}
-              step={0.01}
-              tipFormatter={volume => `Volume: ${Math.round(volume * 100)}%`}
+              tip={`Volume: ${Math.round(volume * 100)}%`}
               onChange={volume =>
                 dispatch({
                   type: 'player-update',
@@ -294,13 +286,10 @@ class Player extends React.Component {
               value={played}
               min={0}
               max={1}
-              step={0.01}
-              tipFormatter={() =>
-                moment(
-                  // eslint-disable-next-line no-underscore-dangle
-                  moment.duration(playedSeconds, 'seconds')._data,
-                ).format('mm:ss')
-              }
+              tip={moment(
+                // eslint-disable-next-line no-underscore-dangle
+                moment.duration(playedSeconds, 'seconds')._data,
+              ).format('mm:ss')}
               onChange={progress => this.player.seekTo(progress)}
             />
           </div>

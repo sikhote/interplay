@@ -26,9 +26,15 @@ export default {
   rootIsLoading: {
     pointerEvents: 'none',
   },
+  rootIsSmall: {
+    height: fontSizes.c * lineHeights.normal * 1.5,
+  },
   rootIsCircle: {
     borderRadius: borderRadii.b,
     width: fontSizes.c * lineHeights.normal * 2,
+  },
+  rootIsSmallCircle: {
+    width: fontSizes.c * lineHeights.normal * 1.5,
   },
   childrenIsLoading: {
     visibility: 'hidden',

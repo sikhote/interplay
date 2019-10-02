@@ -13,6 +13,12 @@ export default {
     '.icon-fast-forward::before': {
       marginRight: 0,
     },
+    '.icon-loop::before': {
+      marginBottom: '.3em',
+    },
+    '.icon-shuffle::before': {
+      marginBottom: '.2em',
+    },
   },
   container: {
     background: colors.background,

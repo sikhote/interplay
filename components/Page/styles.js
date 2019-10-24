@@ -1,4 +1,14 @@
+import { keyframes } from '@emotion/core';
 import { colors, bps } from '../../lib/styling';
+
+const toast = keyframes({
+  '0%': {
+    transform: 'scaleX(1)',
+  },
+  '100%': {
+    transform: 'scaleX(0)',
+  },
+});
 
 export default {
   global: {
@@ -18,6 +28,16 @@ export default {
     },
     '.icon-shuffle::before': {
       marginBottom: '.2em',
+    },
+    '.Toastify': {
+      height: 0,
+      width: '100%',
+    },
+    '.Toastify__progress-bar': {
+      animation: `${toast} linear 1`,
+    },
+    '.Toastify__close-button': {
+      display: 'none',
     },
   },
   container: {
@@ -42,5 +62,22 @@ export default {
   },
   main: {
     overflowY: 'auto',
+  },
+  icon: {
+    color: colors.a,
+  },
+  loading: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+  },
+  notifications: {
+    // position: 'absolute',
+    // top: 0,
+    // left: 0,
+    // width: '100%',
+    // display: 'flex',
+    // align
   },
 };

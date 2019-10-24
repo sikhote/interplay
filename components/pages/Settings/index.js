@@ -2,24 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Cookies from 'js-cookie';
-import { capitalize } from 'lodash';
+import { get, capitalize } from 'lodash';
 import Button from '../../Button';
 import Input from '../../Input';
-import { filesSync } from '../../../requests/files';
-import { cloudSaveOther, cloudGet, cloudDelete } from '../../../requests/cloud';
-import getInitialState from '../../../lib/get-initial-state';
+import { filesSync } from '../../../lib/actions/files';
+import { cloudGet, cloudSaveFiles } from '../../../lib/actions/cloud';
 import H1 from '../../H1';
 import Text from '../../Text';
 import Icon from '../../Icon';
+import PageTitle from '../../PageTitle';
+import notifier from '../../../lib/notifier';
 import styles from './styles';
 
 const Settings = ({ store, dispatch }) => {
   const {
-    cloud: { user, key, path, status },
+    cloud: { user, key, path, status, files },
   } = store;
 
   return (
     <div css={styles.root}>
+      <PageTitle title="settings" />
       <H1>Settings</H1>
       <Text>
         This website allows a user to easily create playslists and stream music
@@ -65,48 +67,125 @@ const Settings = ({ store, dispatch }) => {
             });
           }}
         />
-        <Button onClick={() => cloudGet({ dispatch, store })}>
-          Download from Cloud
+        <Button
+          onClick={() => {
+            dispatch({
+              type: 'cloud-update',
+              payload: ['status', 'connecting'],
+            });
+
+            cloudGet({ key, path, user })
+              .then(storeUpdates => {
+                dispatch({ type: 'store-update', payload: storeUpdates });
+                notifier({
+                  type: 'success',
+                  message: 'Successfully downloaded from cloud',
+                });
+              })
+              .catch(() => {
+                dispatch({
+                  type: 'cloud-update',
+                  payload: ['status', 'disconnected'],
+                });
+                notifier({
+                  type: 'error',
+                  message: 'Failed to download from cloud',
+                });
+              });
+          }}
+        >
+          Connect to Cloud
         </Button>
       </div>
       <div css={styles.statuses}>
-        {['files', 'playlists', 'other'].map(key => {
-          const { status, date } = store.cloud[key];
-          const success = ['downloaded', 'synced'].includes(status);
+        {[
+          { ...store.cloud, key: 'cloud' },
+          ...['files', 'playlists', 'other'].map(key => ({
+            ...store.cloud[key],
+            key,
+          })),
+        ].map(({ key, status, date }) => {
+          const success = ['connected', 'synced'].includes(status);
 
           return (
             <Text key={key} css={styles.statusLine}>
               <Text color={success ? 'a' : 'c'}>
                 <Icon icon={success ? 'check' : 'cancel'} />
               </Text>
-              {capitalize(key)} {status} {date && moment(date).fromNow()}
+              {capitalize(key)} {status}{' '}
+              {success && date && moment(date).fromNow()}
             </Text>
           );
         })}
       </div>
       <div css={styles.icons}>
-        {status === 'syncing' && (
-          <Button
-            icon="cancel"
-            shape="circle"
-            onClick={() =>
+        <Button
+          allowLoadingClicks
+          icon={files.status === 'syncing' ? 'cancel' : 'arrows-ccw'}
+          shape="circle"
+          loading={files.status === 'syncing'}
+          onClick={() => {
+            if (files.status === 'syncing') {
               dispatch({
                 type: 'cloud-update',
-                payload: ['status', 'cancelled'],
-              })
+                payload: [
+                  'files',
+                  { status: 'sync cancelled', date: Date.now() },
+                ],
+              });
+              return;
             }
-          />
-        )}
-        <Button
-          icon="arrows-ccw"
-          shape="circle"
-          loading={status === 'syncing'}
-          onClick={() => filesSync({ dispatch, store })}
+
+            dispatch({
+              type: 'cloud-update',
+              payload: ['files', { status: 'syncing', date: Date.now() }],
+            });
+
+            filesSync(store)
+              .then(files => {
+                dispatch({ type: 'files-replace', payload: files });
+                dispatch({
+                  type: 'cloud-update-many',
+                  payload: {
+                    files: { status: 'synced', date: Date.now() },
+                    status: 'connected',
+                  },
+                });
+                return cloudSaveFiles({ ...store, files });
+              })
+              .then(() =>
+                notifier({
+                  type: 'success',
+                  message: 'Synced files successfully',
+                }),
+              )
+              .catch(error => {
+                const errorReason =
+                  get(error, 'message') === 'sync cancelled'
+                    ? 'sync cancelled'
+                    : 'sync error';
+                dispatch({
+                  type: 'cloud-update',
+                  payload: ['files', { status: errorReason, date: Date.now() }],
+                });
+                notifier({
+                  type: 'error',
+                  message: `Failed to sync files due to ${errorReason}`,
+                });
+              });
+          }}
         />
-        <Button
+        {/* <Button
           icon="upload-cloud"
           shape="circle"
-          onClick={() => cloudSaveOther({ store })}
+          onClick={() =>
+            cloudSaveOther({ store }).catch(() =>
+              notifier({
+                type: 'error',
+                message: 'Failed to save to cloud',
+              }),
+            )
+          }
         />
         <Button
           icon="download-cloud"
@@ -126,7 +205,7 @@ const Settings = ({ store, dispatch }) => {
             });
             cloudDelete({ store });
           }}
-        />
+        /> */}
       </div>
     </div>
   );

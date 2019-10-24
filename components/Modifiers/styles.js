@@ -1,67 +1,48 @@
-import css from 'styled-jsx/css';
-import { spacing, bps, colors, zIndexes, speeds } from '../../lib/styling';
+import { spacing, zIndexes, colors, speeds } from '../../lib/styling';
 
-export default css`
-  .container {
-    z-index: ${zIndexes.modifiers};
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: ${colors.modifiersBg};
-    height: 100%;
-    border-top: 1px solid ${colors.border};
-    border-left: 1px solid ${colors.border};
-    transition: all ease ${speeds.a1}s;
-    transform: translateX(100%);
-    width: 300px;
-    display: grid;
-    grid-template-rows: auto auto;
-  }
-  .container.show {
-    transform: translateX(0);
-  }
-  .options-container {
-    overflow-y: auto;
-  }
-  .options {
-    display: grid;
-    grid-template-rows: auto;
-    grid-gap: ${spacing.a6}px;
-    grid-auto-rows: auto;
-    grid-auto-flow: row;
-    align-content: start;
-    padding: ${spacing.page}px;
-  }
-  .selections {
-    border-bottom: 1px solid ${colors.border};
-    max-height: 100px;
-    overflow-y: auto;
-  }
-  .selections > * {
-    padding: ${spacing.a3}px ${spacing.a4}px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  .selections > *:nth-child(even) {
-    background: ${colors.alternatingBg};
-  }
-  .playlists {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-gap: ${spacing.a4}px;
-  }
-  .name {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-gap: ${spacing.a4}px;
-  }
-  .moving {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: ${spacing.a4}px;
-  }
-
-  @media (max-width: ${bps.a2}px) {
-  }
-`;
+export default {
+  root: {
+    zIndex: zIndexes.modifiers,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    background: 'rgba(255, 255, 255, 1)',
+    height: '100%',
+    borderTop: `1px solid ${colors.border}`,
+    borderLeft: `1px solid ${colors.border}`,
+    transition: `all ease ${speeds.a}s`,
+    transform: 'translateX(100%)',
+    width: 300,
+    display: 'grid',
+    gridTemplateRows: 'auto auto',
+  },
+  rootShow: {
+    transform: 'translateX(0)',
+  },
+  selections: {
+    borderBottom: `1px solid ${colors.border}`,
+    maxHeight: 100,
+    overflowY: 'auto',
+  },
+  selection: {
+    padding: `${spacing.c}px ${spacing.d}px`,
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    '&:nth-of-type(even)': {
+      background: 'rgba(0, 0, 0, 0.03)',
+    },
+  },
+  optionsContainer: {
+    overflowY: 'auto',
+  },
+  options: {
+    display: 'grid',
+    gridTemplateRows: 'auto',
+    gridGap: spacing.f,
+    gridAutoRows: 'auto',
+    gridAutoFlow: 'row',
+    alignContent: 'start',
+    padding: spacing.page,
+  },
+};

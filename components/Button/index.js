@@ -5,13 +5,21 @@ import Text from '../Text';
 import Icon from '../Icon';
 import styles from './styles';
 
-const Button = ({ children, icon, shape, loading, size, ...props }) => (
+const Button = ({
+  children,
+  icon,
+  shape,
+  loading,
+  allowLoadingClicks,
+  size,
+  ...props
+}) => (
   <div
     role="button"
     css={merge(
       {},
       styles.root,
-      loading ? styles.rootIsLoading : {},
+      loading && !allowLoadingClicks ? styles.rootIsLoading : {},
       shape === 'circle' ? styles.rootIsCircle : {},
       size === 'small' ? styles.rootIsSmall : {},
       size === 'small' && shape === 'circle' ? styles.rootIsSmallCircle : {},
@@ -35,6 +43,7 @@ Button.propTypes = {
   icon: PropTypes.string,
   shape: PropTypes.string,
   size: PropTypes.string,
+  allowLoadingClicks: PropTypes.bool,
 };
 
 Button.defaultProps = {
@@ -43,6 +52,7 @@ Button.defaultProps = {
   icon: '',
   shape: 'rectangle',
   size: 'medium',
+  allowLoadingClicks: false,
 };
 
 export default Button;

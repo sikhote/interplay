@@ -8,28 +8,36 @@ import Text from '../Text';
 import { titleToSlug } from '../../lib/playlists';
 import styles from './styles';
 
-const Navigation = ({ router, playlists, dispatch }) => {
+const Navigation = ({ router, store, dispatch }) => {
+  const {
+    playlists,
+    cloud: { status },
+  } = store;
   const id = get(router.query, 'id');
   const path = `${router.pathname}${id ? `/${id}` : ''}`;
   const items = [
     { id: '/', title: 'Settings', icon: 'cog' },
-    { id: '/audio', title: 'Audio', icon: 'audio' },
-    { id: '/video', title: 'Video', icon: 'video' },
-    { id: '/playlists', title: 'Playlists', icon: 'star' },
-    ...playlists.map(({ name }) => ({
-      href: `/playlists?id=${titleToSlug(name)}`,
-      id: `/playlists/${titleToSlug(name)}`,
-      title: name,
-      icon: 'star',
-      css: styles.itemPlaylist,
-    })),
-    {
-      id: 'playlist-add',
-      title: 'Add',
-      icon: 'list-add',
-      css: styles.itemPlaylist,
-      onClick: () => dispatch({ type: 'playlists-add' }),
-    },
+    ...(status === 'connected'
+      ? [
+          { id: '/audio', title: 'Audio', icon: 'audio' },
+          { id: '/video', title: 'Video', icon: 'video' },
+          { id: '/playlists', title: 'Playlists', icon: 'star' },
+          ...playlists.map(({ name }) => ({
+            href: `/playlists?id=${titleToSlug(name)}`,
+            id: `/playlists/${titleToSlug(name)}`,
+            title: name,
+            icon: 'star',
+            css: styles.itemPlaylist,
+          })),
+          {
+            id: 'playlist-add',
+            title: 'Add',
+            icon: 'list-add',
+            css: styles.itemPlaylist,
+            onClick: () => dispatch({ type: 'playlists-add' }),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -84,7 +92,7 @@ const Navigation = ({ router, playlists, dispatch }) => {
 
 Navigation.propTypes = {
   router: PropTypes.object.isRequired,
-  playlists: PropTypes.array.isRequired,
+  store: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 

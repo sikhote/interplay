@@ -10,7 +10,7 @@ import Slider from '../Slider';
 import Switch from '../Switch';
 import Text from '../Text';
 import getFileInDirection from '../../lib/get-file-in-direction';
-import { filesGetUrl } from '../../requests/files';
+import { filesGetUrl } from '../../lib/actions/files';
 import { colors } from '../../lib/styling';
 import styles from './styles';
 
@@ -20,7 +20,7 @@ const Divider = () => <Text css={styles.divider}> - </Text>;
 class Player extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const oldPath = get(prevState, 'path');
-    const path = get(nextProps, 'player.file.path');
+    const path = get(nextProps, 'store.player.file.path');
 
     if (oldPath !== path) {
       return {
@@ -107,8 +107,10 @@ class Player extends React.Component {
         if (playing && played > 0.9) {
           prepareFile(() =>
             filesGetUrl({
-              source,
+              dispatch,
+              store,
               ...getFileInDirection(player, lists, files, playlists),
+              source,
             }),
           );
         }
@@ -160,7 +162,9 @@ class Player extends React.Component {
           <div css={styles.info}>
             {path ? (
               <>
-                <Text fontWeight="bold">{name}</Text>
+                <Text fontWeight="bold" css={styles.name}>
+                  {name}
+                </Text>
                 {category && (
                   <Text>
                     <Divider />
@@ -185,7 +189,7 @@ class Player extends React.Component {
             )}
           </div>
           <div css={styles.directions}>
-            <LoopButton />
+            <LoopButton css={styles.loopDirections} />
             <div css={styles.buttons}>
               <Button
                 shape="circle"
@@ -247,7 +251,7 @@ class Player extends React.Component {
                 }
               />
             </div>
-            <ShuffleButton />
+            <ShuffleButton css={styles.shuffleDirections} />
           </div>
           <div css={styles.sound}>
             <div css={styles.switches}>
@@ -267,7 +271,6 @@ class Player extends React.Component {
               />
             </div>
             <Slider
-              className="volume"
               color={colors.c}
               value={volume}
               min={0}
@@ -281,18 +284,18 @@ class Player extends React.Component {
               }
             />
           </div>
-          <div className="progress">
-            <Slider
-              value={played}
-              min={0}
-              max={1}
-              tip={moment(
-                // eslint-disable-next-line no-underscore-dangle
-                moment.duration(playedSeconds, 'seconds')._data,
-              ).format('mm:ss')}
-              onChange={progress => this.player.seekTo(progress)}
-            />
-          </div>
+          <Slider
+            css={styles.progress}
+            value={played}
+            min={0}
+            max={1}
+            step={0.01}
+            tip={moment(
+              // eslint-disable-next-line no-underscore-dangle
+              moment.duration(playedSeconds, 'seconds')._data,
+            ).format('mm:ss')}
+            onChange={progress => this.player.seekTo(progress)}
+          />
         </div>
       </div>
     );

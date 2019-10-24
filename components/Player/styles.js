@@ -1,4 +1,4 @@
-import { spacing, bps } from '../../lib/styling';
+import { spacing, bps, fontWeights } from '../../lib/styling';
 
 export default {
   root: {
@@ -12,7 +12,7 @@ export default {
     display: 'grid',
     gridTemplateColumns: '0px 1fr',
     gridArea: 'player',
-    [`@media (max-width: '${bps.b}px)`]: {
+    [`@media (max-width: ${bps.b}px)`]: {
       padding: spacing.pageMobile,
     },
   },
@@ -27,9 +27,16 @@ export default {
     gridRowGap: spacing.e,
     gridTemplateColumns: '0.7fr 1fr 0.7fr',
     gridTemplateRows: 'auto auto',
-    gridTemplateAreas: `"info directions sound" "info progress sound"`,
+    gridTemplateAreas: '"info directions sound" "info progress sound"',
     alignItems: 'center',
     justifyItems: 'stretch',
+    [`@media (max-width: ${bps.b}px)`]: {
+      gridTemplateAreas: '"sound sound" "progress directions" "info info"',
+      gridTemplateColumns: '1fr auto',
+      gridTemplateRows: 'auto auto auto',
+      gridColumnGap: spacing.e,
+      gridRowGap: spacing.e,
+    },
   },
   info: {
     gridArea: 'info',
@@ -42,9 +49,23 @@ export default {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
     },
+    [`@media (max-width: ${bps.b}px)`]: {
+      display: 'block',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+    },
+  },
+  name: {
+    [`@media (max-width: ${bps.b}px)`]: {
+      fontWeight: fontWeights.normal,
+    },
   },
   divider: {
     display: 'none',
+    [`@media (max-width: ${bps.b}px)`]: {
+      display: 'inline',
+    },
   },
   directions: {
     display: 'grid',
@@ -54,6 +75,9 @@ export default {
     gridArea: 'directions',
     gridGap: spacing.f,
     justifySelf: 'center',
+    [`@media (max-width: ${bps.b}px)`]: {
+      gridGap: 0,
+    },
   },
   buttons: {
     display: 'grid',
@@ -61,6 +85,9 @@ export default {
     gridAutoFlow: 'column',
     gridGap: spacing.d,
     alignItems: 'center',
+    [`@media (max-width: ${bps.b}px)`]: {
+      gridGap: spacing.c,
+    },
   },
   sound: {
     display: 'grid',
@@ -70,21 +97,37 @@ export default {
     alignItems: 'center',
   },
   shuffleSound: {
-    display: 'none',
+    [`@media (min-width: ${bps.b + 1}px)`]: {
+      display: 'none',
+    },
   },
   loopSound: {
-    display: 'none',
+    [`@media (min-width: ${bps.b + 1}px)`]: {
+      display: 'none',
+    },
+  },
+  shuffleDirections: {
+    [`@media (max-width: ${bps.b}px)`]: {
+      display: 'none',
+    },
+  },
+  loopDirections: {
+    [`@media (max-width: ${bps.b}px)`]: {
+      display: 'none',
+    },
   },
   switches: {
-    [`@media (max-width: '${bps.b}px)`]: {
+    [`@media (max-width: ${bps.b}px)`]: {
       display: 'grid',
       gridGap: spacing.c,
       gridTemplateColumns: 'auto auto auto',
     },
   },
+  progress: {
+    gridArea: 'progress',
+  },
 };
 
-//   }
 //   .video {
 //     grid-gap: '${spacing.a5}px',
 //     grid-template-columns: '120px 1fr',
@@ -104,55 +147,3 @@ export default {
 //     width: '100% !important',
 //     height: '100% !important',
 //   }
-//
-
-//   :global(.progress) {
-//     grid-area: 'progress',
-//   }
-//   @media (max-width: '${bps.a2 - 1}px) {
-//     .main {
-//       grid-template-areas:
-//         'sound sound'
-//         'progress directions'
-//         'info info'',
-//       grid-template-columns: '1fr auto',
-//       grid-template-rows: 'auto auto auto',
-//       grid-column-gap: '${spacing.a5}px',
-//       grid-row-gap: '${spacing.a5}px',
-//     }
-//     .directions {
-//       grid-gap: '0',
-//     }
-//     .directions :global(.loop),
-//     .directions :global(.shuffle) {
-//       display: 'none',
-//     }
-//     .buttons {
-//       grid-gap: '${spacing.a3}px',
-//     }
-//     .sound {
-//       display: 'grid',
-//       grid-gap: '${spacing.a5}px',
-//       grid-area: 'sound',
-//       grid-template-columns: 'auto 1fr',
-//       align-items: 'center',
-//     }
-//     .sound :global(.loop),
-//     .sound :global(.shuffle) {
-//       display: 'block',
-//     }
-//
-//     .info {
-//       display: 'block',
-//       text-overflow: 'ellipsis',
-//       white-space: 'nowrap',
-//       overflow: 'hidden',
-//     }
-//     :global(.name) {
-//       font-weight: '${fontWeights.normal} !important',
-//     }
-//     :global(.divider) {
-//       display: 'inline',
-//     }
-//   }
-// `',

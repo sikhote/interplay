@@ -16,7 +16,7 @@ import styles from './styles';
 
 const Settings = ({ store, dispatch }) => {
   const {
-    cloud: { user, key, path, status, files },
+    cloud: { user, key, path, files },
   } = store;
 
   return (
@@ -74,7 +74,7 @@ const Settings = ({ store, dispatch }) => {
               payload: ['status', 'connecting'],
             });
 
-            cloudGet({ key, path, user })
+            cloudGet(store)
               .then(storeUpdates => {
                 dispatch({ type: 'store-update', payload: storeUpdates });
                 notifier({
@@ -190,7 +190,7 @@ const Settings = ({ store, dispatch }) => {
         <Button
           icon="download-cloud"
           shape="circle"
-          onClick={() => cloudGet({ dispatch, store })}
+          onClick={() => cloudGet(store )}
         />
         <Button
           icon="trash"

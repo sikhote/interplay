@@ -23,7 +23,7 @@ const Navigation = ({ router, store, dispatch }) => {
           { id: '/video', title: 'Video', icon: 'video' },
           { id: '/playlists', title: 'Playlists', icon: 'star' },
           ...playlists.map(({ name }) => ({
-            href: `/playlists?id=${titleToSlug(name)}`,
+            href: '/playlists/[id]',
             id: `/playlists/${titleToSlug(name)}`,
             title: name,
             icon: 'star',

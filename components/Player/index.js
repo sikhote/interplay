@@ -109,7 +109,7 @@ class Player extends React.Component {
             filesGetUrl({
               dispatch,
               store,
-              ...getFileInDirection(player, lists, files, playlists),
+              ...getFileInDirection({ player, lists, files, playlists }),
               source,
             }),
           );
@@ -119,13 +119,13 @@ class Player extends React.Component {
         filesGetUrl({
           dispatch,
           store,
-          ...getFileInDirection(
+          ...getFileInDirection({
             player,
             lists,
             files,
             playlists,
-            random ? 'random' : 'next',
-          ),
+            direction: random ? 'random' : 'next',
+          }),
           source,
           shouldPlay: true,
         }),
@@ -198,13 +198,13 @@ class Player extends React.Component {
                   filesGetUrl({
                     dispatch,
                     store,
-                    ...getFileInDirection(
+                    ...getFileInDirection({
                       player,
                       lists,
                       files,
                       playlists,
-                      random ? 'random' : 'previous',
-                    ),
+                      direction: random ? 'random' : 'previous',
+                    }),
                     source,
                     shouldPlay: true,
                   })
@@ -238,13 +238,13 @@ class Player extends React.Component {
                   filesGetUrl({
                     dispatch,
                     store,
-                    ...getFileInDirection(
+                    ...getFileInDirection({
                       player,
                       lists,
                       files,
                       playlists,
-                      random ? 'random' : 'next',
-                    ),
+                      direction: random ? 'random' : 'next',
+                    }),
                     source,
                     shouldPlay: true,
                   })

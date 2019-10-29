@@ -33,9 +33,9 @@ export default {
     gridTemplateColumns: '1fr 1fr',
   },
   rootPlaylists: {
-    gridTemplateColumns: '1fr 90px 60',
+    gridTemplateColumns: '1fr 90px 60px',
     [`@media (max-width: ${bps.b}px)`]: {
-      gridTemplateColumns: '1fr 80px 50',
+      gridTemplateColumns: '1fr 80px 50px',
     },
   },
   rootActive: {

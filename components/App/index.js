@@ -1,26 +1,11 @@
 import React from 'react';
-import NextApp, { Container } from 'next/app';
+import NextApp from 'next/app';
 import Page from '../Page';
 
 class App extends NextApp {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
-
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    return { pageProps };
-  }
-
   render() {
     const { Component, pageProps } = this.props;
-
-    return (
-      <Container>
-        <Page {...{ Component, pageProps }} />
-      </Container>
-    );
+    return <Page {...{ Component, pageProps }} />;
   }
 }
 

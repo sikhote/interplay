@@ -21,7 +21,7 @@ const Page = ({ Component, pageProps }) => {
   useEffect(() => {
     if (status === 'initial') {
       if (key && path && user) {
-        cloudGet({ key, path, user })
+        cloudGet(store)
           .then(storeUpdates => {
             dispatch({ type: 'store-update', payload: storeUpdates });
             notifier({
@@ -43,16 +43,16 @@ const Page = ({ Component, pageProps }) => {
         dispatch({ type: 'cloud-update', payload: ['status', 'disconnected'] });
       }
     }
-  }, [status, key, path, user]);
+  }, [status, key, path, user, store]);
 
   return (
     <div>
       <Head>
-        <link rel="stylesheet" href="/static/css/animation.css" />
-        <link rel="stylesheet" href="/static/css/fontello.css" />
+        <link rel="stylesheet" href="/css/animation.css" />
+        <link rel="stylesheet" href="/css/fontello.css" />
       </Head>
       <Global styles={styles.global} />
-      <ToastContainer css={styles.notifications} />
+      <ToastContainer />
       {status === 'initial' ? (
         <div css={styles.loading}>
           <Icon css={styles.icon} icon="loading animate-spin" />

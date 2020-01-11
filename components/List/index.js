@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { get } from 'lodash';
 import Router from 'next/router';
-import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList } from 'react-window';
 import Input from '../Input';
 import Button from '../Button';
 import H1 from '../H1';
@@ -19,7 +20,6 @@ import Row from './Row';
 import styles from './styles';
 
 const List = ({ title, header, source, store, dispatch }) => {
-  const tableRef = useRef(null);
   const { lists, player, files, playlists, modifiers } = store;
   const { position, sortBy, sortDirection, search } =
     lists[source] || getDefaultListSettings(source);
@@ -27,6 +27,13 @@ const List = ({ title, header, source, store, dispatch }) => {
   const searchedData = getSearchedData(sourcedData, source, search);
   const sortedData = getSortedData(searchedData, sortBy, sortDirection);
   const currentPath = get(player, 'file.path');
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    dispatch({ type: 'modifiers-show-update', payload: false });
+    dispatch({ type: 'modifiers-selections-reset' });
+  }, [dispatch]);
+
   const saveListSettings = listSettings =>
     dispatch({
       type: 'lists-update',
@@ -38,23 +45,22 @@ const List = ({ title, header, source, store, dispatch }) => {
         },
       ],
     });
-  const onRowClick = arg =>
+  const onRowClick = ({ rowData, index }) =>
     dispatch({
       type: 'modifiers-selections-toggle',
       payload:
         source === 'playlists'
-          ? get(arg, 'rowData.name')
+          ? get(rowData, 'name')
           : ['video', 'audio'].includes(source)
-          ? get(arg, 'rowData.path')
-          : arg.index,
+          ? get(rowData, 'path')
+          : index,
     });
-  const onRowDoubleClick = arg => {
-    const position = get(arg, 'index');
-    const path = get(arg, 'rowData.path');
+  const onRowDoubleClick = ({ rowData, index }) => {
+    const path = get(rowData, 'path');
 
     if (source === 'playlists') {
-      const slug = titleToSlug(get(playlists, `[${position}].name`));
-      Router.push(`/playlists?id=${slug}`, `/playlists/${slug}`);
+      const slug = titleToSlug(get(playlists, `[${index}].name`));
+      Router.push('/playlists/[id]', `/playlists/${slug}`);
     } else {
       filesGetUrl({
         dispatch,
@@ -73,6 +79,7 @@ const List = ({ title, header, source, store, dispatch }) => {
         <H1 css={styles.h1}>{header}</H1>
         <div css={styles.side}>
           <Input
+            size="small"
             css={styles.search}
             icon="search"
             placeholder="Search"
@@ -81,6 +88,7 @@ const List = ({ title, header, source, store, dispatch }) => {
           />
           {source !== 'playlists' && player.source === source && (
             <Button
+              size="small"
               shape="circle"
               icon="location"
               onClick={() => {
@@ -88,12 +96,12 @@ const List = ({ title, header, source, store, dispatch }) => {
                 const currentIndex = sortedData.findIndex(
                   ({ path }) => path === file.path,
                 );
-                console.log(tableRef);
-                tableRef.scrollToRow(currentIndex);
+                listRef.current.scrollToItem(currentIndex, 'center');
               }}
             />
           )}
           <Button
+            size="small"
             shape="circle"
             icon="switch"
             onClick={() =>
@@ -105,52 +113,51 @@ const List = ({ title, header, source, store, dispatch }) => {
           />
         </div>
       </div>
-      <div css={styles.tableContainer}>
+      <div css={styles.list}>
         <Modifiers source={source} store={store} dispatch={dispatch} />
+        <Row
+          {...{
+            source,
+            selections: modifiers.selections,
+            columns: getListColumns(source),
+            isHeader: true,
+            sortBy,
+            onClickColumn: key =>
+              saveListSettings({
+                sortBy: key,
+                sortDirection: sortBy === key ? !sortDirection : true,
+              }),
+          }}
+        />
         <AutoSizer>
           {({ height, width }) => (
-            <Table
-              ref={tableRef}
+            <FixedSizeList
+              ref={listRef}
+              initialScrollOffset={position}
               height={height}
-              headerHeight={30}
-              headerRowRenderer={args => (
-                <Row {...args} isHeader source={source} />
-              )}
-              rowRenderer={args => (
-                <Row
-                  {...args}
-                  currentPath={currentPath}
-                  selections={modifiers.selections}
-                  source={source}
-                />
-              )}
-              rowCount={sortedData.length}
-              rowGetter={({ index }) => sortedData[index]}
-              rowHeight={26}
-              scrollToIndex={position}
               width={width}
-              sort={({ sortBy, sortDirection }) =>
-                saveListSettings({
-                  sortBy,
-                  sortDirection: sortDirection === SortDirection.ASC,
-                })
+              itemCount={sortedData.length}
+              itemSize={26}
+              onScroll={({ scrollOffset }) =>
+                saveListSettings({ position: scrollOffset })
               }
-              sortBy={sortBy}
-              sortDirection={
-                sortDirection ? SortDirection.ASC : SortDirection.DESC
-              }
-              onRowClick={onRowClick}
-              onRowDoubleClick={onRowDoubleClick}
             >
-              {getListColumns(source).map(({ title, dataKey }) => (
-                <Column
-                  key={dataKey}
-                  label={title}
-                  dataKey={dataKey}
-                  width={1}
+              {({ style, index }) => (
+                <Row
+                  {...{
+                    style,
+                    index,
+                    rowData: sortedData[index],
+                    source,
+                    selections: modifiers.selections,
+                    currentPath,
+                    columns: getListColumns(source),
+                    onClick: onRowClick,
+                    onDoubleClick: onRowDoubleClick,
+                  }}
                 />
-              ))}
-            </Table>
+              )}
+            </FixedSizeList>
           )}
         </AutoSizer>
       </div>

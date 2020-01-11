@@ -9,13 +9,24 @@ import Icon from '../Icon';
 import reducer from '../../lib/reducer';
 import notifier from '../../lib/notifier';
 import getInitialState from '../../lib/get-initial-state';
-import { cloudGet } from '../../lib/actions/cloud';
+import {
+  cloudGet,
+  cloudSavePlaylists,
+  cloudSaveOther,
+} from '../../lib/actions/cloud';
 import styles from './styles';
 
 const Page = ({ Component, pageProps }) => {
   const [store, dispatch] = useReducer(reducer, null, getInitialState);
   const {
-    cloud: { key, path, user, status },
+    cloud: {
+      key,
+      path,
+      user,
+      status,
+      playlists: { changes: playlistsChanges },
+      other: { changes: otherChanges },
+    },
   } = store;
 
   useEffect(() => {
@@ -44,6 +55,18 @@ const Page = ({ Component, pageProps }) => {
       }
     }
   }, [status, key, path, user, store]);
+
+  useEffect(() => {
+    if (status !== 'initial') {
+      cloudSavePlaylists(store);
+    }
+  }, [playlistsChanges]);
+
+  useEffect(() => {
+    if (status !== 'initial') {
+      cloudSaveOther(store);
+    }
+  }, [otherChanges]);
 
   return (
     <div>

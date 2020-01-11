@@ -1,24 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { merge } from 'lodash';
+import Icon from '../Icon';
 import Text from '../Text';
 import styles from './styles';
 
-const Select = ({ options, value, ...props }) => (
-  <select css={styles.root} {...props}>
-    {options.map(({ key, title, value }) => (
-      <option key={key} value={value}>
-        <Text>{title}</Text>
-      </option>
-    ))}
-  </select>
+const Select = ({ options, value, icon, ...props }) => (
+  <div css={styles.root}>
+    {icon && (
+      <Text color="text" css={styles.icon}>
+        <Icon icon={icon} />
+      </Text>
+    )}
+    <select
+      value={value}
+      css={merge({}, styles.select, icon ? styles.selectWithIcon : {})}
+      {...props}
+    >
+      <option value="">-</option>
+      {options.map(({ key, title, value }) => (
+        <option key={key} value={value}>
+          {title}
+        </option>
+      ))}
+    </select>
+  </div>
 );
 
 Select.propTypes = {
+  icon: PropTypes.string,
   options: PropTypes.array.isRequired,
   value: PropTypes.any,
 };
 
 Select.defaultProps = {
+  icon: '',
   value: undefined,
 };
 

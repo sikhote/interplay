@@ -27,7 +27,7 @@ export default {
     borderTop: `1px solid ${colors.border}`,
     borderBottom: `1px solid ${colors.border}`,
     background:
-      'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.08) 100%)',
+      'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.08) 100%) !important',
   },
   rootVideo: {
     gridTemplateColumns: '1fr 1fr',
@@ -55,8 +55,6 @@ export default {
     gridTemplateColumns: 'auto auto',
     justifyContent: 'start',
     alignItems: 'center',
-    ':not([aria-sort="none"])': {
-      color: colors.text,
-    },
+    height: 26,
   },
 };

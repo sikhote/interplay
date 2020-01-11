@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
-import { get, merge } from 'lodash';
+import { merge } from 'lodash';
 import Icon from '../Icon';
 import Text from '../Text';
 import { titleToSlug } from '../../lib/playlists';
@@ -13,12 +13,12 @@ const Navigation = ({ router, store, dispatch }) => {
     playlists,
     cloud: { status },
   } = store;
-  const id = get(router.query, 'id');
-  const path = `${router.pathname}${id ? `/${id}` : ''}`;
-  const items = [
-    { id: '/', title: 'Settings', icon: 'cog' },
-    ...(status === 'connected'
+  const { asPath } = router;
+  console.log(status)
+  const items =
+    status === 'connected'
       ? [
+          { id: '/', title: 'Settings', icon: 'cog' },
           { id: '/audio', title: 'Audio', icon: 'audio' },
           { id: '/video', title: 'Video', icon: 'video' },
           { id: '/playlists', title: 'Playlists', icon: 'star' },
@@ -37,8 +37,7 @@ const Navigation = ({ router, store, dispatch }) => {
             onClick: () => dispatch({ type: 'playlists-add' }),
           },
         ]
-      : []),
-  ];
+      : [];
 
   return (
     <div css={styles.root}>
@@ -49,7 +48,7 @@ const Navigation = ({ router, store, dispatch }) => {
               css={merge(
                 {},
                 styles.itemText,
-                path === id ? styles.itemTextActive : {},
+                asPath === id ? styles.itemTextActive : {},
               )}
             >
               <Icon css={styles.itemTextIcon} icon={icon} />
@@ -64,7 +63,7 @@ const Navigation = ({ router, store, dispatch }) => {
                 {},
                 styles.item,
                 css,
-                path === id ? styles.itemActive : {},
+                asPath === id ? styles.itemActive : {},
               )}
               onClick={onClick}
             >
@@ -77,7 +76,7 @@ const Navigation = ({ router, store, dispatch }) => {
                   {},
                   styles.item,
                   css,
-                  path === id ? styles.itemActive : {},
+                  asPath === id ? styles.itemActive : {},
                 )}
               >
                 {inner}

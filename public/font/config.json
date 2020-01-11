@@ -169,10 +169,46 @@
       "src": "entypo"
     },
     {
-      "uid": "5d2d07f112b8de19f2c0dbfec3e42c05",
+      "uid": "9bd60140934a1eb9236fd7a8ab1ff6ba",
       "css": "loading",
-      "code": 59448,
+      "code": 59444,
       "src": "fontelico"
+    },
+    {
+      "uid": "0a3192de65a73ca1501b073ad601f87d",
+      "css": "sort",
+      "code": 59417,
+      "src": "entypo"
+    },
+    {
+      "uid": "f08fd9b6b61b3670cf88ed64da891cae",
+      "css": "cloud",
+      "code": 59418,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "66a40c7c0ee5ea61f4b6aa0dd0f9ebb9",
+      "css": "cloud-connect",
+      "code": 59419,
+      "src": "entypo"
+    },
+    {
+      "uid": "c77fd2fd065b5fe16d6f2b41e190b266",
+      "css": "pencil",
+      "code": 59420,
+      "src": "entypo"
+    },
+    {
+      "uid": "2d76f2c8d13be40694ecadfea7fb83c3",
+      "css": "logout",
+      "code": 59421,
+      "src": "entypo"
+    },
+    {
+      "uid": "a204f0fa972408eaae5a363c444991b2",
+      "css": "login",
+      "code": 59422,
+      "src": "entypo"
     },
     {
       "uid": "1cbd1fb0b01f1e777d429a5f9e56cb41",

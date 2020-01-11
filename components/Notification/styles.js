@@ -1,6 +1,6 @@
 import { transparentize } from 'polished';
 import { keyframes } from '@emotion/core';
-import { colors, spacing } from '../../lib/styling';
+import { colors, spacing, zIndexes } from '../../lib/styling';
 
 const slideInAndOut = keyframes({
   '0%': {
@@ -31,6 +31,7 @@ export default {
     padding: `${spacing.d}px ${spacing.e}px`,
     background: transparentize(0, colors.white),
     borderBottom: `1px solid ${colors.border}`,
+    zIndex: zIndexes.notification,
   },
   iconSuccess: {
     color: colors.a,

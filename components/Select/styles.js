@@ -8,6 +8,18 @@ import {
 
 export default {
   root: {
+    position: 'relative',
+  },
+  icon: {
+    position: 'absolute',
+    top: 0,
+    left: spacing.e,
+    height: '100%',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  select: {
     background: colors.white,
     padding: `0 ${spacing.e}px`,
     height: fontSizes.c * lineHeights.normal * 2,
@@ -20,5 +32,8 @@ export default {
     fontSize: fontSizes.c,
     lineHeight: lineHeights.close,
     color: colors.text,
+  },
+  selectWithIcon: {
+    paddingLeft: 46,
   },
 };

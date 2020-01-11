@@ -6,26 +6,19 @@ export default {
     [`@media (max-width: ${bps.b}px)`]: {
       padding: spacing.pageMobile,
     },
+    maxWidth: 600,
   },
   inputs: {
     marginTop: spacing.e,
+  },
+  sync: {
+    marginTop: spacing.c,
     maxWidth: 400,
-    '& > div:nth-of-type(n + 2)': {
-      marginTop: spacing.c,
-    },
   },
   statuses: {
     marginTop: spacing.e,
   },
   statusLine: {
     display: 'flex',
-  },
-  icons: {
-    marginTop: spacing.e,
-    display: 'grid',
-    gridAutoFlow: 'column',
-    gridAutoColumns: 'auto',
-    justifyContent: 'start',
-    gridGap: spacing.c,
   },
 };

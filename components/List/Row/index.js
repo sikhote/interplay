@@ -2,20 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { merge } from 'lodash';
 import Text from '../../Text';
+import Icon from '../../Icon';
 import styles from './styles';
 
 const Row = ({
-  className,
-  columns,
-  currentPath,
-  selections,
-  source,
-  index,
-  onRowClick,
-  onRowDoubleClick,
-  rowData,
   style,
+  index,
+  rowData,
+  source,
+  selections,
+  currentPath,
+  columns,
+  onClick,
+  onDoubleClick,
+  onClickColumn,
   isHeader,
+  sortBy,
 }) => {
   const isSelected =
     source === 'playlists'
@@ -26,7 +28,6 @@ const Row = ({
 
   return (
     <div
-      className={className}
       css={merge(
         {},
         style,
@@ -37,55 +38,60 @@ const Row = ({
         isSelected ? styles.rootSelected : {},
         rowData.path === currentPath ? styles.rootActive : {},
       )}
-      role="row"
-      tabIndex={0}
-      {...(isHeader
-        ? {}
-        : {
-            onClick: event => onRowClick({ event, index, rowData }),
-            onDoubleClick: event => onRowDoubleClick({ event, index, rowData }),
-          })}
+      onClick={() => setTimeout(() => onClick({ index, rowData }), 10)}
+      onDoubleClick={() => onDoubleClick({ index, rowData })}
     >
-      {columns.map(({ props, key }) => (
+      {columns.map(({ key, title }) => (
         <Text
           key={key}
           css={merge({}, styles.column, isHeader ? styles.columnHeader : {})}
           {...(isHeader
             ? {
-                color: 'textFaded',
+                color: sortBy === key ? 'text' : 'textFaded',
                 fontWeight: 'bold',
                 fontSize: 'b',
+                onClick: () => onClickColumn(key),
               }
             : {})}
-          {...props}
-        />
+        >
+          {isHeader ? title : rowData[key]}
+          {isHeader && sortBy === key && (
+            <Text color="text" fontSize="a">
+              <Icon icon="sort" />
+            </Text>
+          )}
+        </Text>
       ))}
     </div>
   );
 };
 
 Row.propTypes = {
-  className: PropTypes.any.isRequired,
   columns: PropTypes.array.isRequired,
   index: PropTypes.number,
-  onRowClick: PropTypes.func,
-  onRowDoubleClick: PropTypes.func,
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
+  onClickColumn: PropTypes.func,
   rowData: PropTypes.any,
-  style: PropTypes.any.isRequired,
+  style: PropTypes.any,
   currentPath: PropTypes.string,
   selections: PropTypes.array,
   source: PropTypes.string.isRequired,
   isHeader: PropTypes.bool,
+  sortBy: PropTypes.string,
 };
 
 Row.defaultProps = {
   currentPath: '',
+  style: {},
   isHeader: false,
   selections: [],
   rowData: {},
-  onRowClick: () => null,
-  onRowDoubleClick: () => null,
+  onClick: () => null,
+  onDoubleClick: () => null,
+  onClickColumn: () => null,
   index: null,
+  sortBy: undefined,
 };
 
 export default Row;

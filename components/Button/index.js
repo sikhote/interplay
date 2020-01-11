@@ -6,6 +6,7 @@ import Icon from '../Icon';
 import styles from './styles';
 
 const Button = ({
+  theme,
   children,
   icon,
   shape,
@@ -19,6 +20,8 @@ const Button = ({
     css={merge(
       {},
       styles.root,
+      theme === 'primary' ? styles.rootIsPrimary : {},
+      theme === 'secondary' ? styles.rootIsSecondary : {},
       loading && !allowLoadingClicks ? styles.rootIsLoading : {},
       shape === 'circle' ? styles.rootIsCircle : {},
       size === 'small' ? styles.rootIsSmall : {},
@@ -27,11 +30,20 @@ const Button = ({
     {...props}
   >
     <Text color="white" css={loading && styles.childrenIsLoading}>
-      {icon && <Icon icon={icon} />}
+      {icon && (
+        <Icon
+          icon={icon}
+          css={merge({}, children ? styles.iconWithChildren : {})}
+        />
+      )}
       {children}
     </Text>
     <Icon
-      css={merge({}, styles.icon, loading ? styles.iconIsLoading : {})}
+      css={merge(
+        {},
+        styles.loadingIcon,
+        loading ? styles.loadingIconIsLoading : {},
+      )}
       icon="loading animate-spin"
     />
   </div>
@@ -44,6 +56,7 @@ Button.propTypes = {
   shape: PropTypes.string,
   size: PropTypes.string,
   allowLoadingClicks: PropTypes.bool,
+  theme: PropTypes.string,
 };
 
 Button.defaultProps = {
@@ -53,6 +66,7 @@ Button.defaultProps = {
   shape: 'rectangle',
   size: 'medium',
   allowLoadingClicks: false,
+  theme: 'primary',
 };
 
 export default Button;

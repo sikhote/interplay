@@ -19,6 +19,9 @@ export default {
     display: 'flex',
     alignItems: 'center',
   },
+  iconIsSmall: {
+    left: spacing.d,
+  },
   input: {
     background: colors.white,
     padding: `0 ${spacing.e}px`,
@@ -35,5 +38,12 @@ export default {
   },
   inputWithIcon: {
     paddingLeft: 46,
+  },
+  inputIsSmall: {
+    height: fontSizes.c * lineHeights.normal * 1.5,
+    padding: `0 ${spacing.d}px`,
+  },
+  inputWithIconIsSmall: {
+    paddingLeft: 30,
   },
 };

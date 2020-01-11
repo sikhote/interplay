@@ -35,10 +35,7 @@ export default {
       maxWidth: 90,
     },
   },
-  tableContainer: {
+  list: {
     overflow: 'hidden',
-    '.ReactVirtualized__Grid': {
-      outline: 'none',
-    },
   },
 };

@@ -11,11 +11,8 @@ import H2 from '../H2';
 import { titleToSlug } from '../../lib/playlists';
 import styles from './styles';
 
-const Modifiers = ({
-  source,
-  dispatch,
-  store: { modifiers, playlists, files },
-}) => {
+const Modifiers = ({ source, dispatch, store }) => {
+  const { modifiers, playlists, files } = store;
   const [selectedPlaylist, selectedPlaylistSet] = useState(undefined);
   const [playlistName, playlistNameSet] = useState(undefined);
   const hasSelections = Boolean(modifiers.selections.length);
@@ -62,7 +59,7 @@ const Modifiers = ({
     const slug = titleToSlug(playlistName);
     currentPlaylist.name = playlistName;
     dispatch({ type: 'playlists-update', payload: currentPlaylist });
-    Router.push(`/playlists?id=${slug}`, `/playlists/${slug}`);
+    Router.push('/playlists/[id]', `/playlists/${slug}`);
   };
 
   const moveTracks = isMovingUp => {
@@ -182,7 +179,7 @@ const Modifiers = ({
                     value: name,
                     title: name,
                   }))}
-                  onChange={value => selectedPlaylistSet(value)}
+                  onChange={e => selectedPlaylistSet(e.target.value)}
                 />
                 <Button
                   shape="circle"

@@ -10,7 +10,6 @@ import {
 export default {
   root: {
     position: 'relative',
-    background: colors.a,
     padding: `0 ${spacing.e}px`,
     height: fontSizes.c * lineHeights.normal * 2,
     display: 'flex',
@@ -19,8 +18,17 @@ export default {
     borderRadius: borderRadii.a,
     cursor: 'pointer',
     userSelect: 'none',
+  },
+  rootIsPrimary: {
+    background: colors.a,
     '&:active': {
       background: lighten(0.1, colors.a),
+    },
+  },
+  rootIsSecondary: {
+    background: colors.c,
+    '&:active': {
+      background: lighten(0.1, colors.c),
     },
   },
   rootIsLoading: {
@@ -39,7 +47,10 @@ export default {
   childrenIsLoading: {
     visibility: 'hidden',
   },
-  icon: {
+  iconWithChildren: {
+    marginRight: spacing.c,
+  },
+  loadingIcon: {
     display: 'none',
     position: 'absolute',
     top: 0,
@@ -50,7 +61,7 @@ export default {
     justifyContent: 'center',
     color: colors.white,
   },
-  iconIsLoading: {
+  loadingIconIsLoading: {
     display: 'flex',
   },
 };

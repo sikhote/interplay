@@ -6,15 +6,15 @@ import Text from '../Text';
 import styles from './styles';
 
 const Select = ({ options, value, icon, ...props }) => (
-  <div css={styles.root}>
+  <div style={styles.root}>
     {icon && (
-      <Text color="text" css={styles.icon}>
+      <Text color="text" style={styles.icon}>
         <Icon icon={icon} />
       </Text>
     )}
     <select
       value={value}
-      css={merge({}, styles.select, icon ? styles.selectWithIcon : {})}
+      style={merge({}, styles.select, icon ? styles.selectWithIcon : {})}
       {...props}
     >
       <option value="">-</option>

@@ -1,11 +1,12 @@
 import { spacing, bps } from '../../lib/styling';
 
-export default {
+export default ({ width }) => ({
   root: {
     width: '100%',
     height: '100%',
     display: 'grid',
     gridTemplateRows: 'auto 1fr',
+    background: 'red'
   },
   header: {
     paddingTop: spacing.page,
@@ -15,10 +16,12 @@ export default {
     display: 'grid',
     gridTemplateColumns: '1fr auto',
     gridGap: spacing.d,
-    [`@media (max-width: ${bps.b}px)`]: {
-      padding: spacing.pageMobile,
-      paddingBottom: spacing.c,
-    },
+    ...(width < bps.b
+      ? {
+          padding: spacing.pageMobile,
+          paddingBottom: spacing.c,
+        }
+      : {}),
   },
   h1: {
     paddingBottom: 0,
@@ -31,11 +34,13 @@ export default {
   },
   search: {
     maxWidth: 240,
-    [`@media (max-width: ${bps.b}px)`]: {
-      maxWidth: 90,
-    },
+    ...(width < bps.b
+      ? {
+          maxWidth: 90,
+        }
+      : {}),
   },
   list: {
     overflow: 'hidden',
   },
-};
+});

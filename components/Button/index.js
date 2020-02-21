@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { merge } from 'lodash';
+import { TouchableOpacity, View } from 'react-native';
 import Text from '../Text';
 import Icon from '../Icon';
 import styles from './styles';
@@ -13,40 +13,42 @@ const Button = ({
   loading,
   allowLoadingClicks,
   size,
-  ...props
+  style,
+  onPress,
 }) => (
-  <div
-    role="button"
-    css={merge(
+  <TouchableOpacity
+    style={Object.assign(
       {},
       styles.root,
-      theme === 'primary' ? styles.rootIsPrimary : {},
-      theme === 'secondary' ? styles.rootIsSecondary : {},
+      theme === 'secondary' ? styles.rootIsSecondary : styles.rootIsPrimary,
       loading && !allowLoadingClicks ? styles.rootIsLoading : {},
       shape === 'circle' ? styles.rootIsCircle : {},
       size === 'small' ? styles.rootIsSmall : {},
       size === 'small' && shape === 'circle' ? styles.rootIsSmallCircle : {},
+      style,
     )}
-    {...props}
+    onPress={!loading || (loading && allowLoadingClicks) ? onPress : undefined}
   >
-    <Text color="white" css={loading && styles.childrenIsLoading}>
-      {icon && (
-        <Icon
-          icon={icon}
-          css={merge({}, children ? styles.iconWithChildren : {})}
-        />
-      )}
-      {children}
-    </Text>
-    <Icon
-      css={merge(
-        {},
-        styles.loadingIcon,
-        loading ? styles.loadingIconIsLoading : {},
-      )}
-      icon="loading animate-spin"
-    />
-  </div>
+    <View>
+      <Text color="white" style={loading ? styles.childrenIsLoading : {}}>
+        {icon && (
+          <Icon
+            icon={icon}
+            style={Object.assign({}, children ? styles.iconWithChildren : {})}
+          />
+        )}
+        {children}
+      </Text>
+      <Icon
+        style={Object.assign(
+          {},
+          styles.loadingIcon,
+          loading ? styles.loadingIconIsLoading : {},
+        )}
+        icon="loading animate-spin"
+      />
+    </View>
+  </TouchableOpacity>
 );
 
 Button.propTypes = {
@@ -57,6 +59,8 @@ Button.propTypes = {
   size: PropTypes.string,
   allowLoadingClicks: PropTypes.bool,
   theme: PropTypes.string,
+  style: PropTypes.object,
+  onPress: PropTypes.func.isRequired,
 };
 
 Button.defaultProps = {
@@ -67,6 +71,7 @@ Button.defaultProps = {
   size: 'medium',
   allowLoadingClicks: false,
   theme: 'primary',
+  style: {},
 };
 
 export default Button;

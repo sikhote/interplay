@@ -1,4 +1,5 @@
 import React from 'react';
+import { Dimensions } from 'react-native';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
@@ -12,10 +13,9 @@ import Text from '../Text';
 import getFileInDirection from '../../lib/get-file-in-direction';
 import { filesGetUrl } from '../../lib/actions/files';
 import { colors } from '../../lib/styling';
-import styles from './styles';
+import getStyles from './get-styles';
 
 const prepareFile = throttle(callback => callback(), 10000, { leading: true });
-const Divider = () => <Text css={styles.divider}> - </Text>;
 
 class Player extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -70,6 +70,9 @@ class Player extends React.Component {
   }
 
   render() {
+    const dimensions = Dimensions.get('window');
+    const styles = getStyles(dimensions);
+    const Divider = () => <Text style={styles.divider}> - </Text>;
     const { played, playedSeconds, path, isFullscreen } = this.state;
     const { dispatch, store } = this.props;
     const { files, player, playlists, lists } = store;
@@ -156,13 +159,13 @@ class Player extends React.Component {
     );
 
     return (
-      <div css={styles.root}>
+      <div style={styles.root}>
         <ReactPlayer {...config} />
-        <div css={styles.main}>
-          <div css={styles.info}>
+        <div style={styles.main}>
+          <div style={styles.info}>
             {path ? (
               <>
-                <Text fontWeight="bold" css={styles.name}>
+                <Text fontWeight="bold" style={styles.name}>
                   {name}
                 </Text>
                 {category && (
@@ -188,13 +191,13 @@ class Player extends React.Component {
               <Text>Add credentials and play some media</Text>
             )}
           </div>
-          <div css={styles.directions}>
-            <LoopButton css={styles.loopDirections} />
-            <div css={styles.buttons}>
+          <div style={styles.directions}>
+            <LoopButton style={styles.loopDirections} />
+            <div style={styles.buttons}>
               <Button
                 shape="circle"
                 icon="fast-backward"
-                onClick={() =>
+                onPress={() =>
                   filesGetUrl({
                     dispatch,
                     store,
@@ -214,7 +217,7 @@ class Player extends React.Component {
                 shape="circle"
                 icon={playing ? 'pause' : 'play'}
                 loading={loading}
-                onClick={() => {
+                onPress={() => {
                   if (!playing) {
                     filesGetUrl({
                       dispatch,
@@ -234,7 +237,7 @@ class Player extends React.Component {
               <Button
                 shape="circle"
                 icon="fast-forward"
-                onClick={() =>
+                onPress={() =>
                   filesGetUrl({
                     dispatch,
                     store,
@@ -251,12 +254,12 @@ class Player extends React.Component {
                 }
               />
             </div>
-            <ShuffleButton css={styles.shuffleDirections} />
+            <ShuffleButton style={styles.shuffleDirections} />
           </div>
-          <div css={styles.sound}>
-            <div css={styles.switches}>
-              <ShuffleButton css={styles.shuffleSound} />
-              <LoopButton css={styles.loopSound} />
+          <div style={styles.sound}>
+            <div style={styles.switches}>
+              <ShuffleButton style={styles.shuffleSound} />
+              <LoopButton style={styles.loopSound} />
               <Switch
                 color={colors.c}
                 checkedIcon="volume"
@@ -285,7 +288,7 @@ class Player extends React.Component {
             />
           </div>
           <Slider
-            css={styles.progress}
+            style={styles.progress}
             value={played}
             min={0}
             max={1}

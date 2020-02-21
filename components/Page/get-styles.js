@@ -1,16 +1,15 @@
-import { keyframes } from '@emotion/core';
 import { colors, bps } from '../../lib/styling';
 
-const toast = keyframes({
-  '0%': {
-    transform: 'scaleX(1)',
-  },
-  '100%': {
-    transform: 'scaleX(0)',
-  },
-});
+// const toast = keyframes({
+//   '0%': {
+//     transform: 'scaleX(1)',
+//   },
+//   '100%': {
+//     transform: 'scaleX(0)',
+//   },
+// });
 
-export default {
+export default ({ width }) => ({
   global: {
     '*': {
       margin: 0,
@@ -34,7 +33,7 @@ export default {
       width: '100%',
     },
     '.Toastify__progress-bar': {
-      animation: `${toast} linear 1`,
+      // animation: `${toast} linear 1`,
     },
     '.Toastify__close-button': {
       display: 'none',
@@ -50,15 +49,17 @@ export default {
       'player player'
     `,
     height: '100vh',
-    [`@media (max-width: ${bps.b}px)`]: {
-      gridTemplateColumns: '1fr',
-      gridTemplateRows: 'auto 1fr auto',
-      gridTemplateAreas: `
-        'navigation'
-        'main'
-        'player'
-      `,
-    },
+    ...(width < bps.b
+      ? {
+          gridTemplateColumns: '1fr',
+          gridTemplateRows: 'auto 1fr auto',
+          gridTemplateAreas: `
+          'navigation'
+          'main'
+          'player'
+        `,
+        }
+      : {}),
   },
   main: {
     overflowY: 'auto',
@@ -72,4 +73,4 @@ export default {
     justifyContent: 'center',
     height: '100vh',
   },
-};
+});

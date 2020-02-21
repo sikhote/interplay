@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Text as RNText } from 'react-native';
 import {
   colors,
   fontSizes,
@@ -15,26 +16,26 @@ const Text = ({
   fontWeight,
   fontFamily,
   lineHeight,
-  width,
   textAlign,
   textTransform,
+  style,
   ...props
 }) => (
-  <div
-    css={{
+  <RNText
+    style={{
       fontSize: fontSizes[fontSize],
       color: colors[color],
       fontWeight: fontWeights[fontWeight],
       fontFamily: fontFamilies[fontFamily],
       lineHeight: lineHeights[lineHeight],
-      width,
       textAlign,
       textTransform,
+      ...style,
     }}
     {...props}
   >
     {children}
-  </div>
+  </RNText>
 );
 
 Text.propTypes = {
@@ -44,7 +45,6 @@ Text.propTypes = {
   fontWeight: PropTypes.string,
   fontFamily: PropTypes.string,
   lineHeight: PropTypes.string,
-  width: PropTypes.any,
   textAlign: PropTypes.string,
   style: PropTypes.object,
   className: PropTypes.string,
@@ -58,7 +58,6 @@ Text.defaultProps = {
   fontWeight: 'normal',
   fontFamily: 'normal',
   lineHeight: 'normal',
-  width: undefined,
   textAlign: 'left',
   style: {},
   className: '',

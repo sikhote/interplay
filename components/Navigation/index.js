@@ -1,12 +1,12 @@
 import React from 'react';
+import { useWindowDimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
-import { merge } from 'lodash';
 import Icon from '../Icon';
 import Text from '../Text';
 import { titleToSlug } from '../../lib/playlists';
-import styles from './styles';
+import getStyles from './get-styles';
 
 const Navigation = ({ router, store, dispatch }) => {
   const {
@@ -14,7 +14,8 @@ const Navigation = ({ router, store, dispatch }) => {
     cloud: { status },
   } = store;
   const { asPath } = router;
-  console.log(status)
+  const dimensions = useWindowDimensions();
+  const styles = getStyles(dimensions);
   const items =
     status === 'connected'
       ? [
@@ -27,42 +28,42 @@ const Navigation = ({ router, store, dispatch }) => {
             id: `/playlists/${titleToSlug(name)}`,
             title: name,
             icon: 'star',
-            css: styles.itemPlaylist,
+            style: styles.itemPlaylist,
           })),
           {
             id: 'playlist-add',
             title: 'Add',
             icon: 'list-add',
-            css: styles.itemPlaylist,
+            style: styles.itemPlaylist,
             onClick: () => dispatch({ type: 'playlists-add' }),
           },
         ]
       : [];
 
   return (
-    <div css={styles.root}>
-      <div css={styles.inner}>
-        {items.map(({ id, href, title, icon, css = {}, onClick }) => {
+    <div style={styles.root}>
+      <div style={styles.inner}>
+        {items.map(({ id, href, title, icon, style = {}, onClick }) => {
           const inner = (
             <Text
-              css={merge(
+              style={Object.assign(
                 {},
                 styles.itemText,
                 asPath === id ? styles.itemTextActive : {},
               )}
             >
-              <Icon css={styles.itemTextIcon} icon={icon} />
-              <span css={styles.itemTextContent}>{title}</span>
+              <Icon style={styles.itemTextIcon} icon={icon} />
+              <span style={styles.itemTextContent}>{title}</span>
             </Text>
           );
 
           return onClick ? (
             <div
               key={id}
-              css={merge(
+              style={Object.assign(
                 {},
                 styles.item,
-                css,
+                style,
                 asPath === id ? styles.itemActive : {},
               )}
               onClick={onClick}
@@ -72,10 +73,10 @@ const Navigation = ({ router, store, dispatch }) => {
           ) : (
             <Link key={id} as={id} href={href || id}>
               <a
-                css={merge(
+                style={Object.assign(
                   {},
                   styles.item,
-                  css,
+                  style,
                   asPath === id ? styles.itemActive : {},
                 )}
               >

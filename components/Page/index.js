@@ -1,8 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
+import { useWindowDimensions } from 'react-native';
 import PropTypes from 'prop-types';
-import { Global } from '@emotion/core';
 import Head from 'next/head';
-import { ToastContainer } from 'react-toastify';
 import Navigation from '../Navigation';
 import Player from '../Player';
 import Icon from '../Icon';
@@ -14,7 +13,7 @@ import {
   cloudSavePlaylists,
   cloudSaveOther,
 } from '../../lib/actions/cloud';
-import styles from './styles';
+import getStyles from './get-styles';
 
 const Page = ({ Component, pageProps }) => {
   const [store, dispatch] = useReducer(reducer, null, getInitialState);
@@ -28,6 +27,8 @@ const Page = ({ Component, pageProps }) => {
       other: { changes: otherChanges },
     },
   } = store;
+  const dimensions = useWindowDimensions();
+  const styles = getStyles(dimensions);
 
   useEffect(() => {
     if (status === 'initial') {
@@ -74,17 +75,15 @@ const Page = ({ Component, pageProps }) => {
         <link rel="stylesheet" href="/css/animation.css" />
         <link rel="stylesheet" href="/css/fontello.css" />
       </Head>
-      <Global styles={styles.global} />
-      <ToastContainer />
       {status === 'initial' ? (
-        <div css={styles.loading}>
-          <Icon css={styles.icon} icon="loading animate-spin" />
+        <div style={styles.loading}>
+          <Icon style={styles.icon} icon="loading animate-spin" />
         </div>
       ) : (
-        <div css={styles.container}>
+        <div style={styles.container}>
           <Player {...{ store, dispatch }} />
           <Navigation {...{ store, dispatch }} />
-          <div css={styles.main}>
+          <div style={styles.main}>
             <Component {...{ pageProps, store, dispatch }} />
           </div>
         </div>

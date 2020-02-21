@@ -15,7 +15,7 @@ const SettingsFields = ({ store, dispatch, ...props }) => {
   } = store;
 
   return (
-    <div {...props} css={styles.root}>
+    <div {...props} style={styles.root}>
       <Select
         disabled={status === 'connected'}
         icon="cloud"
@@ -30,48 +30,52 @@ const SettingsFields = ({ store, dispatch, ...props }) => {
         }}
       />
       <Input
-        disabled={status === 'connected'}
+        style={styles.marginTop}
+        editable={status !== 'connected'}
         icon="user"
         placeholder="Person"
         value={user}
-        onChange={e => {
-          Cookies.set('user', e.target.value);
+        onChangeText={text => {
+          Cookies.set('user', text);
           dispatch({
             type: 'cloud-update',
-            payload: ['user', e.target.value],
+            payload: ['user', text],
           });
         }}
       />
       <Input
-        disabled={status === 'connected'}
+        style={styles.marginTop}
+        editable={status !== 'connected'}
         icon="key"
         placeholder="ABC123"
         value={key}
-        onChange={e => {
-          Cookies.set('key', e.target.value);
+        onChangeText={text => {
+          Cookies.set('key', text);
           dispatch({
             type: 'cloud-update',
-            payload: ['key', e.target.value],
+            payload: ['key', text],
           });
         }}
       />
       <Input
-        disabled={status === 'connected'}
+        style={styles.marginTop}
+        editable={status !== 'connected'}
         icon="folder"
         placeholder="itunes/itunes music"
         value={path}
-        onChange={e => {
-          Cookies.set('path', e.target.value.toLowerCase());
+        onChangeText={text => {
+          Cookies.set('path', text.toLowerCase());
           dispatch({
             type: 'cloud-update',
-            payload: ['path', e.target.value.toLowerCase()],
+            payload: ['path', text.toLowerCase()],
           });
         }}
       />
       {status === 'connected' && (
         <Button
+          style={styles.marginTop}
           icon="logout"
-          onClick={() => {
+          onPress={() => {
             dispatch({
               type: 'cloud-update',
               payload: ['status', 'disconnected'],
@@ -84,9 +88,10 @@ const SettingsFields = ({ store, dispatch, ...props }) => {
       )}
       {status !== 'connected' && (
         <Button
+          style={styles.marginTop}
           icon="login"
           loading={status === 'connecting'}
-          onClick={() => {
+          onPress={() => {
             dispatch({
               type: 'cloud-update',
               payload: ['status', 'connecting'],

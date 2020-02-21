@@ -4,6 +4,7 @@ import { get } from 'lodash';
 import Router from 'next/router';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
+import { useWindowDimensions, View } from 'react-native';
 import Input from '../Input';
 import Button from '../Button';
 import H1 from '../H1';
@@ -17,7 +18,7 @@ import { titleToSlug } from '../../lib/playlists';
 import { filesGetUrl } from '../../lib/actions/files';
 import getListColumns from '../../lib/get-list-columns';
 import Row from './Row';
-import styles from './styles';
+import getStyles from './get-styles';
 
 const List = ({ title, header, source, store, dispatch }) => {
   const { lists, player, files, playlists, modifiers } = store;
@@ -28,6 +29,8 @@ const List = ({ title, header, source, store, dispatch }) => {
   const sortedData = getSortedData(searchedData, sortBy, sortDirection);
   const currentPath = get(player, 'file.path');
   const listRef = useRef(null);
+  const dimensions = useWindowDimensions();
+  const styles = getStyles(dimensions);
 
   useEffect(() => {
     dispatch({ type: 'modifiers-show-update', payload: false });
@@ -73,25 +76,25 @@ const List = ({ title, header, source, store, dispatch }) => {
   };
 
   return (
-    <div css={styles.root}>
+    <View style={styles.root}>
       <PageTitle title={title} />
-      <div css={styles.header}>
-        <H1 css={styles.h1}>{header}</H1>
-        <div css={styles.side}>
+      <View style={styles.header}>
+        <H1 style={styles.h1}>{header}</H1>
+        <View style={styles.side}>
           <Input
             size="small"
-            css={styles.search}
+            style={styles.search}
             icon="search"
             placeholder="Search"
             value={search}
-            onChange={e => saveListSettings({ search: e.target.value })}
+            onChangeText={text => saveListSettings({ search: text })}
           />
           {source !== 'playlists' && player.source === source && (
             <Button
               size="small"
               shape="circle"
               icon="location"
-              onClick={() => {
+              onPress={() => {
                 const file = get(player, 'file') || {};
                 const currentIndex = sortedData.findIndex(
                   ({ path }) => path === file.path,
@@ -104,16 +107,16 @@ const List = ({ title, header, source, store, dispatch }) => {
             size="small"
             shape="circle"
             icon="switch"
-            onClick={() =>
+            onPress={() =>
               dispatch({
                 type: 'modifiers-show-update',
                 payload: !modifiers.show,
               })
             }
           />
-        </div>
-      </div>
-      <div css={styles.list}>
+        </View>
+      </View>
+      <View style={styles.list}>
         <Modifiers source={source} store={store} dispatch={dispatch} />
         <Row
           {...{
@@ -160,8 +163,8 @@ const List = ({ title, header, source, store, dispatch }) => {
             </FixedSizeList>
           )}
         </AutoSizer>
-      </div>
-    </div>
+      </View>
+    </View>
   );
 };
 

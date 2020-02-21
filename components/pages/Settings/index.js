@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useWindowDimensions } from 'react-native';
 import moment from 'moment';
 import { get, capitalize } from 'lodash';
 import Button from '../../Button';
@@ -11,25 +12,27 @@ import Text from '../../Text';
 import Icon from '../../Icon';
 import PageTitle from '../../PageTitle';
 import notifier from '../../../lib/notifier';
-import styles from './styles';
+import getStyles from './get-styles';
 
 const Settings = ({ store, dispatch }) => {
   const {
     cloud: { files },
   } = store;
+  const dimensions = useWindowDimensions();
+  const styles = getStyles(dimensions);
 
   return (
-    <div css={styles.root}>
+    <div style={styles.root}>
       <PageTitle title="settings" />
       <H1>Settings</H1>
       <SettingsFields {...{ store, dispatch }} />
       <Button
         allowLoadingClicks
-        css={styles.sync}
+        style={styles.sync}
         theme="secondary"
         icon={files.status === 'syncing' ? 'cancel' : 'arrows-ccw'}
         loading={files.status === 'syncing'}
-        onClick={() => {
+        onPress={() => {
           if (files.status === 'syncing') {
             dispatch({
               type: 'cloud-update',
@@ -82,7 +85,7 @@ const Settings = ({ store, dispatch }) => {
       >
         Sync Files
       </Button>
-      <div css={styles.statuses}>
+      <div style={styles.statuses}>
         {[
           { ...store.cloud, key: 'cloud' },
           ...['files', 'playlists', 'other'].map(key => ({
@@ -93,7 +96,7 @@ const Settings = ({ store, dispatch }) => {
           const success = ['connected', 'synced'].includes(status);
 
           return (
-            <Text key={key} css={styles.statusLine}>
+            <Text key={key} style={styles.statusLine}>
               <Text color={success ? 'a' : 'c'}>
                 <Icon icon={success ? 'check' : 'cancel'} />
               </Text>

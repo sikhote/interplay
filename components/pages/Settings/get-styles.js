@@ -1,12 +1,14 @@
 import { spacing, bps } from '../../../lib/styling';
 
-export default {
+export default ({ width }) => ({
   root: {
     padding: spacing.page,
-    [`@media (max-width: ${bps.b}px)`]: {
-      padding: spacing.pageMobile,
-    },
     maxWidth: 600,
+    ...(width < bps.b
+      ? {
+          padding: spacing.pageMobile,
+        }
+      : {}),
   },
   inputs: {
     marginTop: spacing.e,
@@ -21,4 +23,4 @@ export default {
   statusLine: {
     display: 'flex',
   },
-};
+});

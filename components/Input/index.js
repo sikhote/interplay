@@ -1,22 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { merge } from 'lodash';
+import { TextInput, View } from 'react-native';
 import Text from '../Text';
 import Icon from '../Icon';
 import styles from './styles';
 
-const Input = ({ icon, size, ...props }) => (
-  <div css={styles.root}>
+const Input = ({ icon, size, style, ...props }) => (
+  <View style={Object.assign({}, styles.root, style)}>
     {icon && (
       <Text
         color="text"
-        css={merge({}, styles.icon, size === 'small' ? styles.iconIsSmall : {})}
+        style={merge(
+          {},
+          styles.icon,
+          size === 'small' ? styles.iconIsSmall : {},
+        )}
       >
         <Icon icon={icon} />
       </Text>
     )}
-    <input
-      css={merge(
+    <TextInput
+      style={merge(
         {},
         styles.input,
         icon ? styles.inputWithIcon : {},
@@ -25,17 +30,19 @@ const Input = ({ icon, size, ...props }) => (
       )}
       {...props}
     />
-  </div>
+  </View>
 );
 
 Input.propTypes = {
   icon: PropTypes.string,
   size: PropTypes.string,
+  style: PropTypes.object,
 };
 
 Input.defaultProps = {
   icon: '',
   size: 'medium',
+  style: {},
 };
 
 export default Input;

@@ -28,7 +28,7 @@ const Row = ({
 
   return (
     <div
-      css={merge(
+      style={merge(
         {},
         style,
         styles.root,
@@ -44,7 +44,7 @@ const Row = ({
       {columns.map(({ key, title }) => (
         <Text
           key={key}
-          css={merge({}, styles.column, isHeader ? styles.columnHeader : {})}
+          style={merge({}, styles.column, isHeader ? styles.columnHeader : {})}
           {...(isHeader
             ? {
                 color: sortBy === key ? 'text' : 'textFaded',

@@ -19,7 +19,7 @@ const Switch = ({
     size={size}
     shape="circle"
     icon={checked ? checkedIcon : unCheckedIcon}
-    css={merge(
+    style={merge(
       {},
       styles.root,
       checked
@@ -32,7 +32,7 @@ const Switch = ({
         : {},
     )}
     role="button"
-    onClick={() => onChange(!checked)}
+    onPress={() => onChange(!checked)}
     {...props}
   />
 );

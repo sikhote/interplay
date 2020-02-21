@@ -25,18 +25,18 @@ export default {
     borderRadius: borderRadii.b,
     position: 'relative',
     zIndex: 1,
-    '&::-webkit-slider-runnable-track': {
+    '&::WebkitSliderRunnableTrack': {
       height: '100%',
     },
-    '&::-moz-range-track': {
+    '&::MozRangeTrack': {
       height: '100%',
     },
-    '&::-ms-track:': {
+    '&::MsTrack': {
       height: '100%',
       color: 'transparent',
       border: 'none',
     },
-    '&::-webkit-slider-thumb': {
+    '&::WebkitSliderThumb': {
       appearance: 'none',
       width: 20,
       height: 20,
@@ -47,7 +47,7 @@ export default {
       position: 'relative',
       top: 2,
     },
-    '&::-moz-range-thumb': {
+    '&::MozRangeThumb': {
       width: 20,
       height: 20,
       borderRadius: borderRadii.b,
@@ -56,7 +56,7 @@ export default {
       borderStyle: 'solid',
       boxSizing: 'border-box',
     },
-    '&::-ms-thumb': {
+    '&::MsThumb': {
       width: 20,
       height: 20,
       borderRadius: borderRadii.b,

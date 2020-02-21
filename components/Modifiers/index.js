@@ -123,16 +123,16 @@ const Modifiers = ({ source, dispatch, store }) => {
         }));
 
   return (
-    <div css={merge({}, styles.root, modifiers.show ? styles.rootShow : {})}>
-      <div css={styles.selections}>
+    <div style={merge({}, styles.root, modifiers.show ? styles.rootShow : {})}>
+      <div style={styles.selections}>
         {selections.map(({ name, key }) => (
-          <Text key={key} css={styles.selection}>
+          <Text key={key} style={styles.selection}>
             {name}
           </Text>
         ))}
       </div>
-      <div css={styles.optionsContainer}>
-        <div css={styles.options}>
+      <div style={styles.optionsContainer}>
+        <div style={styles.options}>
           {hasSelections && (
             <Button
               type="primary"
@@ -148,7 +148,7 @@ const Modifiers = ({ source, dispatch, store }) => {
                 <Input
                   placeholder="Name"
                   value={playlistName === undefined ? source : playlistName}
-                  onChange={e => playlistNameSet(e.target.value)}
+                  onChangeText={text => playlistNameSet(text)}
                 />
                 <Button
                   shape="circle"

@@ -1,10 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Text from '../Text';
+
+// Import { glyphs } from '../../public/font/config';
+// const glyphsMap = glyphs.reduce(
+//   (acc, cur) => ({
+//     ...acc,
+//     [cur.css]: cur.code,
+//   }),
+//   {},
+// );
 
 const Icon = ({ icon, ...props }) => (
-  <span {...props}>
-    <i className={`icon-${icon}`} />
-  </span>
+  <Text color="inherit" {...props}>
+    <span className={`icon-${icon}`} />
+  </Text>
 );
 
 Icon.propTypes = {

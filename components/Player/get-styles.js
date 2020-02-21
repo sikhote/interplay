@@ -1,6 +1,6 @@
 import { spacing, bps, fontWeights } from '../../lib/styling';
 
-export default {
+export default ({ width }) => ({
   root: {
     padding: `${spacing.e}px ${spacing.page}px`,
     background: `linear-gradient(
@@ -12,9 +12,11 @@ export default {
     display: 'grid',
     gridTemplateColumns: '0px 1fr',
     gridArea: 'player',
-    [`@media (max-width: ${bps.b}px)`]: {
-      padding: spacing.pageMobile,
-    },
+    ...(width < bps.b
+      ? {
+          padding: spacing.pageMobile,
+        }
+      : {}),
   },
   player: {
     overflow: 'hidden',
@@ -30,13 +32,15 @@ export default {
     gridTemplateAreas: '"info directions sound" "info progress sound"',
     alignItems: 'center',
     justifyItems: 'stretch',
-    [`@media (max-width: ${bps.b}px)`]: {
-      gridTemplateAreas: '"sound sound" "progress directions" "info info"',
-      gridTemplateColumns: '1fr auto',
-      gridTemplateRows: 'auto auto auto',
-      gridColumnGap: spacing.e,
-      gridRowGap: spacing.e,
-    },
+    ...(width < bps.b
+      ? {
+          gridTemplateAreas: '"sound sound" "progress directions" "info info"',
+          gridTemplateColumns: '1fr auto',
+          gridTemplateRows: 'auto auto auto',
+          gridColumnGap: spacing.e,
+          gridRowGap: spacing.e,
+        }
+      : {}),
   },
   info: {
     gridArea: 'info',
@@ -49,23 +53,29 @@ export default {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
     },
-    [`@media (max-width: ${bps.b}px)`]: {
-      display: 'block',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-    },
+    ...(width < bps.b
+      ? {
+          display: 'block',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }
+      : {}),
   },
   name: {
-    [`@media (max-width: ${bps.b}px)`]: {
-      fontWeight: fontWeights.normal,
-    },
+    ...(width < bps.b
+      ? {
+          fontWeight: fontWeights.normal,
+        }
+      : {}),
   },
   divider: {
     display: 'none',
-    [`@media (max-width: ${bps.b}px)`]: {
-      display: 'inline',
-    },
+    ...(width < bps.b
+      ? {
+          display: 'inline',
+        }
+      : {}),
   },
   directions: {
     display: 'grid',
@@ -75,9 +85,11 @@ export default {
     gridArea: 'directions',
     gridGap: spacing.f,
     justifySelf: 'center',
-    [`@media (max-width: ${bps.b}px)`]: {
-      gridGap: 0,
-    },
+    ...(width < bps.b
+      ? {
+          gridGap: 0,
+        }
+      : {}),
   },
   buttons: {
     display: 'grid',
@@ -85,9 +97,11 @@ export default {
     gridAutoFlow: 'column',
     gridGap: spacing.d,
     alignItems: 'center',
-    [`@media (max-width: ${bps.b}px)`]: {
-      gridGap: spacing.c,
-    },
+    ...(width < bps.b
+      ? {
+          gridGap: spacing.c,
+        }
+      : {}),
   },
   sound: {
     display: 'grid',
@@ -97,36 +111,46 @@ export default {
     alignItems: 'center',
   },
   shuffleSound: {
-    [`@media (min-width: ${bps.b + 1}px)`]: {
-      display: 'none',
-    },
+    ...(width < bps.b
+      ? {
+          display: 'none',
+        }
+      : {}),
   },
   loopSound: {
-    [`@media (min-width: ${bps.b + 1}px)`]: {
-      display: 'none',
-    },
+    ...(width < bps.b
+      ? {
+          display: 'none',
+        }
+      : {}),
   },
   shuffleDirections: {
-    [`@media (max-width: ${bps.b}px)`]: {
-      display: 'none',
-    },
+    ...(width < bps.b
+      ? {
+          display: 'none',
+        }
+      : {}),
   },
   loopDirections: {
-    [`@media (max-width: ${bps.b}px)`]: {
-      display: 'none',
-    },
+    ...(width < bps.b
+      ? {
+          display: 'none',
+        }
+      : {}),
   },
   switches: {
-    [`@media (max-width: ${bps.b}px)`]: {
-      display: 'grid',
-      gridGap: spacing.c,
-      gridTemplateColumns: 'auto auto auto',
-    },
+    ...(width < bps.b
+      ? {
+          display: 'grid',
+          gridGap: spacing.c,
+          gridTemplateColumns: 'auto auto auto',
+        }
+      : {}),
   },
   progress: {
     gridArea: 'progress',
   },
-};
+});
 
 //   .video {
 //     grid-gap: '${spacing.a5}px',

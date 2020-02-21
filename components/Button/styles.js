@@ -1,4 +1,3 @@
-import { lighten } from 'polished';
 import {
   colors,
   spacing,
@@ -12,24 +11,15 @@ export default {
     position: 'relative',
     padding: `0 ${spacing.e}px`,
     height: fontSizes.c * lineHeights.normal * 2,
-    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: borderRadii.a,
-    cursor: 'pointer',
-    userSelect: 'none',
   },
   rootIsPrimary: {
     background: colors.a,
-    '&:active': {
-      background: lighten(0.1, colors.a),
-    },
   },
   rootIsSecondary: {
     background: colors.c,
-    '&:active': {
-      background: lighten(0.1, colors.c),
-    },
   },
   rootIsLoading: {
     pointerEvents: 'none',
@@ -45,7 +35,7 @@ export default {
     width: fontSizes.c * lineHeights.normal * 1.5,
   },
   childrenIsLoading: {
-    visibility: 'hidden',
+    opacity: 0,
   },
   iconWithChildren: {
     marginRight: spacing.c,

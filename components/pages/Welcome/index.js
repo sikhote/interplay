@@ -7,7 +7,7 @@ import PageTitle from '../../PageTitle';
 import styles from './styles';
 
 const Welcome = ({ store, dispatch }) => (
-  <div css={styles.root}>
+  <div style={styles.root}>
     <PageTitle title="log in" />
     <H1>Welcome to Interplay!</H1>
     <Text>
@@ -18,7 +18,7 @@ const Welcome = ({ store, dispatch }) => (
       folder. Settings and playlists are stored in a folder within the specified
       cloud service.
     </Text>
-    <SettingsFields {...{ store, dispatch }} css={styles.settingsFields} />
+    <SettingsFields {...{ store, dispatch }} style={styles.settingsFields} />
   </div>
 );
 

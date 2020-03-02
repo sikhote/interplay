@@ -27,7 +27,7 @@ const Text = ({
       color: colors[color],
       fontWeight: fontWeights[fontWeight],
       fontFamily: fontFamilies[fontFamily],
-      lineHeight: lineHeights[lineHeight],
+      lineHeight: lineHeights[lineHeight] * fontSizes[fontSize],
       textAlign,
       textTransform,
       ...style,

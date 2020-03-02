@@ -6,7 +6,6 @@ export default ({ width }) => ({
     height: '100%',
     display: 'grid',
     gridTemplateRows: 'auto 1fr',
-    background: 'red'
   },
   header: {
     paddingTop: spacing.page,

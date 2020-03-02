@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useWindowDimensions } from 'react-native';
 import { merge } from 'lodash';
 import Text from '../../Text';
 import Icon from '../../Icon';
-import styles from './styles';
+import getStyles from './get-styles';
 
 const Row = ({
   style,
@@ -19,6 +20,8 @@ const Row = ({
   isHeader,
   sortBy,
 }) => {
+  const dimensions = useWindowDimensions();
+  const styles = getStyles(dimensions);
   const isSelected =
     source === 'playlists'
       ? selections.includes(rowData.name)
@@ -32,6 +35,7 @@ const Row = ({
         {},
         style,
         styles.root,
+        index % 2 ? styles.rootOdd : {},
         isHeader ? styles.rootHeader : {},
         source === 'playlists' ? styles.rootPlaylists : {},
         source === 'video' ? styles.rootVideo : {},
@@ -57,7 +61,7 @@ const Row = ({
           {isHeader ? title : rowData[key]}
           {isHeader && sortBy === key && (
             <Text color="text" fontSize="a">
-              <Icon icon="sort" />
+              <Icon fontSize="a" icon="sort" />
             </Text>
           )}
         </Text>

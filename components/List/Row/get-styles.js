@@ -1,27 +1,25 @@
 import { transparentize } from 'polished';
 import { colors, spacing, bps } from '../../../lib/styling';
 
-export default {
+export default ({ width }) => ({
   root: {
     display: 'grid',
     gridGap: spacing.e,
     gridTemplateColumns: '40px 1fr 1fr 1fr',
     padding: `0 ${spacing.e}px`,
+    boxSizing: 'border-box',
     alignItems: 'center',
     outline: 'none',
     cursor: 'pointer',
-    '&:nth-of-type(even)': {
-      background: 'rgba(0, 0, 0, 0.03)',
-    },
-    svg: {
-      paddingLeft: spacing.b,
-      width: 24,
-      height: 24,
-    },
-    [`@media (max-width: ${bps.b}px)`]: {
-      padding: `0 ${spacing.d}px`,
-      gridTemplateColumns: '20px 1fr 1fr 1fr',
-    },
+    ...(width < bps.b
+      ? {
+          padding: `0 ${spacing.d}px`,
+          gridTemplateColumns: '20px 1fr 1fr 1fr',
+        }
+      : {}),
+  },
+  rootOdd: {
+    background: 'rgba(0, 0, 0, 0.03)',
   },
   rootHeader: {
     borderTop: `1px solid ${colors.border}`,
@@ -34,9 +32,11 @@ export default {
   },
   rootPlaylists: {
     gridTemplateColumns: '1fr 90px 60px',
-    [`@media (max-width: ${bps.b}px)`]: {
-      gridTemplateColumns: '1fr 80px 50px',
-    },
+    ...(width < bps.b
+      ? {
+          gridTemplateColumns: '1fr 80px 50px',
+        }
+      : {}),
   },
   rootActive: {
     background: `${transparentize(0.8, colors.a)} !important`,
@@ -57,4 +57,4 @@ export default {
     alignItems: 'center',
     height: 26,
   },
-};
+});

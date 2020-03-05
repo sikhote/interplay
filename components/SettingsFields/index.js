@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import Button from '../Button';
 import Input from '../Input';
 import Select from '../Select';

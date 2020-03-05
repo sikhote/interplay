@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useWindowDimensions } from 'react-native';
 import moment from 'moment';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import { get, capitalize } from 'lodash';
 import Button from '../../Button';
 import SettingsFields from '../../SettingsFields';

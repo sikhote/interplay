@@ -1,46 +1,70 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { differenceBy } from 'lodash';
-import Button from '../Button';
+import { useWindowDimensions, View } from 'react-native';
 import Icon from '../Icon';
 import Text from '../Text';
-import styles from './styles';
+import getStyles from './get-styles';
 
-const topValues = [-999, -5, -2, 0, -2, -5, 0, -999];
-const intervalMs = 500;
+const steps = [-999, -50, -20, -10, -5, -1, 0, 0, 0, 0, 0, 0, 0, 0, -5, -10, -20, -35, -50, -999];
+const intervalMs = 100;
 
 const Notifications = ({ notifications, dispatch }) => {
+  const dimensions = useWindowDimensions();
+  const styles = getStyles(dimensions);
   const [messages, messagesSet] = useState([]);
+  const updateStepIndex = useCallback(
+    (index, value) => {
+      const newMessages = messages.slice();
+      newMessages[index].stepIndex = value;
+      messagesSet(newMessages);
+    },
+    [messages],
+  );
 
   useEffect(() => {
-    const newMessages = differenceBy(notifications, messages, 'id');
-
-    newMessages.forEach(message => {
-      let interval = null;
-
-      if (isActive) {
-        interval = setInterval(() => {
-          setSeconds(seconds => seconds + 1);
-        }, 1000);
-      } else if (!isActive && seconds !== 0) {
-        clearInterval(interval);
-      }
-    });
-
-    messagesSet(notifications);
+    messagesSet(notifications.slice());
   }, [notifications]);
 
+  useEffect(() => {
+    messages.forEach((message, index) => {
+      if (message.stepIndex === steps.length) {
+        // dispatch({ type: 'notifications-remove', payload: message.id });
+      } else {
+        setTimeout(
+          () =>
+            updateStepIndex(
+              index,
+              message.stepIndex ? message.stepIndex + 1 : 1,
+            ),
+          intervalMs,
+        );
+      }
+    });
+  }, [messages, updateStepIndex, dispatch]);
+
   return (
-    <div>
-      {/* <Text style={styles.root}>
-        <Icon
-          style={type === 'success' ? styles.iconSuccess : styles.iconError}
-          icon={type === 'success' ? 'check' : 'cancel'}
-        />{' '}
-        {children}
-        //{' '}
-      </Text> */}
-    </div>
+    <>
+      {messages.map(({ stepIndex = 0, type, message, id }) => (
+        <View
+          key={id}
+          style={Object.assign({}, styles.item, { top: steps[stepIndex] })}
+        >
+          <View key={id} style={styles.itemInner}>
+            <Text>
+              <Icon
+                style={Object.assign(
+                  {},
+                  styles.icon,
+                  type === 'success' ? styles.iconSuccess : styles.iconError,
+                )}
+                icon={type === 'success' ? 'check' : 'cancel'}
+              />
+              {message}
+            </Text>
+          </View>
+        </View>
+      ))}
+    </>
   );
 };
 

@@ -2,7 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import { useWindowDimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import Navigation from '../Navigation';
 import Player from '../Player';
 import Icon from '../Icon';
@@ -79,7 +79,7 @@ const Page = ({ Component, pageProps }) => {
   }, [otherChanges]);
 
   return (
-    <div>
+    <div className="hello-there">
       <Head>
         <link rel="stylesheet" href="/css/animation.css" />
         <link rel="stylesheet" href="/css/fontello.css" />

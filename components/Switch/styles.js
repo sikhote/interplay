@@ -1,10 +1,10 @@
-import { lighten } from 'polished';
+import { spacing } from '../../lib/styling';
 
 export default {
   root: {
-    background: 'rgba(0, 0, 0, 0.3)',
-    '&:active': {
-      background: lighten(0.1, 'rgba(0, 0, 0, 0.3)'),
-    },
+    flexDirection: 'row',
+  },
+  icon: {
+    marginRight: spacing.c,
   },
 };

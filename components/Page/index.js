@@ -2,11 +2,12 @@ import React, { useReducer, useEffect } from 'react';
 import { useWindowDimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
+import uuidv4 from 'uuid/v4';
 import Navigation from '../Navigation';
 import Player from '../Player';
 import Icon from '../Icon';
+import Notifications from '../Notifications';
 import reducer from '../../lib/reducer';
-import notifier from '../../lib/notifier';
 import getInitialState from '../../lib/get-initial-state';
 import {
   cloudGet,
@@ -36,9 +37,13 @@ const Page = ({ Component, pageProps }) => {
         cloudGet(store)
           .then(storeUpdates => {
             dispatch({ type: 'store-update', payload: storeUpdates });
-            notifier({
-              type: 'success',
-              message: 'Successfully downloaded from cloud',
+            dispatch({
+              type: 'notifications-add',
+              payload: {
+                type: 'success',
+                message: 'Successfully downloaded from cloud',
+                id: uuidv4(),
+              },
             });
           })
           .catch(() => {
@@ -46,9 +51,13 @@ const Page = ({ Component, pageProps }) => {
               type: 'cloud-update',
               payload: ['status', 'disconnected'],
             });
-            notifier({
-              type: 'error',
-              message: 'Failed to download from cloud',
+            dispatch({
+              type: 'notifications-add',
+              payload: {
+                type: 'error',
+                message: 'Failed to download from cloud',
+                id: uuidv4(),
+              },
             });
           });
       } else {
@@ -88,6 +97,7 @@ const Page = ({ Component, pageProps }) => {
           </div>
         </div>
       )}
+      <Notifications {...{ notifications: store.notifications, dispatch }} />
     </div>
   );
 };

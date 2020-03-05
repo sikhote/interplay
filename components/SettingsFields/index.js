@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
+import uuidv4 from 'uuid/v4';
 import Button from '../Button';
 import Input from '../Input';
 import Select from '../Select';
 import { cloudGet } from '../../lib/actions/cloud';
-import notifier from '../../lib/notifier';
 import styles from './styles';
 
 const SettingsFields = ({ store, dispatch, ...props }) => {
@@ -101,9 +101,13 @@ const SettingsFields = ({ store, dispatch, ...props }) => {
               .then(storeUpdates => {
                 Router.push('/').then(() => {
                   dispatch({ type: 'store-update', payload: storeUpdates });
-                  notifier({
-                    type: 'success',
-                    message: 'Successfully downloaded from cloud',
+                  dispatch({
+                    type: 'notifications-add',
+                    payload: {
+                      type: 'success',
+                      message: 'Successfully downloaded from cloud',
+                      id: uuidv4(),
+                    },
                   });
                 });
               })
@@ -112,9 +116,13 @@ const SettingsFields = ({ store, dispatch, ...props }) => {
                   type: 'cloud-update',
                   payload: ['status', 'disconnected'],
                 });
-                notifier({
-                  type: 'error',
-                  message: 'Failed to download from cloud',
+                dispatch({
+                  type: 'notifications-add',
+                  payload: {
+                    type: 'error',
+                    message: 'Failed to download from cloud',
+                    id: uuidv4(),
+                  },
                 });
               });
           }}

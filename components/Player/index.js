@@ -139,8 +139,8 @@ class Player extends React.Component {
       <Switch
         checkedIcon="loop"
         unCheckedIcon="loop"
-        checked={loop}
-        onChange={() =>
+        value={loop}
+        onValueChange={() =>
           dispatch({ type: 'player-update', payload: ['loop', !loop] })
         }
         {...props}
@@ -150,8 +150,8 @@ class Player extends React.Component {
       <Switch
         checkedIcon="shuffle"
         unCheckedIcon="shuffle"
-        checked={random}
-        onChange={() =>
+        value={random}
+        onValueChange={() =>
           dispatch({ type: 'player-update', payload: ['random', !random] })
         }
         {...props}
@@ -264,8 +264,8 @@ class Player extends React.Component {
                 color={colors.c}
                 checkedIcon="volume"
                 unCheckedIcon="mute"
-                checked={!muted}
-                onChange={() =>
+                value={!muted}
+                onValueChange={() =>
                   dispatch({
                     type: 'player-update',
                     payload: ['muted', !muted],

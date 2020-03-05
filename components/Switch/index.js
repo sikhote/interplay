@@ -1,54 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { merge } from 'lodash';
-import { lighten } from 'polished';
-import Button from '../Button';
+import { Switch as RNSwitch, View } from 'react-native';
+import Icon from '../Icon';
 import { colors } from '../../lib/styling';
 import styles from './styles';
 
-const Switch = ({
-  color,
-  checkedIcon,
-  unCheckedIcon,
-  checked,
-  onChange,
-  size,
-  ...props
-}) => (
-  <Button
-    size={size}
-    shape="circle"
-    icon={checked ? checkedIcon : unCheckedIcon}
-    style={merge(
-      {},
-      styles.root,
-      checked
-        ? {
-            background: color,
-            '&:active': {
-              background: lighten(0.1, color),
-            },
-          }
-        : {},
-    )}
-    role="button"
-    onPress={() => onChange(!checked)}
-    {...props}
-  />
+const Switch = ({ value, color, checkedIcon, unCheckedIcon, ...props }) => (
+  <View style={Object.assign({}, styles.root, { color })}>
+    <Icon style={styles.icon} icon={value ? checkedIcon : unCheckedIcon} />
+    <RNSwitch
+      activeThumbColor={color}
+      trackColor="rgb(204, 204, 204)"
+      activeTrackColor="rgb(204, 204, 204)"
+      value={value}
+      {...props}
+    />
+  </View>
 );
 
 Switch.propTypes = {
-  size: PropTypes.string,
   color: PropTypes.string,
   checkedIcon: PropTypes.string.isRequired,
   unCheckedIcon: PropTypes.string.isRequired,
-  checked: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
+  value: PropTypes.bool.isRequired,
 };
 
 Switch.defaultProps = {
   color: colors.a,
-  size: 'small',
 };
 
 export default Switch;

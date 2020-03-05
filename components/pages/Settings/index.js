@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useWindowDimensions } from 'react-native';
 import moment from 'moment';
+import uuidv4 from 'uuid/v4';
 import { get, capitalize } from 'lodash';
 import Button from '../../Button';
 import SettingsFields from '../../SettingsFields';
@@ -11,7 +12,6 @@ import H1 from '../../H1';
 import Text from '../../Text';
 import Icon from '../../Icon';
 import PageTitle from '../../PageTitle';
-import notifier from '../../../lib/notifier';
 import getStyles from './get-styles';
 
 const Settings = ({ store, dispatch }) => {
@@ -62,9 +62,13 @@ const Settings = ({ store, dispatch }) => {
               return cloudSaveFiles({ ...store, files });
             })
             .then(() =>
-              notifier({
-                type: 'success',
-                message: 'Synced files successfully',
+              dispatch({
+                type: 'notifications-add',
+                payload: {
+                  type: 'success',
+                  message: 'Synced files successfully',
+                  id: uuidv4(),
+                },
               }),
             )
             .catch(error => {
@@ -76,9 +80,13 @@ const Settings = ({ store, dispatch }) => {
                 type: 'cloud-update',
                 payload: ['files', { status: errorReason, date: Date.now() }],
               });
-              notifier({
-                type: 'error',
-                message: `Failed to sync files due to ${errorReason}`,
+              dispatch({
+                type: 'notifications-add',
+                payload: {
+                  type: 'error',
+                  message: `Failed to sync files due to ${errorReason}`,
+                  id: uuidv4(),
+                },
               });
             });
         }}

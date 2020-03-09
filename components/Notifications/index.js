@@ -6,7 +6,7 @@ import Text from '../Text';
 import getStyles from './get-styles';
 
 const halfSteps = [-999, -100, -50, -30, -20, -12, -8, -5, -1];
-const steps = [...halfSteps, 0, ...halfSteps.slice().reverse()];
+const steps = [...halfSteps, 0, ...halfSteps.slice().reverse(), -999];
 const stepIntervalMs = 15;
 const middleIntervalMs = 1000;
 
@@ -29,7 +29,7 @@ const Notifications = ({ notifications, dispatch }) => {
 
   useEffect(() => {
     messages.forEach((message, index) => {
-      if (message.stepIndex === steps.length) {
+      if (message.stepIndex === steps.length - 1) {
         dispatch({ type: 'notifications-remove', payload: message.id });
       } else {
         const interval =

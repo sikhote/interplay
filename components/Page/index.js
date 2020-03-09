@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { v4 as uuidv4 } from 'uuid';
@@ -79,26 +79,26 @@ const Page = ({ Component, pageProps }) => {
   }, [otherChanges]);
 
   return (
-    <div className="hello-there">
+    <View>
       <Head>
         <link rel="stylesheet" href="/css/animation.css" />
         <link rel="stylesheet" href="/css/fontello.css" />
       </Head>
       {status === 'initial' ? (
-        <div style={styles.loading}>
+        <View style={styles.loading}>
           <Icon style={styles.icon} icon="loading animate-spin" />
-        </div>
+        </View>
       ) : (
-        <div style={styles.container}>
+        <View style={styles.container}>
           <Player {...{ store, dispatch }} />
           <Navigation {...{ store, dispatch }} />
-          <div style={styles.main}>
+          <View style={styles.main}>
             <Component {...{ pageProps, store, dispatch }} />
-          </div>
-        </div>
+          </View>
+        </View>
       )}
       <Notifications {...{ notifications: store.notifications, dispatch }} />
-    </div>
+    </View>
   );
 };
 

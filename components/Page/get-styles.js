@@ -19,16 +19,6 @@ export default ({ width }) => ({
     '.icon-shuffle::before': {
       marginBottom: '.2em',
     },
-    '.Toastify': {
-      height: 0,
-      width: '100%',
-    },
-    '.Toastify__progress-bar': {
-      // animation: `${toast} linear 1`,
-    },
-    '.Toastify__close-button': {
-      display: 'none',
-    },
   },
   container: {
     background: colors.background,

@@ -2,7 +2,8 @@ import { spacing, bps, fontWeights } from '../../lib/styling';
 
 export default ({ width }) => ({
   root: {
-    padding: `${spacing.e}px ${spacing.page}px`,
+    paddingHorizontal: spacing.page,
+    paddingVertical: spacing.e,
     background: `linear-gradient(
       to top,
       transparent 50%,
@@ -12,9 +13,10 @@ export default ({ width }) => ({
     display: 'grid',
     gridTemplateColumns: '0px 1fr',
     gridArea: 'player',
-    ...(width < bps.b
+    ...(width < bps.c
       ? {
-          padding: spacing.pageMobile,
+          paddingHorizontal: spacing.pageMobile,
+          paddingVertical: spacing.pageMobile,
         }
       : {}),
   },
@@ -32,7 +34,7 @@ export default ({ width }) => ({
     gridTemplateAreas: '"info directions sound" "info progress sound"',
     alignItems: 'center',
     justifyItems: 'stretch',
-    ...(width < bps.b
+    ...(width < bps.c
       ? {
           gridTemplateAreas: '"sound sound" "progress directions" "info info"',
           gridTemplateColumns: '1fr auto',
@@ -53,7 +55,7 @@ export default ({ width }) => ({
       whiteSpace: 'nowrap',
       overflow: 'hidden',
     },
-    ...(width < bps.b
+    ...(width < bps.c
       ? {
           display: 'block',
           textOverflow: 'ellipsis',
@@ -63,7 +65,7 @@ export default ({ width }) => ({
       : {}),
   },
   name: {
-    ...(width < bps.b
+    ...(width < bps.c
       ? {
           fontWeight: fontWeights.normal,
         }
@@ -71,7 +73,7 @@ export default ({ width }) => ({
   },
   divider: {
     display: 'none',
-    ...(width < bps.b
+    ...(width < bps.c
       ? {
           display: 'inline',
         }
@@ -111,16 +113,18 @@ export default ({ width }) => ({
     alignItems: 'center',
   },
   shuffleSound: {
+    display: 'none',
     ...(width < bps.b
       ? {
-          display: 'none',
+          display: 'flex',
         }
       : {}),
   },
   loopSound: {
+    display: 'none',
     ...(width < bps.b
       ? {
-          display: 'none',
+          display: 'flex',
         }
       : {}),
   },

@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { merge } from 'lodash';
+import { View } from 'react-native';
 import Icon from '../Icon';
 import Text from '../Text';
 import styles from './styles';
 
 const Select = ({ options, value, icon, ...props }) => (
-  <div style={styles.root}>
+  <View style={styles.root}>
     {icon && (
       <Text color="text" style={styles.icon}>
         <Icon icon={icon} />
@@ -24,7 +25,7 @@ const Select = ({ options, value, icon, ...props }) => (
         </option>
       ))}
     </select>
-  </div>
+  </View>
 );
 
 Select.propTypes = {

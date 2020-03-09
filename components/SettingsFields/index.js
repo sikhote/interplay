@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
+import { View } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '../Button';
 import Input from '../Input';
@@ -15,7 +16,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
   } = store;
 
   return (
-    <div {...props} style={Object.assign({}, styles.root, style)}>
+    <View {...props} style={Object.assign({}, styles.root, style)}>
       <Select
         disabled={status === 'connected'}
         icon="cloud"
@@ -130,7 +131,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
           Log In
         </Button>
       )}
-    </div>
+    </View>
   );
 };
 

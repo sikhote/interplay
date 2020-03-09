@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
@@ -159,10 +159,10 @@ class Player extends React.Component {
     );
 
     return (
-      <div style={styles.root}>
+      <View style={styles.root}>
         <ReactPlayer {...config} />
-        <div style={styles.main}>
-          <div style={styles.info}>
+        <View style={styles.main}>
+          <View style={styles.info}>
             {path ? (
               <>
                 <Text fontWeight="bold" style={styles.name}>
@@ -190,10 +190,10 @@ class Player extends React.Component {
             ) : (
               <Text>Add credentials and play some media</Text>
             )}
-          </div>
-          <div style={styles.directions}>
+          </View>
+          <View style={styles.directions}>
             <LoopButton style={styles.loopDirections} />
-            <div style={styles.buttons}>
+            <View style={styles.buttons}>
               <Button
                 shape="circle"
                 icon="fast-backward"
@@ -253,11 +253,11 @@ class Player extends React.Component {
                   })
                 }
               />
-            </div>
+            </View>
             <ShuffleButton style={styles.shuffleDirections} />
-          </div>
-          <div style={styles.sound}>
-            <div style={styles.switches}>
+          </View>
+          <View style={styles.sound}>
+            <View style={styles.switches}>
               <ShuffleButton style={styles.shuffleSound} />
               <LoopButton style={styles.loopSound} />
               <Switch
@@ -272,7 +272,7 @@ class Player extends React.Component {
                   })
                 }
               />
-            </div>
+            </View>
             <Slider
               color={colors.c}
               value={volume}
@@ -286,7 +286,7 @@ class Player extends React.Component {
                 })
               }
             />
-          </div>
+          </View>
           <Slider
             style={styles.progress}
             value={played}
@@ -299,8 +299,8 @@ class Player extends React.Component {
             ).format('mm:ss')}
             onChange={progress => this.player.seekTo(progress)}
           />
-        </div>
-      </div>
+        </View>
+      </View>
     );
   }
 }

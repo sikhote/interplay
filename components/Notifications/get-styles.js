@@ -1,18 +1,10 @@
 import { transparentize } from 'polished';
 import { colors, spacing, zIndexes } from '../../lib/styling';
 
-export default ({ width }) => ({
-  // example: {
-  //   ...(width < bps.b
-  //     ? {
-
-  //       }
-  //     : {}),
-  // },
+export default () => ({
   item: {
     position: 'fixed',
     left: 0,
-    // top: 0,
     width: '100%',
     flexWrap: 'wrap',
     alignItems: 'center',

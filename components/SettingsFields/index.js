@@ -9,13 +9,13 @@ import Select from '../Select';
 import { cloudGet } from '../../lib/actions/cloud';
 import styles from './styles';
 
-const SettingsFields = ({ store, dispatch, ...props }) => {
+const SettingsFields = ({ store, dispatch, style, ...props }) => {
   const {
     cloud: { user, key, path, type, status },
   } = store;
 
   return (
-    <div {...props} style={styles.root}>
+    <div {...props} style={Object.assign({}, styles.root, style)}>
       <Select
         disabled={status === 'connected'}
         icon="cloud"
@@ -137,6 +137,11 @@ const SettingsFields = ({ store, dispatch, ...props }) => {
 SettingsFields.propTypes = {
   store: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  style: PropTypes.object,
+};
+
+SettingsFields.defaultProps = {
+  style: {},
 };
 
 export default SettingsFields;

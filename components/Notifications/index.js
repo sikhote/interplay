@@ -5,8 +5,10 @@ import Icon from '../Icon';
 import Text from '../Text';
 import getStyles from './get-styles';
 
-const steps = [-999, -50, -20, -10, -5, -1, 0, 0, 0, 0, 0, 0, 0, 0, -5, -10, -20, -35, -50, -999];
-const intervalMs = 100;
+const halfSteps = [-999, -100, -50, -30, -20, -12, -8, -5, -1];
+const steps = [...halfSteps, 0, ...halfSteps.slice().reverse()];
+const stepIntervalMs = 15;
+const middleIntervalMs = 1000;
 
 const Notifications = ({ notifications, dispatch }) => {
   const dimensions = useWindowDimensions();
@@ -28,15 +30,17 @@ const Notifications = ({ notifications, dispatch }) => {
   useEffect(() => {
     messages.forEach((message, index) => {
       if (message.stepIndex === steps.length) {
-        // dispatch({ type: 'notifications-remove', payload: message.id });
+        dispatch({ type: 'notifications-remove', payload: message.id });
       } else {
+        const interval =
+          steps[message.stepIndex] === 0 ? middleIntervalMs : stepIntervalMs;
         setTimeout(
           () =>
             updateStepIndex(
               index,
               message.stepIndex ? message.stepIndex + 1 : 1,
             ),
-          intervalMs,
+          interval,
         );
       }
     });

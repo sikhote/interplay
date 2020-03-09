@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { get, capitalize } from 'lodash';
@@ -22,7 +22,7 @@ const Settings = ({ store, dispatch }) => {
   const styles = getStyles(dimensions);
 
   return (
-    <div style={styles.root}>
+    <View style={styles.root}>
       <PageTitle title="settings" />
       <H1>Settings</H1>
       <SettingsFields {...{ store, dispatch }} />
@@ -93,7 +93,7 @@ const Settings = ({ store, dispatch }) => {
       >
         Sync Files
       </Button>
-      <div style={styles.statuses}>
+      <View style={styles.statuses}>
         {[
           { ...store.cloud, key: 'cloud' },
           ...['files', 'playlists', 'other'].map(key => ({
@@ -113,8 +113,8 @@ const Settings = ({ store, dispatch }) => {
             </Text>
           );
         })}
-      </div>
-    </div>
+      </View>
+    </View>
   );
 };
 

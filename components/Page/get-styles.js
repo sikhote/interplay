@@ -1,14 +1,5 @@
 import { colors, bps } from '../../lib/styling';
 
-// const toast = keyframes({
-//   '0%': {
-//     transform: 'scaleX(1)',
-//   },
-//   '100%': {
-//     transform: 'scaleX(0)',
-//   },
-// });
-
 export default ({ width }) => ({
   global: {
     '*': {

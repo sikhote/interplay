@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useMemo } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
@@ -29,7 +29,7 @@ const Page = ({ Component, pageProps }) => {
     },
   } = store;
   const dimensions = useWindowDimensions();
-  const styles = getStyles(dimensions);
+  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
 
   useEffect(() => {
     if (status === 'initial') {
@@ -76,7 +76,7 @@ const Page = ({ Component, pageProps }) => {
     if (status !== 'initial') {
       cloudSaveOther(store);
     }
-  }, [otherChanges]);
+  }, [status, store, otherChanges]);
 
   return (
     <View>
@@ -91,7 +91,13 @@ const Page = ({ Component, pageProps }) => {
       ) : (
         <View style={styles.container}>
           <Player {...{ store, dispatch }} />
-          <Navigation {...{ store, dispatch }} />
+          <Navigation
+            {...{
+              playlists: store.playlists,
+              status: store.cloud.status,
+              dispatch,
+            }}
+          />
           <View style={styles.main}>
             <Component {...{ pageProps, store, dispatch }} />
           </View>

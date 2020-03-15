@@ -1,21 +1,30 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import { merge } from 'lodash';
 import { colors } from '../../lib/styling';
 import styles from './styles';
-// determine way to stop dragging when mouse goes outside of region
+
 const Slider = ({ color, value, min, max, onChange, style, ...props }) => {
   const [isMoving, isMovingSet] = useState(false);
+  const [lastMovement, lastMovementSet] = useState(0);
   const progress = ((value - min) / (max - min)) * 100;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      isMovingSet(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [lastMovement]);
 
   const onClick = useCallback(
     e => {
+      e.preventDefault();
       const { left, width } = e.currentTarget.getBoundingClientRect();
       const relativeClickX = e.pageX - left;
       const percent = relativeClickX / width;
-      console.log(percent)
       onChange((max - min) * percent);
+      lastMovementSet(Date.now());
     },
     [min, max, onChange],
   );

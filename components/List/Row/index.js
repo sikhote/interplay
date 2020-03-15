@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions, TouchableOpacity, View } from 'react-native';
+import moment from 'moment';
 import { merge } from 'lodash';
 import Text from '../../Text';
 import Icon from '../../Icon';
@@ -14,23 +15,28 @@ const Row = ({
   selections,
   currentPath,
   columns,
-  onClick,
-  onDoubleClick,
+  onPress,
   onClickColumn,
   isHeader,
   sortBy,
 }) => {
   const dimensions = useWindowDimensions();
-  const styles = getStyles(dimensions);
-  const isSelected =
-    source === 'playlists'
-      ? selections.includes(rowData.name)
-      : ['video', 'audio'].includes(source)
-      ? selections.includes(rowData.path)
-      : selections.includes(index);
+  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
+  const isSelected = useMemo(
+    () =>
+      source === 'playlists'
+        ? selections.includes(rowData.name)
+        : ['video', 'audio'].includes(source)
+        ? selections.includes(rowData.path)
+        : selections.includes(index),
+    [source, selections, rowData, index],
+  );
+  const Container = useMemo(() => (onPress ? TouchableOpacity : View), [
+    onPress,
+  ]);
 
   return (
-    <div
+    <Container
       style={merge(
         {},
         style,
@@ -39,11 +45,11 @@ const Row = ({
         isHeader ? styles.rootHeader : {},
         source === 'playlists' ? styles.rootPlaylists : {},
         source === 'video' ? styles.rootVideo : {},
+        source === 'recent' ? styles.rootRecent : {},
         isSelected ? styles.rootSelected : {},
         rowData.path === currentPath ? styles.rootActive : {},
       )}
-      onClick={() => setTimeout(() => onClick({ index, rowData }), 10)}
-      onDoubleClick={() => onDoubleClick({ index, rowData })}
+      onPress={() => onPress({ index, rowData })}
     >
       {columns.map(({ key, title }) => (
         <Text
@@ -58,7 +64,11 @@ const Row = ({
               }
             : {})}
         >
-          {isHeader ? title : rowData[key]}
+          {isHeader
+            ? title
+            : key === 'dateAdded'
+            ? moment(rowData[key]).format('YYYY/MM/DD HH:mm:ss')
+            : rowData[key]}
           {isHeader && sortBy === key && (
             <Text color="text" fontSize="a">
               <Icon fontSize="a" icon="sort" />
@@ -66,15 +76,14 @@ const Row = ({
           )}
         </Text>
       ))}
-    </div>
+    </Container>
   );
 };
 
 Row.propTypes = {
   columns: PropTypes.array.isRequired,
   index: PropTypes.number,
-  onClick: PropTypes.func,
-  onDoubleClick: PropTypes.func,
+  onPress: PropTypes.func,
   onClickColumn: PropTypes.func,
   rowData: PropTypes.any,
   style: PropTypes.any,
@@ -91,9 +100,8 @@ Row.defaultProps = {
   isHeader: false,
   selections: [],
   rowData: {},
-  onClick: () => null,
-  onDoubleClick: () => null,
-  onClickColumn: () => null,
+  onPress: undefined,
+  onClickColumn: undefined,
   index: null,
   sortBy: undefined,
 };

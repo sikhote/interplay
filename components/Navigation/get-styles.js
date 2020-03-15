@@ -15,7 +15,7 @@ export default ({ width }) => ({
       : {}),
   },
   inner: {
-    padding: `${spacing.e}px 0`,
+    paddingVertical: spacing.e,
     display: 'grid',
     gridAutoFlow: 'row',
     alignContent: 'start',
@@ -23,12 +23,15 @@ export default ({ width }) => ({
       ? {
           gridAutoFlow: 'column',
           alignContent: 'stretch',
-          padding: 0,
+          paddingVertical: 0,
         }
       : {}),
   },
   item: {
-    padding: `${spacing.d}px ${spacing.page}px`,
+    paddingLeft: spacing.page,
+    paddingRight: spacing.page,
+    paddingTop: spacing.d,
+    paddingBottom: spacing.d,
     textDecoration: 'none',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -36,7 +39,9 @@ export default ({ width }) => ({
     cursor: 'pointer',
     ...(width < bps.b
       ? {
-          padding: `${spacing.d}px 0`,
+          paddingLeft: 0,
+          paddingRight: 0,
+          textAlign: 'center',
         }
       : {}),
   },
@@ -60,6 +65,11 @@ export default ({ width }) => ({
   },
   itemTextIcon: {
     marginRight: spacing.e,
+    ...(width < bps.b
+      ? {
+          marginRight: 0,
+        }
+      : {}),
   },
   itemTextContent: {
     ...(width < bps.b

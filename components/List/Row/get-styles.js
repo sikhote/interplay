@@ -6,14 +6,14 @@ export default ({ width }) => ({
     display: 'grid',
     gridGap: spacing.e,
     gridTemplateColumns: '40px 1fr 1fr 1fr',
-    padding: `0 ${spacing.e}px`,
+    paddingHorizontal: spacing.e,
     boxSizing: 'border-box',
     alignItems: 'center',
     outline: 'none',
     cursor: 'pointer',
     ...(width < bps.b
       ? {
-          padding: `0 ${spacing.d}px`,
+          paddingHorizontal: spacing.d,
           gridTemplateColumns: '20px 1fr 1fr 1fr',
         }
       : {}),
@@ -25,10 +25,13 @@ export default ({ width }) => ({
     borderTop: `1px solid ${colors.border}`,
     borderBottom: `1px solid ${colors.border}`,
     background:
-      'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.08) 100%) !important',
+      'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.08) 100%)',
   },
   rootVideo: {
     gridTemplateColumns: '1fr 1fr',
+  },
+  rootRecent: {
+    gridTemplateColumns: '160px 1fr 1fr 1fr',
   },
   rootPlaylists: {
     gridTemplateColumns: '1fr 90px 60px',
@@ -39,10 +42,7 @@ export default ({ width }) => ({
       : {}),
   },
   rootActive: {
-    background: `${transparentize(0.8, colors.a)} !important`,
-  },
-  rootSelected: {
-    background: `${transparentize(0.8, colors.c)} !important`,
+    background: `${transparentize(0.8, colors.a)}`,
   },
   column: {
     textOverflow: 'ellipsis',

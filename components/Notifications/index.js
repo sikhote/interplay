@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useWindowDimensions, View } from 'react-native';
 import Icon from '../Icon';
@@ -12,7 +12,7 @@ const middleIntervalMs = 1000;
 
 const Notifications = ({ notifications, dispatch }) => {
   const dimensions = useWindowDimensions();
-  const styles = getStyles(dimensions);
+  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
   const [messages, messagesSet] = useState([]);
   const updateStepIndex = useCallback(
     (index, value) => {

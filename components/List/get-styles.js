@@ -39,7 +39,9 @@ export default ({ width }) => ({
         }
       : {}),
   },
-  list: {
+  table: {
+    display: 'grid',
+    gridTemplateRows: 'auto 1fr',
     overflow: 'hidden',
   },
 });

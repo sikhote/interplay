@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useWindowDimensions, View } from 'react-native';
 import moment from 'moment';
@@ -19,7 +19,7 @@ const Settings = ({ store, dispatch }) => {
     cloud: { files },
   } = store;
   const dimensions = useWindowDimensions();
-  const styles = getStyles(dimensions);
+  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
 
   return (
     <View style={styles.root}>

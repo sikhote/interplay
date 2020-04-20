@@ -15,11 +15,13 @@ import { filesGetUrl } from '../../lib/actions/files';
 import { colors } from '../../lib/styling';
 import getStyles from './get-styles';
 
-const prepareFile = throttle(callback => callback(), 10000, { leading: true });
+const prepareFile = throttle((callback) => callback(), 10000, {
+  leading: true,
+});
 
 class Player extends React.Component {
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const oldPath = get(prevState, 'path');
+  static getDerivedStateFromProps(nextProps, previousState) {
+    const oldPath = get(previousState, 'path');
     const path = get(nextProps, 'store.player.file.path');
 
     if (oldPath !== path) {
@@ -47,16 +49,16 @@ class Player extends React.Component {
     screenfull.on('change', () => this.setIsFullscreen());
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(previousProps) {
     const { store, dispatch } = this.props;
     const { path } = this.state;
     const {
       player: { source, playing },
       cloud: { isConnected },
     } = store;
-    const isConnectedPrev = get(prevProps, 'store.cloud.isConnected');
+    const isConnectedPrevious = get(previousProps, 'store.cloud.isConnected');
 
-    if (isConnected !== isConnectedPrev && playing && source && path) {
+    if (isConnected !== isConnectedPrevious && playing && source && path) {
       filesGetUrl({ dispatch, store, source, path, shouldPlay: true });
     }
   }
@@ -99,7 +101,7 @@ class Player extends React.Component {
       volume,
       playing,
       url,
-      ref: ref => {
+      ref: (ref) => {
         this.player = ref;
       },
       onDuration: () => this.player.seekTo(played),
@@ -135,22 +137,22 @@ class Player extends React.Component {
       // eslint-disable-next-line react/no-find-dom-node
       onClick: () => screenfull.request(findDOMNode(this.player)),
     };
-    const LoopButton = props => (
+    const LoopButton = (props) => (
       <Switch
         checkedIcon="loop"
         unCheckedIcon="loop"
-        value={loop}
+        isOn={loop}
         onValueChange={() =>
           dispatch({ type: 'player-update', payload: ['loop', !loop] })
         }
         {...props}
       />
     );
-    const ShuffleButton = props => (
+    const ShuffleButton = (props) => (
       <Switch
         checkedIcon="shuffle"
         unCheckedIcon="shuffle"
-        value={random}
+        isOn={random}
         onValueChange={() =>
           dispatch({ type: 'player-update', payload: ['random', !random] })
         }
@@ -195,6 +197,7 @@ class Player extends React.Component {
             <LoopButton style={styles.loopDirections} />
             <View style={styles.buttons}>
               <Button
+                size="large"
                 shape="circle"
                 icon="fast-backward"
                 onPress={() =>
@@ -214,9 +217,10 @@ class Player extends React.Component {
                 }
               />
               <Button
+                size="large"
                 shape="circle"
                 icon={playing ? 'pause' : 'play'}
-                loading={loading}
+                isLoading={loading}
                 onPress={() => {
                   if (!playing) {
                     filesGetUrl({
@@ -235,6 +239,7 @@ class Player extends React.Component {
                 }}
               />
               <Button
+                size="large"
                 shape="circle"
                 icon="fast-forward"
                 onPress={() =>
@@ -264,7 +269,7 @@ class Player extends React.Component {
                 color={colors.c}
                 checkedIcon="volume"
                 unCheckedIcon="mute"
-                value={!muted}
+                isOn={!muted}
                 onValueChange={() =>
                   dispatch({
                     type: 'player-update',
@@ -279,7 +284,7 @@ class Player extends React.Component {
               min={0}
               max={1}
               tip={`Volume: ${Math.round(volume * 100)}%`}
-              onChange={volume =>
+              onChange={(volume) =>
                 dispatch({
                   type: 'player-update',
                   payload: ['volume', volume],
@@ -297,7 +302,7 @@ class Player extends React.Component {
               // eslint-disable-next-line no-underscore-dangle
               moment.duration(playedSeconds, 'seconds')._data,
             ).format('mm:ss')}
-            onChange={progress => this.player.seekTo(progress)}
+            onChange={(progress) => this.player.seekTo(progress)}
           />
         </View>
       </View>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useRef, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { get, throttle } from 'lodash';
 import Router from 'next/router';
@@ -17,19 +17,16 @@ import { titleToSlug } from '../../lib/playlists';
 import { filesGetUrl } from '../../lib/actions/files';
 import getListColumns from '../../lib/get-list-columns';
 import Row from './Row';
-import Modifiers from '../Modifiers';
 import getStyles from './get-styles';
 
-const throttledOnScroll = throttle(callback => callback(), 10000, {
+const throttledOnScroll = throttle((callback) => callback(), 10000, {
   trailing: true,
 });
 
 const List = ({ title, header, source, store, dispatch }) => {
-  const { lists, player, files, playlists, modifiers } = store;
-  const { position, sortBy, sortDirection, search } = useMemo(
-    () => lists[source] || getDefaultListSettings(source),
-    [lists, source],
-  );
+  const { lists, player, files, playlists } = store;
+  const { position, sortBy, sortDirection, search } =
+    lists[source] || getDefaultListSettings(source);
   const sourcedData = useMemo(() => getSourcedData(files, source, playlists), [
     files,
     source,
@@ -48,13 +45,8 @@ const List = ({ title, header, source, store, dispatch }) => {
   const dimensions = useWindowDimensions();
   const styles = useMemo(() => getStyles(dimensions), [dimensions]);
 
-  useEffect(() => {
-    dispatch({ type: 'modifiers-show-update', payload: false });
-    dispatch({ type: 'modifiers-selections-reset' });
-  }, [dispatch]);
-
   const saveListSettings = useCallback(
-    listSettings =>
+    (listSettings) =>
       dispatch({
         type: 'lists-update',
         payload: [
@@ -99,11 +91,10 @@ const List = ({ title, header, source, store, dispatch }) => {
             icon="search"
             placeholder="Search"
             value={search}
-            onChangeText={text => saveListSettings({ search: text })}
+            onChangeText={(text) => saveListSettings({ search: text })}
           />
           {source !== 'playlists' && player.source === source && (
             <Button
-              size="small"
               shape="circle"
               icon="location"
               onPress={() => {
@@ -116,28 +107,23 @@ const List = ({ title, header, source, store, dispatch }) => {
             />
           )}
           <Button
-            size="small"
             shape="circle"
-            icon="switch"
+            icon="options"
             onPress={() =>
-              dispatch({
-                type: 'modifiers-show-update',
-                payload: !modifiers.show,
-              })
+              dispatch({ type: 'options-start', payload: ['source', source] })
             }
           />
         </View>
       </View>
       <View style={styles.table}>
-        <Modifiers {...{ source, dispatch, store }} />
         <Row
           {...{
+            dispatch,
             source,
-            selections: modifiers.selections,
             columns: getListColumns(source),
             isHeader: true,
             sortBy,
-            onClickColumn: key =>
+            onClickColumn: (key) =>
               saveListSettings({
                 sortBy: key,
                 sortDirection: sortBy === key ? !sortDirection : true,
@@ -150,10 +136,12 @@ const List = ({ title, header, source, store, dispatch }) => {
               <FixedSizeList
                 ref={listRef}
                 initialScrollOffset={position}
+                style={styles.items}
                 height={height}
                 width={width}
                 itemCount={sortedData.length}
                 itemSize={26}
+                overscanCount={5}
                 onScroll={({ scrollOffset }) =>
                   throttledOnScroll(() =>
                     saveListSettings({ position: scrollOffset }),
@@ -163,11 +151,11 @@ const List = ({ title, header, source, store, dispatch }) => {
                 {({ style, index }) => (
                   <Row
                     {...{
+                      dispatch,
                       style,
                       index,
                       rowData: sortedData[index],
                       source,
-                      selections: modifiers.selections,
                       currentPath,
                       columns: getListColumns(source),
                       onPress: onRowClick,

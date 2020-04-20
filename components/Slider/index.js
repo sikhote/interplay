@@ -18,10 +18,10 @@ const Slider = ({ color, value, min, max, onChange, style, ...props }) => {
   }, [lastMovement]);
 
   const onClick = useCallback(
-    e => {
-      e.preventDefault();
-      const { left, width } = e.currentTarget.getBoundingClientRect();
-      const relativeClickX = e.pageX - left;
+    (event) => {
+      event.preventDefault();
+      const { left, width } = event.currentTarget.getBoundingClientRect();
+      const relativeClickX = event.pageX - left;
       const percent = relativeClickX / width;
       onChange((max - min) * percent);
       lastMovementSet(Date.now());
@@ -30,9 +30,9 @@ const Slider = ({ color, value, min, max, onChange, style, ...props }) => {
   );
 
   const onMouseMove = useCallback(
-    e => {
+    (event) => {
       if (isMoving) {
-        onClick(e);
+        onClick(event);
       }
     },
     [isMoving, onClick],

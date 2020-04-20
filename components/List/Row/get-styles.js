@@ -1,11 +1,19 @@
 import { transparentize } from 'polished';
-import { colors, spacing, bps } from '../../../lib/styling';
+import {
+  colors,
+  spacing,
+  bps,
+  fontSizes,
+  lineHeights,
+} from '../../../lib/styling';
+
+const buttonWidth = fontSizes.c * lineHeights.normal * 1.125;
 
 export default ({ width }) => ({
   root: {
     display: 'grid',
     gridGap: spacing.e,
-    gridTemplateColumns: '40px 1fr 1fr 1fr',
+    gridTemplateColumns: `40px 1fr 1fr 1fr ${buttonWidth}px`,
     paddingHorizontal: spacing.e,
     boxSizing: 'border-box',
     alignItems: 'center',
@@ -14,7 +22,7 @@ export default ({ width }) => ({
     ...(width < bps.b
       ? {
           paddingHorizontal: spacing.d,
-          gridTemplateColumns: '20px 1fr 1fr 1fr',
+          gridTemplateColumns: `20px 1fr 1fr 1fr ${buttonWidth}px`,
         }
       : {}),
   },
@@ -26,18 +34,19 @@ export default ({ width }) => ({
     borderBottom: `1px solid ${colors.border}`,
     background:
       'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.08) 100%)',
+    overflowY: 'scroll',
   },
   rootVideo: {
     gridTemplateColumns: '1fr 1fr',
   },
   rootRecent: {
-    gridTemplateColumns: '160px 1fr 1fr 1fr',
+    gridTemplateColumns: `160px 1fr 1fr 1fr ${buttonWidth}px`,
   },
   rootPlaylists: {
-    gridTemplateColumns: '1fr 90px 60px',
+    gridTemplateColumns: `1fr 90px 60px ${buttonWidth}px`,
     ...(width < bps.b
       ? {
-          gridTemplateColumns: '1fr 80px 50px',
+          gridTemplateColumns: `1fr 80px 50px ${buttonWidth}px`,
         }
       : {}),
   },

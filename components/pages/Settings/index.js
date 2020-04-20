@@ -27,11 +27,11 @@ const Settings = ({ store, dispatch }) => {
       <H1>Settings</H1>
       <SettingsFields {...{ store, dispatch }} />
       <Button
-        allowLoadingClicks
+        isAllowingLoadingClicks
         style={styles.sync}
         theme="secondary"
         icon={files.status === 'syncing' ? 'cancel' : 'arrows-ccw'}
-        loading={files.status === 'syncing'}
+        isLoading={files.status === 'syncing'}
         onPress={() => {
           if (files.status === 'syncing') {
             dispatch({
@@ -50,7 +50,7 @@ const Settings = ({ store, dispatch }) => {
           });
 
           filesSync(store)
-            .then(files => {
+            .then((files) => {
               dispatch({ type: 'files-replace', payload: files });
               dispatch({
                 type: 'cloud-update-many',
@@ -71,7 +71,7 @@ const Settings = ({ store, dispatch }) => {
                 },
               }),
             )
-            .catch(error => {
+            .catch((error) => {
               const errorReason =
                 get(error, 'message') === 'sync cancelled'
                   ? 'sync cancelled'
@@ -96,7 +96,7 @@ const Settings = ({ store, dispatch }) => {
       <View style={styles.statuses}>
         {[
           { ...store.cloud, key: 'cloud' },
-          ...['files', 'playlists', 'other'].map(key => ({
+          ...['files', 'playlists', 'other'].map((key) => ({
             ...store.cloud[key],
             key,
           })),

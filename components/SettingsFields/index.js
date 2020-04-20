@@ -22,11 +22,11 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         icon="cloud"
         value={type}
         options={[{ title: 'Dropbox', value: 'dropbox', key: 'dropbox' }]}
-        onChange={e => {
-          Cookies.set('type', e.target.value);
+        onChange={(event) => {
+          Cookies.set('type', event.target.value);
           dispatch({
             type: 'cloud-update',
-            payload: ['user', e.target.value],
+            payload: ['user', event.target.value],
           });
         }}
       />
@@ -36,7 +36,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         icon="user"
         placeholder="Person"
         value={user}
-        onChangeText={text => {
+        onChangeText={(text) => {
           Cookies.set('user', text);
           dispatch({
             type: 'cloud-update',
@@ -50,7 +50,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         icon="key"
         placeholder="ABC123"
         value={key}
-        onChangeText={text => {
+        onChangeText={(text) => {
           Cookies.set('key', text);
           dispatch({
             type: 'cloud-update',
@@ -64,7 +64,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         icon="folder"
         placeholder="itunes/itunes music"
         value={path}
-        onChangeText={text => {
+        onChangeText={(text) => {
           Cookies.set('path', text.toLowerCase());
           dispatch({
             type: 'cloud-update',
@@ -77,10 +77,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
           style={styles.marginTop}
           icon="logout"
           onPress={() => {
-            dispatch({
-              type: 'cloud-update',
-              payload: ['status', 'disconnected'],
-            });
+            dispatch({ type: 'reset' });
             Router.push('/welcome');
           }}
         >
@@ -91,7 +88,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         <Button
           style={styles.marginTop}
           icon="login"
-          loading={status === 'connecting'}
+          isLoading={status === 'connecting'}
           onPress={() => {
             dispatch({
               type: 'cloud-update',
@@ -99,7 +96,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
             });
 
             cloudGet(store)
-              .then(storeUpdates => {
+              .then((storeUpdates) => {
                 Router.push('/').then(() => {
                   dispatch({ type: 'store-update', payload: storeUpdates });
                   dispatch({

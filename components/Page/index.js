@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { v4 as uuidv4 } from 'uuid';
 import Navigation from '../Navigation';
 import Player from '../Player';
+import Options from '../Options';
 import Icon from '../Icon';
 import Notifications from '../Notifications';
 import reducer from '../../lib/reducer';
@@ -35,7 +36,7 @@ const Page = ({ Component, pageProps }) => {
     if (status === 'initial') {
       if (key && path && user) {
         cloudGet(store)
-          .then(storeUpdates => {
+          .then((storeUpdates) => {
             dispatch({ type: 'store-update', payload: storeUpdates });
             dispatch({
               type: 'notifications-add',
@@ -67,13 +68,13 @@ const Page = ({ Component, pageProps }) => {
   }, [status, key, path, user, store]);
 
   useEffect(() => {
-    if (status !== 'initial') {
+    if (!['initial', 'disconnected'].includes(status)) {
       cloudSavePlaylists(store);
     }
-  }, [playlistsChanges]);
+  }, [playlistsChanges, status, store]);
 
   useEffect(() => {
-    if (status !== 'initial') {
+    if (!['initial', 'disconnected'].includes(status)) {
       cloudSaveOther(store);
     }
   }, [status, store, otherChanges]);
@@ -81,8 +82,8 @@ const Page = ({ Component, pageProps }) => {
   return (
     <View>
       <Head>
-        <link rel="stylesheet" href="/css/animation.css" />
-        <link rel="stylesheet" href="/css/fontello.css" />
+        <link rel="stylesheet" href="/css/fontello/css/animation.css" />
+        <link rel="stylesheet" href="/css/fontello/css/fontello.css" />
       </Head>
       {status === 'initial' ? (
         <View style={styles.loading}>
@@ -90,6 +91,7 @@ const Page = ({ Component, pageProps }) => {
         </View>
       ) : (
         <View style={styles.container}>
+          <Options {...{ store, dispatch }} />
           <Player {...{ store, dispatch }} />
           <Navigation
             {...{

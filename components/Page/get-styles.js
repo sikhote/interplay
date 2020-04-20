@@ -25,20 +25,13 @@ export default ({ width }) => ({
     display: 'grid',
     gridTemplateColumns: 'auto 1fr',
     gridTemplateRows: '1fr auto',
-    gridTemplateAreas: `
-      'navigation main'
-      'player player'
-    `,
+    gridTemplateAreas: '"navigation main" "player player"',
     height: '100vh',
     ...(width < bps.b
       ? {
           gridTemplateColumns: '1fr',
           gridTemplateRows: 'auto 1fr auto',
-          gridTemplateAreas: `
-          'navigation'
-          'main'
-          'player'
-        `,
+          gridTemplateAreas: '"navigation" "main" "player"',
         }
       : {}),
   },

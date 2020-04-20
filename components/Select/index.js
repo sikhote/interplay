@@ -6,9 +6,9 @@ import Icon from '../Icon';
 import Text from '../Text';
 import styles from './styles';
 
-const Select = ({ options, value, icon, ...props }) => (
-  <View style={styles.root}>
-    {icon && (
+const Select = ({ options, value, icon, style, ...props }) => (
+  <View style={Object.assign({}, styles.root, style)}>
+    {Boolean(icon) && (
       <Text color="text" style={styles.icon}>
         <Icon icon={icon} />
       </Text>
@@ -32,11 +32,13 @@ Select.propTypes = {
   icon: PropTypes.string,
   options: PropTypes.array.isRequired,
   value: PropTypes.any,
+  style: PropTypes.object,
 };
 
 Select.defaultProps = {
   icon: '',
   value: undefined,
+  style: {},
 };
 
 export default Select;

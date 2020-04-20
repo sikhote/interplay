@@ -8,7 +8,7 @@ import styles from './styles';
 
 const Input = ({ icon, size, style, ...props }) => (
   <View style={Object.assign({}, styles.root, style)}>
-    {icon && (
+    {Boolean(icon) && (
       <Text
         color="text"
         style={merge(

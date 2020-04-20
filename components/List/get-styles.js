@@ -6,6 +6,7 @@ export default ({ width }) => ({
     height: '100%',
     display: 'grid',
     gridTemplateRows: 'auto 1fr',
+    overflow: 'hidden',
   },
   header: {
     paddingTop: spacing.page,
@@ -42,6 +43,8 @@ export default ({ width }) => ({
   table: {
     display: 'grid',
     gridTemplateRows: 'auto 1fr',
-    overflow: 'hidden',
+  },
+  items: {
+    overflowY: 'scroll',
   },
 });

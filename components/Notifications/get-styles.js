@@ -1,4 +1,3 @@
-import { transparentize } from 'polished';
 import { colors, spacing, zIndexes } from '../../lib/styling';
 
 export default () => ({

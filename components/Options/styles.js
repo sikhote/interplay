@@ -1,0 +1,58 @@
+import { spacing, zIndexes, colors, speeds } from '../../lib/styling';
+
+export default {
+  root: {
+    zIndex: zIndexes.options,
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    height: '100%',
+    width: '100%',
+    transition: `all ease ${speeds.a}s`,
+    transform: 'translateX(100%)',
+    flexDirection: 'row',
+  },
+  rootShow: {
+    transform: 'translateX(0)',
+  },
+  close: {
+    flexGrow: 1,
+    height: '100%',
+    width: '100px',
+  },
+  inner: {
+    flex: '0 0 auto',
+    background: 'rgba(255, 255, 255, 1)',
+    borderLeft: `1px solid ${colors.border}`,
+    width: 300,
+    height: '100%',
+    display: 'grid',
+    gridTemplateRows: 'auto',
+    gridGap: spacing.f,
+    gridAutoRows: 'auto',
+    gridAutoFlow: 'row',
+    alignContent: 'start',
+    padding: spacing.page,
+  },
+  inputAndButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputAndButtonInput: {
+    marginRight: spacing.c,
+    flexGrow: 1,
+  },
+  moveUpAndDown: {
+    flexDirection: 'row',
+  },
+  moveButtonLeft: {
+    flexGrow: 1,
+    marginRight: spacing.b,
+    width: '50%',
+  },
+  moveButtonRight: {
+    flexGrow: 1,
+    marginLeft: spacing.b,
+    width: '50%',
+  },
+};

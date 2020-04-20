@@ -46,30 +46,26 @@ const Notifications = ({ notifications, dispatch }) => {
     });
   }, [messages, updateStepIndex, dispatch]);
 
-  return (
-    <>
-      {messages.map(({ stepIndex = 0, type, message, id }) => (
-        <View
-          key={id}
-          style={Object.assign({}, styles.item, { top: steps[stepIndex] })}
-        >
-          <View key={id} style={styles.itemInner}>
-            <Text>
-              <Icon
-                style={Object.assign(
-                  {},
-                  styles.icon,
-                  type === 'success' ? styles.iconSuccess : styles.iconError,
-                )}
-                icon={type === 'success' ? 'check' : 'cancel'}
-              />
-              {message}
-            </Text>
-          </View>
-        </View>
-      ))}
-    </>
-  );
+  return messages.map(({ stepIndex = 0, type, message, id }) => (
+    <View
+      key={id}
+      style={Object.assign({}, styles.item, { top: steps[stepIndex] })}
+    >
+      <View key={id} style={styles.itemInner}>
+        <Text>
+          <Icon
+            style={Object.assign(
+              {},
+              styles.icon,
+              type === 'success' ? styles.iconSuccess : styles.iconError,
+            )}
+            icon={type === 'success' ? 'check' : 'cancel'}
+          />
+          {message}
+        </Text>
+      </View>
+    </View>
+  ));
 };
 
 Notifications.propTypes = {

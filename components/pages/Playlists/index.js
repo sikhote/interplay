@@ -1,7 +1,7 @@
 import React from 'react';
 import List from '../../List';
 
-export default props => (
+export default (props) => (
   <List
     {...props}
     key="playlists"

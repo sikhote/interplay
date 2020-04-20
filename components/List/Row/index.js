@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useWindowDimensions, TouchableOpacity, View } from 'react-native';
 import moment from 'moment';
 import { merge } from 'lodash';
+import Button from '../../Button';
 import Text from '../../Text';
 import Icon from '../../Icon';
 import getStyles from './get-styles';
@@ -12,28 +13,40 @@ const Row = ({
   index,
   rowData,
   source,
-  selections,
   currentPath,
   columns,
   onPress,
   onClickColumn,
   isHeader,
   sortBy,
+  dispatch,
 }) => {
   const dimensions = useWindowDimensions();
   const styles = useMemo(() => getStyles(dimensions), [dimensions]);
-  const isSelected = useMemo(
-    () =>
-      source === 'playlists'
-        ? selections.includes(rowData.name)
-        : ['video', 'audio'].includes(source)
-        ? selections.includes(rowData.path)
-        : selections.includes(index),
-    [source, selections, rowData, index],
-  );
   const Container = useMemo(() => (onPress ? TouchableOpacity : View), [
     onPress,
   ]);
+  const isPlaylist = useMemo(
+    () => !['video', 'audio', 'playlists', 'recent'].includes(source),
+    [source],
+  );
+  const onContainerPress = useCallback(() => onPress({ index, rowData }), [
+    index,
+    rowData,
+    onPress,
+  ]);
+  const onOptionsPress = useCallback(
+    () =>
+      dispatch({
+        type: 'options-start',
+        payload: [
+          'item',
+          rowData.path,
+          { playlist: isPlaylist && source, index },
+        ],
+      }),
+    [dispatch, rowData.path, isPlaylist, source, index],
+  );
 
   return (
     <Container
@@ -46,10 +59,9 @@ const Row = ({
         source === 'playlists' ? styles.rootPlaylists : {},
         source === 'video' ? styles.rootVideo : {},
         source === 'recent' ? styles.rootRecent : {},
-        isSelected ? styles.rootSelected : {},
         rowData.path === currentPath ? styles.rootActive : {},
       )}
-      onPress={() => onPress({ index, rowData })}
+      onPress={onContainerPress}
     >
       {columns.map(({ key, title }) => (
         <Text
@@ -76,6 +88,18 @@ const Row = ({
           )}
         </Text>
       ))}
+      {isHeader ? (
+        <div />
+      ) : (
+        <Button
+          isEnclosed={false}
+          theme="subtle"
+          size="small"
+          shape="circle"
+          icon="options"
+          onPress={onOptionsPress}
+        />
+      )}
     </Container>
   );
 };
@@ -88,17 +112,16 @@ Row.propTypes = {
   rowData: PropTypes.any,
   style: PropTypes.any,
   currentPath: PropTypes.string,
-  selections: PropTypes.array,
   source: PropTypes.string.isRequired,
   isHeader: PropTypes.bool,
   sortBy: PropTypes.string,
+  dispatch: PropTypes.func.isRequired,
 };
 
 Row.defaultProps = {
   currentPath: '',
   style: {},
   isHeader: false,
-  selections: [],
   rowData: {},
   onPress: undefined,
   onClickColumn: undefined,

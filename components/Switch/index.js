@@ -6,7 +6,7 @@ import { colors } from '../../lib/styling';
 import styles from './styles';
 
 const Switch = ({
-  value,
+  isOn,
   color,
   checkedIcon,
   unCheckedIcon,
@@ -16,15 +16,15 @@ const Switch = ({
   <View style={Object.assign({}, styles.root, { color }, style)}>
     <Icon
       style={Object.assign({}, styles.icon, {
-        color: value ? color : colors.textFaded,
+        color: isOn ? color : colors.textFaded,
       })}
-      icon={value ? checkedIcon : unCheckedIcon}
+      icon={isOn ? checkedIcon : unCheckedIcon}
     />
     <RNSwitch
       activeThumbColor={colors.white}
       trackColor="rgb(204, 204, 204)"
       activeTrackColor={color}
-      value={value}
+      value={isOn}
       {...props}
     />
   </View>
@@ -34,7 +34,7 @@ Switch.propTypes = {
   color: PropTypes.string,
   checkedIcon: PropTypes.string.isRequired,
   unCheckedIcon: PropTypes.string.isRequired,
-  value: PropTypes.bool.isRequired,
+  isOn: PropTypes.bool.isRequired,
   style: PropTypes.object,
 };
 

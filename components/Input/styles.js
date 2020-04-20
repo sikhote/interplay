@@ -24,7 +24,7 @@ export default {
   },
   input: {
     background: colors.white,
-    padding: `0 ${spacing.e}px`,
+    paddingHorizontal: spacing.e,
     height: fontSizes.c * lineHeights.normal * 2,
     display: 'flex',
     alignItems: 'center',

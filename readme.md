@@ -8,7 +8,7 @@
 Play media from the cloud on a browser
 
 ## notes
-- Built with react, next, now, xo, antd, lodash, redux, and more
+- Built with react, next, now, xo, lodash, and more
 - So far, only dropbox is supported and it requires an access token
 
 ## commands

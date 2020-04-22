@@ -1,6 +1,3 @@
-import React from 'react';
-import List from '../components/List';
+import Page from '../components/pages/Video';
 
-export default () => (
-  <List key="video" title="video" header="Video" source="video" />
-);
+export default Page;

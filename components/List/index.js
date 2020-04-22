@@ -1,208 +1,182 @@
-import React from 'react';
-import { AutoSizer, Column, SortDirection, Table } from 'react-virtualized';
+import React, { useRef, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { get, throttle } from 'lodash';
 import Router from 'next/router';
-import { get } from 'lodash';
-import { Input } from 'antd';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList } from 'react-window';
+import { useWindowDimensions, View } from 'react-native';
+import Input from '../Input';
+import Button from '../Button';
+import H1 from '../H1';
+import PageTitle from '../PageTitle';
 import getSortedData from '../../lib/get-sorted-data';
 import getSearchedData from '../../lib/get-searched-data';
 import getSourcedData from '../../lib/get-sourced-data';
-import { settingsReplace } from '../../actions/settings';
-import { filesGetUrl } from '../../actions/files';
-import {
-  modifiersSelectionsToggle,
-  modifiersSelectionsRemoveAll,
-  modifiersShowUpdate,
-} from '../../actions/modifiers';
-import getListColumns from '../../lib/get-list-columns';
-import { titleToSlug } from '../../lib/playlists';
 import getDefaultListSettings from '../../lib/get-default-list-settings';
-import H1 from '../H1';
-import InputIcon from '../InputIcon';
-import IconButton from '../IconButton';
-import Icon from '../Icon';
-import PageTitle from '../PageTitle';
-import Modifiers from '../Modifiers';
-import ListRow from './ListRow';
-import styles from './styles';
+import { titleToSlug } from '../../lib/playlists';
+import { filesGetUrl } from '../../lib/actions/files';
+import getListColumns from '../../lib/get-list-columns';
+import Row from './Row';
+import getStyles from './get-styles';
 
-class List extends React.PureComponent {
-  componentDidMount() {
-    const { modifiersSelectionsRemoveAll, modifiersShowUpdate } = this.props;
-    modifiersSelectionsRemoveAll();
-    modifiersShowUpdate(false);
-  }
+const throttledOnScroll = throttle((callback) => callback(), 10000, {
+  trailing: true,
+});
 
-  render() {
-    const {
-      source,
-      settings,
-      settingsReplace,
-      title,
-      header,
-      files,
-      playlists,
-      filesGetUrl,
-      modifiersSelections,
-      modifiersSelectionsToggle,
-      modifiersShowUpdate,
-      modifiersShow,
-    } = this.props;
-    const { position, sortBy, sortDirection, search } =
-      settings.lists[source] || getDefaultListSettings(source);
-    const sourcedData = getSourcedData(files, source, playlists);
-    const searchedData = getSearchedData(sourcedData, source, search);
-    const sortedData = getSortedData(searchedData, sortBy, sortDirection);
-    const saveListSettings = listSettings =>
-      settingsReplace({
-        ...settings,
-        lists: {
-          ...settings.lists,
-          [source]: {
-            ...(settings.lists[source] || getDefaultListSettings(source)),
+const List = ({ title, header, source, store, dispatch }) => {
+  const { lists, player, files, playlists } = store;
+  const { position, sortBy, sortDirection, search } =
+    lists[source] || getDefaultListSettings(source);
+  const sourcedData = useMemo(() => getSourcedData(files, source, playlists), [
+    files,
+    source,
+    playlists,
+  ]);
+  const searchedData = useMemo(
+    () => getSearchedData(sourcedData, source, search),
+    [sourcedData, source, search],
+  );
+  const sortedData = useMemo(
+    () => getSortedData(searchedData, sortBy, sortDirection),
+    [searchedData, sortBy, sortDirection],
+  );
+  const currentPath = player.file.path;
+  const listRef = useRef(null);
+  const dimensions = useWindowDimensions();
+  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
+
+  const saveListSettings = useCallback(
+    (listSettings) =>
+      dispatch({
+        type: 'lists-update',
+        payload: [
+          source,
+          {
+            ...(lists[source] || getDefaultListSettings(source)),
             ...listSettings,
           },
-        },
-      });
-    const onRowClick = arg =>
-      modifiersSelectionsToggle(
-        source === 'playlists'
-          ? get(arg, 'rowData.name')
-          : ['video', 'audio'].includes(source)
-          ? get(arg, 'rowData.path')
-          : arg.index,
-      );
-    const onRowDoubleClick = arg => {
-      const position = get(arg, 'index');
-      const path = get(arg, 'rowData.path');
+        ],
+      }),
+    [dispatch, lists, source],
+  );
+  const onRowClick = useCallback(
+    ({ rowData, index }) => {
+      const path = get(rowData, 'path');
 
       if (source === 'playlists') {
-        const slug = titleToSlug(get(playlists, `[${position}].name`));
-        Router.push(`/playlists?id=${slug}`, `/playlists/${slug}`);
+        const slug = titleToSlug(get(playlists, `[${index}].name`));
+        Router.push('/playlists/[id]', `/playlists/${slug}`);
       } else {
-        filesGetUrl({ source, path, shouldPlay: true, position });
+        filesGetUrl({
+          dispatch,
+          store,
+          source,
+          path,
+          shouldPlay: true,
+        });
       }
-    };
+    },
+    [source, dispatch, store, playlists],
+  );
 
-    const currentPath = get(settings, 'player.file.path');
-
-    return (
-      <div className="container">
-        <PageTitle title={title} />
-        <style jsx>{styles}</style>
-        <div className="header">
-          <H1>{header}</H1>
-          <div className="side">
-            <Input
-              className="search"
-              prefix={<InputIcon icon="search" />}
-              placeholder="Search"
-              value={search}
-              onChange={e => saveListSettings({ search: e.target.value })}
+  return (
+    <View style={styles.root}>
+      <PageTitle title={title} />
+      <View style={styles.header}>
+        <H1 style={styles.h1}>{header}</H1>
+        <View style={styles.side}>
+          <Input
+            size="small"
+            style={styles.search}
+            icon="search"
+            placeholder="Search"
+            value={search}
+            onChangeText={(text) => saveListSettings({ search: text })}
+          />
+          {source !== 'playlists' && player.source === source && (
+            <Button
+              shape="circle"
+              icon="location"
+              onPress={() => {
+                const file = get(player, 'file') || {};
+                const currentIndex = sortedData.findIndex(
+                  ({ path }) => path === file.path,
+                );
+                listRef.current.scrollToItem(currentIndex, 'center');
+              }}
             />
-            {source !== 'playlists' && settings.player.source === source && (
-              <IconButton
-                onClick={() => {
-                  const file = get(this, 'props.settings.player.file', {});
-                  const currentIndex = sortedData.findIndex(
-                    ({ path }) => path === file.path,
-                  );
-                  this.table.scrollToRow(currentIndex);
-                }}
-              >
-                <Icon icon="location" />
-              </IconButton>
-            )}
-            <IconButton onClick={() => modifiersShowUpdate(!modifiersShow)}>
-              <Icon icon="switch" />
-            </IconButton>
-          </div>
-        </div>
-        <div className={`table ${source}`}>
-          <Modifiers source={source} />
+          )}
+          <Button
+            shape="circle"
+            icon="options"
+            onPress={() =>
+              dispatch({ type: 'options-start', payload: ['source', source] })
+            }
+          />
+        </View>
+      </View>
+      <View style={styles.table}>
+        <Row
+          {...{
+            dispatch,
+            source,
+            columns: getListColumns(source),
+            isHeader: true,
+            sortBy,
+            onClickColumn: (key) =>
+              saveListSettings({
+                sortBy: key,
+                sortDirection: sortBy === key ? !sortDirection : true,
+              }),
+          }}
+        />
+        <View>
           <AutoSizer>
             {({ height, width }) => (
-              <Table
-                ref={c => {
-                  this.table = c;
-                }}
+              <FixedSizeList
+                ref={listRef}
+                initialScrollOffset={position}
+                style={styles.items}
                 height={height}
-                headerHeight={30}
-                rowRenderer={args => (
-                  <ListRow
-                    {...args}
-                    currentPath={currentPath}
-                    selections={modifiersSelections}
-                    source={source}
+                width={width}
+                itemCount={sortedData.length}
+                itemSize={26}
+                overscanCount={10}
+                onScroll={({ scrollOffset }) =>
+                  throttledOnScroll(() =>
+                    saveListSettings({ position: scrollOffset }),
+                  )
+                }
+              >
+                {({ style, index }) => (
+                  <Row
+                    {...{
+                      dispatch,
+                      style,
+                      index,
+                      rowData: sortedData[index],
+                      source,
+                      currentPath,
+                      columns: getListColumns(source),
+                      onPress: onRowClick,
+                    }}
                   />
                 )}
-                rowCount={sortedData.length}
-                rowGetter={({ index }) => sortedData[index]}
-                rowHeight={26}
-                scrollToIndex={position}
-                width={width}
-                sort={({ sortBy, sortDirection }) =>
-                  saveListSettings({
-                    sortBy,
-                    sortDirection: sortDirection === SortDirection.ASC,
-                  })
-                }
-                sortBy={sortBy}
-                sortDirection={
-                  sortDirection ? SortDirection.ASC : SortDirection.DESC
-                }
-                onRowClick={onRowClick}
-                onRowDoubleClick={onRowDoubleClick}
-              >
-                {getListColumns(source).map(({ title, dataKey }) => (
-                  <Column
-                    key={dataKey}
-                    label={title}
-                    dataKey={dataKey}
-                    width={1}
-                  />
-                ))}
-              </Table>
+              </FixedSizeList>
             )}
           </AutoSizer>
-        </div>
-      </div>
-    );
-  }
-}
+        </View>
+      </View>
+    </View>
+  );
+};
 
 List.propTypes = {
   source: PropTypes.string.isRequired,
-  files: PropTypes.array.isRequired,
-  playlists: PropTypes.array.isRequired,
-  settings: PropTypes.object.isRequired,
-  settingsReplace: PropTypes.func.isRequired,
-  filesGetUrl: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   header: PropTypes.string.isRequired,
-  modifiersSelections: PropTypes.array.isRequired,
-  modifiersSelectionsToggle: PropTypes.func.isRequired,
-  modifiersSelectionsRemoveAll: PropTypes.func.isRequired,
-  modifiersShowUpdate: PropTypes.func.isRequired,
-  modifiersShow: PropTypes.bool.isRequired,
+  store: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
-export default connect(
-  ({ files, settings, playlists, modifiers }) => ({
-    files,
-    settings,
-    playlists,
-    modifiersShow: modifiers.show,
-    modifiersSelections: modifiers.selections,
-  }),
-  dispatch => ({
-    settingsReplace: payload => dispatch(settingsReplace(payload)),
-    filesGetUrl: payload => dispatch(filesGetUrl(payload)),
-    modifiersSelectionsToggle: payload =>
-      dispatch(modifiersSelectionsToggle(payload)),
-    modifiersSelectionsRemoveAll: () =>
-      dispatch(modifiersSelectionsRemoveAll()),
-    modifiersShowUpdate: payload => dispatch(modifiersShowUpdate(payload)),
-  }),
-)(List);
+export default List;

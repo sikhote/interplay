@@ -1,20 +1,11 @@
-const withCSS = require('@zeit/next-css');
-const FilterWarningsPlugin = require('webpack-filter-warnings-plugin');
-
-if (typeof require !== 'undefined') {
-  // eslint-disable-next-line node/no-deprecated-api
-  require.extensions['.css'] = () => {};
-}
-
-module.exports = withCSS({
-  target: 'serverless',
-  webpack: config => {
-    config.plugins.push(
-      new FilterWarningsPlugin({
-        exclude: /mini-css-extract-plugin[^]*Conflicting order between:/,
-      }),
-    );
-
+module.exports = {
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      // Transform all direct `react-native` imports to `react-native-web`
+      'react-native$': 'react-native-web',
+    };
+    config.resolve.extensions.push('.web.js', '.web.ts', '.web.tsx');
     return config;
   },
-});
+};

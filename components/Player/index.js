@@ -1,28 +1,28 @@
 import React from 'react';
+import { Dimensions, View } from 'react-native';
 import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
-import { merge, get, throttle } from 'lodash';
+import { get, throttle } from 'lodash';
 import screenfull from 'screenfull';
 import moment from 'moment';
-import { connect } from 'react-redux';
-import IconButton from '../IconButton';
+import Button from '../Button';
 import Slider from '../Slider';
 import Switch from '../Switch';
-import Icon from '../Icon';
 import Text from '../Text';
 import getFileInDirection from '../../lib/get-file-in-direction';
-import { settingsReplace } from '../../actions/settings';
-import { filesGetUrl } from '../../actions/files';
-import { colors, fontSizes } from '../../lib/styling';
-import styles from './styles';
+import { filesGetUrl } from '../../lib/actions/files';
+import { colors } from '../../lib/styling';
+import getStyles from './get-styles';
 
-const prepareFile = throttle(callback => callback(), 10000, { leading: true });
+const prepareFile = throttle((callback) => callback(), 10000, {
+  leading: true,
+});
 
 class Player extends React.Component {
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const oldPath = get(prevState, 'path');
-    const path = get(nextProps, 'settings.player.file.path');
+  static getDerivedStateFromProps(nextProps, previousState) {
+    const oldPath = get(previousState, 'path');
+    const path = get(nextProps, 'store.player.file.path');
 
     if (oldPath !== path) {
       return {
@@ -49,16 +49,17 @@ class Player extends React.Component {
     screenfull.on('change', () => this.setIsFullscreen());
   }
 
-  componentDidUpdate(prevProps) {
-    const { settings, filesGetUrl } = this.props;
+  componentDidUpdate(previousProps) {
+    const { store, dispatch } = this.props;
     const { path } = this.state;
-    const source = get(settings, 'player.source');
-    const playing = get(settings, 'player.playing');
-    const isConnected = get(settings, 'isConnected');
-    const isConnectedPrev = get(prevProps.settings, 'isConnected');
+    const {
+      player: { source, playing },
+      cloud: { isConnected },
+    } = store;
+    const isConnectedPrevious = get(previousProps, 'store.cloud.isConnected');
 
-    if (isConnected !== isConnectedPrev && playing && source && path) {
-      filesGetUrl({ source, path, shouldPlay: true });
+    if (isConnected !== isConnectedPrevious && playing && source && path) {
+      filesGetUrl({ dispatch, store, source, path, shouldPlay: true });
     }
   }
 
@@ -71,15 +72,12 @@ class Player extends React.Component {
   }
 
   render() {
+    const dimensions = Dimensions.get('window');
+    const styles = getStyles(dimensions);
+    const Divider = () => <Text style={styles.divider}> - </Text>;
     const { played, playedSeconds, path, isFullscreen } = this.state;
-    const {
-      files,
-      settings,
-      settingsReplace,
-      filesGetUrl,
-      playlists,
-    } = this.props;
-    const { player } = settings;
+    const { dispatch, store } = this.props;
+    const { files, player, playlists, lists } = store;
     const {
       source,
       volume,
@@ -92,7 +90,7 @@ class Player extends React.Component {
     } = player;
     const { url, album, artist, name, type, category } = file;
     const config = {
-      className: 'player',
+      css: styles.player,
       loop,
       muted,
       width: type === 'video' ? 124 : 0,
@@ -103,7 +101,7 @@ class Player extends React.Component {
       volume,
       playing,
       url,
-      ref: ref => {
+      ref: (ref) => {
         this.player = ref;
       },
       onDuration: () => this.player.seekTo(played),
@@ -114,82 +112,78 @@ class Player extends React.Component {
         if (playing && played > 0.9) {
           prepareFile(() =>
             filesGetUrl({
+              dispatch,
+              store,
+              ...getFileInDirection({ player, lists, files, playlists }),
               source,
-              ...getFileInDirection(settings, files, playlists),
             }),
           );
         }
       },
       onEnded: () =>
         filesGetUrl({
-          ...getFileInDirection(
-            this.props.settings,
+          dispatch,
+          store,
+          ...getFileInDirection({
+            player,
+            lists,
             files,
             playlists,
-            random ? 'random' : 'next',
-          ),
+            direction: random ? 'random' : 'next',
+          }),
           source,
           shouldPlay: true,
         }),
-      // eslint-disable-next-line react/no-find-dom-node
       onClick: () => screenfull.request(findDOMNode(this.player)),
     };
-    const loopButton = (
+    const LoopButton = (props) => (
       <Switch
-        className="loop"
-        checkedChildren={<Icon icon="loop" />}
-        unCheckedChildren={<Icon icon="loop" />}
-        checked={loop}
-        onChange={() =>
-          settingsReplace(
-            merge({}, settings, {
-              player: { loop: !loop },
-            }),
-          )
+        checkedIcon="loop"
+        unCheckedIcon="loop"
+        isOn={loop}
+        onValueChange={() =>
+          dispatch({ type: 'player-update', payload: ['loop', !loop] })
         }
+        {...props}
       />
     );
-    const shuffleButton = (
+    const ShuffleButton = (props) => (
       <Switch
-        className="shuffle"
-        checkedChildren={<Icon icon="shuffle" />}
-        unCheckedChildren={<Icon icon="shuffle" />}
-        checked={random}
-        onChange={() =>
-          settingsReplace(
-            merge({}, settings, {
-              player: { random: !random },
-            }),
-          )
+        checkedIcon="shuffle"
+        unCheckedIcon="shuffle"
+        isOn={random}
+        onValueChange={() =>
+          dispatch({ type: 'player-update', payload: ['random', !random] })
         }
+        {...props}
       />
     );
-    const divider = <Text className="divider"> - </Text>;
 
     return (
-      <div className={`container ${type || ''}`}>
-        <style jsx>{styles}</style>
+      <View style={styles.root}>
         <ReactPlayer {...config} />
-        <div className="main">
-          <div className="info">
+        <View style={styles.main}>
+          <View style={styles.info}>
             {path ? (
               <>
-                <Text className="name">{name}</Text>
+                <Text fontWeight="bold" style={styles.name}>
+                  {name}
+                </Text>
                 {category && (
                   <Text>
-                    {divider}
+                    <Divider />
                     {category}
                   </Text>
                 )}
                 {artist && (
                   <Text>
-                    {divider}
+                    <Divider />
                     {artist}
                   </Text>
                 )}
                 {album && (
                   <Text>
-                    {divider}
+                    <Divider />
                     {album}
                   </Text>
                 )}
@@ -197,139 +191,127 @@ class Player extends React.Component {
             ) : (
               <Text>Add credentials and play some media</Text>
             )}
-          </div>
-          <div className="directions">
-            {loopButton}
-            <div className="buttons">
-              <IconButton
+          </View>
+          <View style={styles.directions}>
+            <LoopButton style={styles.loopDirections} />
+            <View style={styles.buttons}>
+              <Button
                 size="large"
-                onClick={() =>
+                shape="circle"
+                icon="fast-backward"
+                onPress={() =>
                   filesGetUrl({
-                    ...getFileInDirection(
-                      settings,
+                    dispatch,
+                    store,
+                    ...getFileInDirection({
+                      player,
+                      lists,
                       files,
                       playlists,
-                      random ? 'random' : 'previous',
-                    ),
+                      direction: random ? 'random' : 'previous',
+                    }),
                     source,
                     shouldPlay: true,
                   })
-                }
-              >
-                <Icon fontSize={fontSizes.a4} icon="fast-backward" />
-              </IconButton>
-              <IconButton
-                size="large"
-                loading={loading}
-                onClick={() => {
-                  if (!playing) {
-                    filesGetUrl({ source, path, shouldPlay: true });
-                  }
-
-                  settingsReplace(
-                    merge({}, settings, {
-                      player: { playing: !playing },
-                    }),
-                  );
-                }}
-              >
-                <Icon
-                  fontSize={fontSizes.a4}
-                  icon={playing ? 'pause' : 'play'}
-                />
-              </IconButton>
-              <IconButton
-                size="large"
-                onClick={() =>
-                  filesGetUrl({
-                    ...getFileInDirection(
-                      settings,
-                      files,
-                      playlists,
-                      random ? 'random' : 'next',
-                    ),
-                    source,
-                    shouldPlay: true,
-                  })
-                }
-              >
-                <Icon fontSize={fontSizes.a4} icon="fast-forward" />
-              </IconButton>
-            </div>
-            {shuffleButton}
-          </div>
-          <div className="sound">
-            <div className="switches">
-              {shuffleButton}
-              {loopButton}
-              <Switch
-                color={colors.a3}
-                checkedChildren={<Icon icon="volume" />}
-                unCheckedChildren={<Icon icon="mute" />}
-                checked={!muted}
-                onChange={() =>
-                  settingsReplace(
-                    merge({}, settings, {
-                      player: { muted: !muted },
-                    }),
-                  )
                 }
               />
-            </div>
+              <Button
+                size="large"
+                shape="circle"
+                icon={playing ? 'pause' : 'play'}
+                isLoading={loading}
+                onPress={() => {
+                  if (!playing) {
+                    filesGetUrl({
+                      dispatch,
+                      store,
+                      source,
+                      path,
+                      shouldPlay: true,
+                    });
+                  }
+
+                  dispatch({
+                    type: 'player-update',
+                    payload: ['playing', !playing],
+                  });
+                }}
+              />
+              <Button
+                size="large"
+                shape="circle"
+                icon="fast-forward"
+                onPress={() =>
+                  filesGetUrl({
+                    dispatch,
+                    store,
+                    ...getFileInDirection({
+                      player,
+                      lists,
+                      files,
+                      playlists,
+                      direction: random ? 'random' : 'next',
+                    }),
+                    source,
+                    shouldPlay: true,
+                  })
+                }
+              />
+            </View>
+            <ShuffleButton style={styles.shuffleDirections} />
+          </View>
+          <View style={styles.sound}>
+            <View style={styles.switches}>
+              <ShuffleButton style={styles.shuffleSound} />
+              <LoopButton style={styles.loopSound} />
+              <Switch
+                color={colors.c}
+                checkedIcon="volume"
+                unCheckedIcon="mute"
+                isOn={!muted}
+                onValueChange={() =>
+                  dispatch({
+                    type: 'player-update',
+                    payload: ['muted', !muted],
+                  })
+                }
+              />
+            </View>
             <Slider
-              className="volume"
-              color={colors.a3}
+              color={colors.c}
               value={volume}
               min={0}
               max={1}
-              step={0.01}
-              tipFormatter={volume => `Volume: ${Math.round(volume * 100)}%`}
-              onChange={volume =>
-                settingsReplace(
-                  merge({}, settings, {
-                    player: { volume },
-                  }),
-                )
+              tip={`Volume: ${Math.round(volume * 100)}%`}
+              onChange={(volume) =>
+                dispatch({
+                  type: 'player-update',
+                  payload: ['volume', volume],
+                })
               }
             />
-          </div>
-          <div className="progress">
-            <Slider
-              value={played}
-              min={0}
-              max={1}
-              step={0.01}
-              tipFormatter={() =>
-                moment(
-                  // eslint-disable-next-line no-underscore-dangle
-                  moment.duration(playedSeconds, 'seconds')._data,
-                ).format('mm:ss')
-              }
-              onChange={progress => this.player.seekTo(progress)}
-            />
-          </div>
-        </div>
-      </div>
+          </View>
+          <Slider
+            style={styles.progress}
+            value={played}
+            min={0}
+            max={1}
+            step={0.01}
+            tip={moment(
+              // eslint-disable-next-line no-underscore-dangle
+              moment.duration(playedSeconds, 'seconds')._data,
+            ).format('mm:ss')}
+            onChange={(progress) => this.player.seekTo(progress)}
+          />
+        </View>
+      </View>
     );
   }
 }
 
 Player.propTypes = {
-  files: PropTypes.array.isRequired,
-  settings: PropTypes.object.isRequired,
-  settingsReplace: PropTypes.func.isRequired,
-  filesGetUrl: PropTypes.func.isRequired,
-  playlists: PropTypes.array.isRequired,
+  store: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
-export default connect(
-  ({ files, settings, playlists }) => ({
-    files,
-    settings,
-    playlists,
-  }),
-  dispatch => ({
-    settingsReplace: payload => dispatch(settingsReplace(payload)),
-    filesGetUrl: payload => dispatch(filesGetUrl(payload)),
-  }),
-)(Player);
+export default Player;

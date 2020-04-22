@@ -3,9 +3,6 @@
   "builds": [
     { "src": "package.json", "use": "@now/next" }
   ],
-  "routes": [
-    { "src": "/playlists/(?<id>[^/]+)$", "dest": "/playlists?id=$id" }
-  ],
   "alias": "interplay.app",
   "github": {
     "silent": true

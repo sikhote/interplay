@@ -1,88 +1,97 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
-import Link from 'next/link';
-import { connect } from 'react-redux';
-import { get } from 'lodash';
-import { colors } from '../../lib/styling';
+import Link from '../Link';
 import Icon from '../Icon';
 import Text from '../Text';
 import { titleToSlug } from '../../lib/playlists';
-import { playlistsAdd } from '../../actions/playlists';
-import styles from './styles';
+import getStyles from './get-styles';
 
-const Navigation = ({ router, playlists, playlistsAdd }) => {
-  const id = get(router.query, 'id');
-  const path = `${router.pathname}${id ? `/${id}` : ''}`;
-  const items = [
-    { id: '/', title: 'Settings', icon: 'cog' },
-    { id: '/audio', title: 'Audio', icon: 'audio' },
-    { id: '/video', title: 'Video', icon: 'video' },
-    { id: '/playlists', title: 'Playlists', icon: 'star' },
-    ...playlists.map(({ name }) => ({
-      href: `/playlists?id=${titleToSlug(name)}`,
-      id: `/playlists/${titleToSlug(name)}`,
-      title: name,
-      icon: 'star',
-      className: 'playlist',
-    })),
-    {
-      id: 'playlist-add',
-      title: 'Add',
-      icon: 'list-add',
-      className: 'playlist-add',
-      onClick: () => playlistsAdd(),
-    },
-  ];
+const Navigation = ({ router, playlists, status, dispatch }) => {
+  const { asPath } = router;
+  const dimensions = useWindowDimensions();
+  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
+  const items =
+    status === 'connected'
+      ? [
+          { id: '/', title: 'Settings', icon: 'cog' },
+          { id: '/audio', title: 'Audio', icon: 'audio' },
+          { id: '/video', title: 'Video', icon: 'video' },
+          { id: '/recent', title: 'Recent', icon: 'calendar' },
+          { id: '/playlists', title: 'Playlists', icon: 'star' },
+          ...playlists.map(({ name }) => ({
+            href: '/playlists/[id]',
+            id: `/playlists/${titleToSlug(name)}`,
+            title: name,
+            icon: 'star',
+            style: styles.itemPlaylist,
+          })),
+          {
+            id: 'playlist-add',
+            title: 'Add',
+            icon: 'list-add',
+            style: styles.itemPlaylistAdd,
+            onClick: () => dispatch({ type: 'playlists-add' }),
+          },
+        ]
+      : [];
 
   return (
-    <div className="container">
-      <style jsx>{styles}</style>
-      <div className="container-inner">
-        {items.map(({ id, href, title, icon, className = '', onClick }) => {
+    <View style={styles.root}>
+      <View style={styles.inner}>
+        {items.map(({ id, href, title, icon, style = {}, onClick }) => {
           const inner = (
-            <>
-              <Icon
-                icon={icon}
-                color={colors.navigationItem}
-                className="icon"
-              />
-              <Text color={colors.navigationItem} className="title">
-                {title}
-              </Text>
-            </>
+            <Text
+              style={Object.assign(
+                {},
+                styles.itemText,
+                asPath === id ? styles.itemTextActive : {},
+              )}
+            >
+              <Icon style={styles.itemTextIcon} icon={icon} />
+              <span style={styles.itemTextContent}>{title}</span>
+            </Text>
           );
 
           return onClick ? (
-            <div key={id} className="item" onClick={onClick}>
+            <View
+              key={id}
+              style={Object.assign(
+                {},
+                styles.item,
+                style,
+                asPath === id ? styles.itemActive : {},
+              )}
+              onClick={onClick}
+            >
               {inner}
-            </div>
+            </View>
           ) : (
-            <Link key={id} as={id} href={href || id}>
-              <a className={`item ${className} ${path === id ? 'active' : ''}`}>
-                {inner}
-              </a>
-            </Link>
+            <Link
+              key={id}
+              id={id}
+              href={href || id}
+              label={inner}
+              style={Object.assign(
+                {},
+                styles.item,
+                style,
+                asPath === id ? styles.itemActive : {},
+              )}
+            />
           );
         })}
-      </div>
-    </div>
+      </View>
+    </View>
   );
 };
 
 Navigation.propTypes = {
   router: PropTypes.object.isRequired,
   playlists: PropTypes.array.isRequired,
-  playlistsAdd: PropTypes.func.isRequired,
+  status: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
-export default withRouter(
-  connect(
-    ({ playlists }) => ({
-      playlists,
-    }),
-    dispatch => ({
-      playlistsAdd: () => dispatch(playlistsAdd()),
-    }),
-  )(Navigation),
-);
+export default withRouter(Navigation);

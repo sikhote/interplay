@@ -1,6 +1,3 @@
-import React from 'react';
-import List from '../components/List';
+import Page from '../components/pages/Audio';
 
-export default () => (
-  <List key="audio" title="audio" header="Audio" source="audio" />
-);
+export default Page;

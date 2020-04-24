@@ -37,7 +37,7 @@ export default ({ width }) => ({
     overflowY: 'scroll',
   },
   rootVideo: {
-    gridTemplateColumns: '1fr 1fr',
+    gridTemplateColumns: `1fr 1fr ${buttonWidth}px`,
   },
   rootRecent: {
     gridTemplateColumns: `160px 1fr 1fr 1fr ${buttonWidth}px`,

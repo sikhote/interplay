@@ -68,5 +68,3 @@ export default getComputedStyles(({ width }) => ({
     height: 26,
   },
 }));
-
-// Export default getComputedStyles(getStyles);

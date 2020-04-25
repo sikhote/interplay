@@ -6,8 +6,7 @@ import { merge } from 'lodash';
 import Button from '../../Button';
 import Text from '../../Text';
 import Icon from '../../Icon';
-import computedStyles from './computed-styles';
-import { getCurrentStyles } from '../../../lib/styling';
+import getStyles from './get-styles';
 
 const Row = ({
   style,
@@ -23,9 +22,7 @@ const Row = ({
   dispatch,
 }) => {
   const dimensions = useWindowDimensions();
-  const styles = useMemo(() => getCurrentStyles(dimensions, computedStyles), [
-    dimensions,
-  ]);
+  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
   const Container = useMemo(() => (onPress ? TouchableOpacity : View), [
     onPress,
   ]);

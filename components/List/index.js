@@ -141,6 +141,7 @@ const List = ({ title, header, source, store, dispatch }) => {
                 width={width}
                 itemCount={sortedData.length}
                 itemSize={26}
+                overscanCount={10}
                 onScroll={({ scrollOffset }) =>
                   throttledOnScroll(() =>
                     saveListSettings({ position: scrollOffset }),

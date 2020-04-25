@@ -5,11 +5,12 @@ import {
   bps,
   fontSizes,
   lineHeights,
+  getComputedStyles,
 } from '../../../lib/styling';
 
 const buttonWidth = fontSizes.c * lineHeights.normal * 1.125;
 
-export default ({ width }) => ({
+export default getComputedStyles(({ width }) => ({
   root: {
     display: 'grid',
     gridGap: spacing.e,
@@ -66,4 +67,6 @@ export default ({ width }) => ({
     alignItems: 'center',
     height: 26,
   },
-});
+}));
+
+// Export default getComputedStyles(getStyles);

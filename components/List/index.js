@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { get, throttle } from 'lodash';
 import Router from 'next/router';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import memoize from 'memoize-one';
 import { FixedSizeList } from 'react-window';
-import { useWindowDimensions, View } from 'react-native';
+import { useWindowDimensions, View, TouchableOpacity } from 'react-native';
 import Input from '../Input';
 import Button from '../Button';
 import H1 from '../H1';
@@ -19,22 +18,11 @@ import { filesGetUrl } from '../../lib/actions/files';
 import getListColumns from '../../lib/get-list-columns';
 import Row from './Row';
 import getStyles from './get-styles';
+import getRowStyles from './Row/get-styles';
 
 const throttledOnScroll = throttle((callback) => callback(), 10000, {
   trailing: true,
 });
-
-const createItemData = memoize(
-  // eslint-disable-next-line max-params
-  (dispatch, source, sortedData, currentPath, onRowClick) => ({
-    dispatch,
-    sortedData,
-    source,
-    currentPath,
-    columns: getListColumns(source),
-    onPress: onRowClick,
-  }),
-);
 
 const List = ({ title, header, source, store, dispatch }) => {
   const { lists, player, files, playlists } = store;
@@ -57,6 +45,7 @@ const List = ({ title, header, source, store, dispatch }) => {
   const listRef = useRef(null);
   const dimensions = useWindowDimensions();
   const styles = useMemo(() => getStyles(dimensions), [dimensions]);
+  const rowStyles = useMemo(() => getRowStyles(dimensions), [dimensions]);
 
   const saveListSettings = useCallback(
     (listSettings) =>
@@ -91,12 +80,19 @@ const List = ({ title, header, source, store, dispatch }) => {
     },
     [source, dispatch, store, playlists],
   );
-  const itemData = createItemData(
-    dispatch,
-    source,
-    sortedData,
-    currentPath,
-    onRowClick,
+  const itemData = useMemo(
+    () => ({
+      dispatch,
+      sortedData,
+      source,
+      currentPath,
+      columns: getListColumns(source),
+      onPress: onRowClick,
+      styles: rowStyles,
+      isPlaylist: !['video', 'audio', 'playlists', 'recent'].includes(source),
+      Container: TouchableOpacity,
+    }),
+    [dispatch, source, sortedData, currentPath, onRowClick, rowStyles],
   );
 
   return (
@@ -138,10 +134,9 @@ const List = ({ title, header, source, store, dispatch }) => {
       <View style={styles.table}>
         <Row
           {...{
-            data: {
-              dispatch,
-              source,
-              columns: getListColumns(source),
+            data: Object.assign({}, itemData, {
+              Container: View,
+              onPress: undefined,
               isHeader: true,
               sortBy,
               onClickColumn: (key) =>
@@ -149,7 +144,7 @@ const List = ({ title, header, source, store, dispatch }) => {
                   sortBy: key,
                   sortDirection: sortBy === key ? !sortDirection : true,
                 }),
-            },
+            }),
           }}
         />
         <View>

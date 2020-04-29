@@ -1,12 +1,9 @@
-import React, { useMemo, useCallback, memo } from 'react';
+import React, { useCallback, memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { useWindowDimensions, TouchableOpacity, View } from 'react-native';
 import moment from 'moment';
-import { merge } from 'lodash';
 import Button from '../../Button';
 import Text from '../../Text';
 import Icon from '../../Icon';
-import getStyles from './get-styles';
 
 const Row = memo(({ style, index, data }) => {
   const {
@@ -19,17 +16,11 @@ const Row = memo(({ style, index, data }) => {
     isHeader = false,
     sortBy,
     dispatch,
+    styles,
+    isPlaylist,
+    Container,
   } = data;
   const rowData = sortedData[index] || {};
-  const dimensions = useWindowDimensions();
-  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
-  const Container = useMemo(() => (onPress ? TouchableOpacity : View), [
-    onPress,
-  ]);
-  const isPlaylist = useMemo(
-    () => !['video', 'audio', 'playlists', 'recent'].includes(source),
-    [source],
-  );
   const onContainerPress = useCallback(() => onPress({ index, rowData }), [
     index,
     rowData,
@@ -47,10 +38,9 @@ const Row = memo(({ style, index, data }) => {
       }),
     [dispatch, rowData.path, isPlaylist, source, index],
   );
-
-  return (
-    <Container
-      style={Object.assign(
+  const containerStyle = useMemo(
+    () =>
+      Object.assign(
         style,
         styles.root,
         index % 2 ? styles.rootOdd : {},
@@ -59,13 +49,34 @@ const Row = memo(({ style, index, data }) => {
         source === 'video' ? styles.rootVideo : {},
         source === 'recent' ? styles.rootRecent : {},
         rowData.path === currentPath ? styles.rootActive : {},
-      )}
-      onPress={onContainerPress}
-    >
+      ),
+    [
+      style,
+      styles.root,
+      styles.rootOdd,
+      styles.rootHeader,
+      styles.rootPlaylists,
+      styles.rootVideo,
+      styles.rootRecent,
+      styles.rootActive,
+      source,
+      index,
+      rowData,
+      currentPath,
+      isHeader,
+    ],
+  );
+  const columnStyle = useMemo(
+    () => Object.assign({}, styles.column, isHeader ? styles.columnHeader : {}),
+    [styles.column, styles.columnHeader, isHeader],
+  );
+
+  return (
+    <Container style={containerStyle} onPress={onContainerPress}>
       {columns.map(({ key, title }) => (
         <Text
           key={key}
-          style={merge({}, styles.column, isHeader ? styles.columnHeader : {})}
+          style={columnStyle}
           {...(isHeader
             ? {
                 color: sortBy === key ? 'text' : 'textFaded',

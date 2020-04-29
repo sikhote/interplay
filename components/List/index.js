@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { get, throttle } from 'lodash';
 import Router from 'next/router';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import memoize from 'memoize-one';
 import { FixedSizeList } from 'react-window';
 import { useWindowDimensions, View } from 'react-native';
 import Input from '../Input';
@@ -22,6 +23,18 @@ import getStyles from './get-styles';
 const throttledOnScroll = throttle((callback) => callback(), 10000, {
   trailing: true,
 });
+
+const createItemData = memoize(
+  // eslint-disable-next-line max-params
+  (dispatch, source, sortedData, currentPath, onRowClick) => ({
+    dispatch,
+    sortedData,
+    source,
+    currentPath,
+    columns: getListColumns(source),
+    onPress: onRowClick,
+  }),
+);
 
 const List = ({ title, header, source, store, dispatch }) => {
   const { lists, player, files, playlists } = store;
@@ -78,6 +91,13 @@ const List = ({ title, header, source, store, dispatch }) => {
     },
     [source, dispatch, store, playlists],
   );
+  const itemData = createItemData(
+    dispatch,
+    source,
+    sortedData,
+    currentPath,
+    onRowClick,
+  );
 
   return (
     <View style={styles.root}>
@@ -118,16 +138,18 @@ const List = ({ title, header, source, store, dispatch }) => {
       <View style={styles.table}>
         <Row
           {...{
-            dispatch,
-            source,
-            columns: getListColumns(source),
-            isHeader: true,
-            sortBy,
-            onClickColumn: (key) =>
-              saveListSettings({
-                sortBy: key,
-                sortDirection: sortBy === key ? !sortDirection : true,
-              }),
+            data: {
+              dispatch,
+              source,
+              columns: getListColumns(source),
+              isHeader: true,
+              sortBy,
+              onClickColumn: (key) =>
+                saveListSettings({
+                  sortBy: key,
+                  sortDirection: sortBy === key ? !sortDirection : true,
+                }),
+            },
           }}
         />
         <View>
@@ -141,27 +163,14 @@ const List = ({ title, header, source, store, dispatch }) => {
                 width={width}
                 itemCount={sortedData.length}
                 itemSize={26}
-                overscanCount={10}
+                itemData={itemData}
                 onScroll={({ scrollOffset }) =>
                   throttledOnScroll(() =>
                     saveListSettings({ position: scrollOffset }),
                   )
                 }
               >
-                {({ style, index }) => (
-                  <Row
-                    {...{
-                      dispatch,
-                      style,
-                      index,
-                      rowData: sortedData[index],
-                      source,
-                      currentPath,
-                      columns: getListColumns(source),
-                      onPress: onRowClick,
-                    }}
-                  />
-                )}
+                {Row}
               </FixedSizeList>
             )}
           </AutoSizer>

@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import { useWindowDimensions, TouchableOpacity, View } from 'react-native';
 import moment from 'moment';
@@ -8,19 +8,19 @@ import Text from '../../Text';
 import Icon from '../../Icon';
 import getStyles from './get-styles';
 
-const Row = ({
-  style,
-  index,
-  rowData,
-  source,
-  currentPath,
-  columns,
-  onPress,
-  onClickColumn,
-  isHeader,
-  sortBy,
-  dispatch,
-}) => {
+const Row = memo(({ style, index, data }) => {
+  const {
+    sortedData = [],
+    source,
+    currentPath = '',
+    columns,
+    onPress,
+    onClickColumn,
+    isHeader = false,
+    sortBy,
+    dispatch,
+  } = data;
+  const rowData = sortedData[index] || {};
   const dimensions = useWindowDimensions();
   const styles = useMemo(() => getStyles(dimensions), [dimensions]);
   const Container = useMemo(() => (onPress ? TouchableOpacity : View), [
@@ -50,8 +50,7 @@ const Row = ({
 
   return (
     <Container
-      style={merge(
-        {},
+      style={Object.assign(
         style,
         styles.root,
         index % 2 ? styles.rootOdd : {},
@@ -102,31 +101,18 @@ const Row = ({
       )}
     </Container>
   );
-};
+});
 
 Row.propTypes = {
-  columns: PropTypes.array.isRequired,
   index: PropTypes.number,
-  onPress: PropTypes.func,
-  onClickColumn: PropTypes.func,
-  rowData: PropTypes.any,
   style: PropTypes.any,
-  currentPath: PropTypes.string,
-  source: PropTypes.string.isRequired,
-  isHeader: PropTypes.bool,
-  sortBy: PropTypes.string,
-  dispatch: PropTypes.func.isRequired,
+  data: PropTypes.object,
 };
 
 Row.defaultProps = {
-  currentPath: '',
-  style: {},
-  isHeader: false,
-  rowData: {},
-  onPress: undefined,
-  onClickColumn: undefined,
   index: null,
-  sortBy: undefined,
+  style: {},
+  data: {},
 };
 
 export default Row;

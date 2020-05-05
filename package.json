@@ -11,9 +11,6 @@
     "start": "next start"
   },
   "xo": {
-    "ignores": [
-      "components/Player/index.js"
-    ],
     "prettier": true,
     "extends": "xo-react",
     "rules": {

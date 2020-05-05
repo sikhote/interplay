@@ -1,4 +1,3 @@
-import { transparentize } from 'polished';
 import {
   colors,
   spacing,

@@ -1,18 +1,20 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, useWindowDimensions } from 'react-native';
 import moment from 'moment';
 import Button from '../../Button';
 import Text from '../../Text';
+import getStyles from './get-styles';
 
 const Row = memo(({ style, index, data }) => {
+  const dimensions = useWindowDimensions();
+  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
   const {
     sortedData = [],
     currentPath = '',
     columns,
     onRowClick,
     onOptionsClick,
-    styles,
     source,
   } = data;
   const rowData = sortedData[index] || {};

@@ -19,7 +19,6 @@ import getListColumns from '../../lib/get-list-columns';
 import Row from './Row';
 import HeaderRow from './HeaderRow';
 import getStyles from './get-styles';
-import getRowStyles from './Row/get-styles';
 
 const throttledOnScroll = throttle((callback) => callback(), 10000, {
   trailing: true,
@@ -46,7 +45,6 @@ const List = ({ title, header, source, store, dispatch }) => {
   const listRef = useRef(null);
   const dimensions = useWindowDimensions();
   const styles = useMemo(() => getStyles(dimensions), [dimensions]);
-  const rowStyles = useMemo(() => getRowStyles(dimensions), [dimensions]);
   const isPlaylist = useMemo(
     () => !['video', 'audio', 'playlists', 'recent'].includes(source),
     [source],
@@ -98,19 +96,9 @@ const List = ({ title, header, source, store, dispatch }) => {
             { playlist: isPlaylist && source, index },
           ],
         }),
-      styles: rowStyles,
       isPlaylist,
     }),
-    [
-      store,
-      playlists,
-      isPlaylist,
-      dispatch,
-      source,
-      sortedData,
-      currentPath,
-      rowStyles,
-    ],
+    [store, playlists, isPlaylist, dispatch, source, sortedData, currentPath],
   );
 
   return (

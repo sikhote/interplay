@@ -19,15 +19,17 @@ export default ({ width }) => ({
     alignItems: 'center',
     outline: 'none',
     cursor: 'pointer',
+    borderTop: `1px solid ${colors.border}`,
+    borderBottom: `1px solid ${colors.border}`,
+    background:
+      'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.08) 100%)',
+    overflowY: 'scroll',
     ...(width < bps.b
       ? {
           paddingHorizontal: spacing.d,
           gridTemplateColumns: `20px 1fr 1fr 1fr ${buttonWidth}px`,
         }
       : {}),
-  },
-  rootOdd: {
-    background: 'rgba(0, 0, 0, 0.03)',
   },
   rootVideo: {
     gridTemplateColumns: `1fr 1fr ${buttonWidth}px`,
@@ -43,13 +45,15 @@ export default ({ width }) => ({
         }
       : {}),
   },
-  rootActive: {
-    background: `${transparentize(0.8, colors.a)}`,
-  },
   column: {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     outline: 'none',
+    display: 'grid',
+    gridTemplateColumns: 'auto auto',
+    justifyContent: 'start',
+    alignItems: 'center',
+    height: 26,
   },
 });

@@ -4,7 +4,7 @@ import { get, throttle } from 'lodash';
 import Router from 'next/router';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
-import { useWindowDimensions, View, TouchableOpacity } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import Input from '../Input';
 import Button from '../Button';
 import H1 from '../H1';
@@ -17,6 +17,7 @@ import { titleToSlug } from '../../lib/playlists';
 import { filesGetUrl } from '../../lib/actions/files';
 import getListColumns from '../../lib/get-list-columns';
 import Row from './Row';
+import HeaderRow from './HeaderRow';
 import getStyles from './get-styles';
 import getRowStyles from './Row/get-styles';
 
@@ -46,6 +47,10 @@ const List = ({ title, header, source, store, dispatch }) => {
   const dimensions = useWindowDimensions();
   const styles = useMemo(() => getStyles(dimensions), [dimensions]);
   const rowStyles = useMemo(() => getRowStyles(dimensions), [dimensions]);
+  const isPlaylist = useMemo(
+    () => !['video', 'audio', 'playlists', 'recent'].includes(source),
+    [source],
+  );
 
   const saveListSettings = useCallback(
     (listSettings) =>
@@ -61,25 +66,6 @@ const List = ({ title, header, source, store, dispatch }) => {
       }),
     [dispatch, lists, source],
   );
-  const onRowClick = useCallback(
-    ({ rowData, index }) => {
-      const path = get(rowData, 'path');
-
-      if (source === 'playlists') {
-        const slug = titleToSlug(get(playlists, `[${index}].name`));
-        Router.push('/playlists/[id]', `/playlists/${slug}`);
-      } else {
-        filesGetUrl({
-          dispatch,
-          store,
-          source,
-          path,
-          shouldPlay: true,
-        });
-      }
-    },
-    [source, dispatch, store, playlists],
-  );
   const itemData = useMemo(
     () => ({
       dispatch,
@@ -87,12 +73,44 @@ const List = ({ title, header, source, store, dispatch }) => {
       source,
       currentPath,
       columns: getListColumns(source),
-      onPress: onRowClick,
+      onRowClick: ({ rowData, index }) => {
+        const path = get(rowData, 'path');
+
+        if (source === 'playlists') {
+          const slug = titleToSlug(get(playlists, `[${index}].name`));
+          Router.push('/playlists/[id]', `/playlists/${slug}`);
+        } else {
+          filesGetUrl({
+            dispatch,
+            store,
+            source,
+            path,
+            shouldPlay: true,
+          });
+        }
+      },
+      onOptionsClick: ({ rowData, index }) =>
+        dispatch({
+          type: 'options-start',
+          payload: [
+            'item',
+            rowData.path,
+            { playlist: isPlaylist && source, index },
+          ],
+        }),
       styles: rowStyles,
-      isPlaylist: !['video', 'audio', 'playlists', 'recent'].includes(source),
-      Container: TouchableOpacity,
+      isPlaylist,
     }),
-    [dispatch, source, sortedData, currentPath, onRowClick, rowStyles],
+    [
+      store,
+      playlists,
+      isPlaylist,
+      dispatch,
+      source,
+      sortedData,
+      currentPath,
+      rowStyles,
+    ],
   );
 
   return (
@@ -132,19 +150,22 @@ const List = ({ title, header, source, store, dispatch }) => {
         </View>
       </View>
       <View style={styles.table}>
-        <Row
+        <HeaderRow
           {...{
-            data: Object.assign({}, itemData, {
-              Container: View,
-              onPress: undefined,
-              isHeader: true,
-              sortBy,
-              onClickColumn: (key) =>
-                saveListSettings({
-                  sortBy: key,
-                  sortDirection: sortBy === key ? !sortDirection : true,
-                }),
-            }),
+            dispatch,
+            sortedData,
+            source,
+            currentPath,
+            columns: getListColumns(source),
+            isPlaylist: !['video', 'audio', 'playlists', 'recent'].includes(
+              source,
+            ),
+            sortBy,
+            onClickColumn: (key) =>
+              saveListSettings({
+                sortBy: key,
+                sortDirection: sortBy === key ? !sortDirection : true,
+              }),
           }}
         />
         <View>

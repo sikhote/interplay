@@ -57,7 +57,7 @@ const Player = ({ dispatch, store }) => {
   } = player;
   const { url, album, artist, name, type, category } = file;
   const config = {
-    css: styles.player,
+    style: styles.player,
     loop,
     muted,
     width: type === 'video' ? 124 : 0,

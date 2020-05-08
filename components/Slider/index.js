@@ -50,7 +50,7 @@ const Slider = ({ color, value, min, max, onChange, style, ...props }) => {
         style={[
           styles.rail,
           {
-            backgroundColor: `linear-gradient(to right, ${color} ${progress}%, rgba(0, 0, 0, 0.3) ${progress}%)`,
+            backgroundImage: `linear-gradient(to right, ${color} ${progress}%, rgba(0, 0, 0, 0.3) ${progress}%)`,
           },
         ]}
       />

@@ -1,0 +1,12 @@
+.icon-play::before {
+  margin-right: 0;
+}
+.icon-fast-forward::before {
+  margin-right: 0;
+}
+.icon-loop::before {
+  margin-bottom: .3em;
+}
+.icon-shuffle::before {
+  margin-bottom: .2em;
+}

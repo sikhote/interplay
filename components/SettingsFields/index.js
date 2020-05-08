@@ -16,17 +16,17 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
   } = store;
 
   return (
-    <View {...props} style={Object.assign({}, styles.root, style)}>
+    <View {...props} style={[styles.root, style]}>
       <Select
         disabled={status === 'connected'}
         icon="cloud"
         value={type}
         options={[{ title: 'Dropbox', value: 'dropbox', key: 'dropbox' }]}
-        onChange={(event) => {
-          Cookies.set('type', event.target.value);
+        onValueChange={(value) => {
+          Cookies.set('type', value);
           dispatch({
             type: 'cloud-update',
-            payload: ['user', event.target.value],
+            payload: ['user', value],
           });
         }}
       />
@@ -135,7 +135,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
 SettingsFields.propTypes = {
   store: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  style: PropTypes.object,
+  style: PropTypes.any,
 };
 
 SettingsFields.defaultProps = {

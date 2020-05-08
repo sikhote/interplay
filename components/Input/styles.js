@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import {
   colors,
   fontSizes,
@@ -6,7 +7,7 @@ import {
   borderRadii,
 } from '../../lib/styling';
 
-export default {
+export default StyleSheet.create({
   root: {
     position: 'relative',
   },
@@ -18,14 +19,15 @@ export default {
     pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
+    color: colors.text,
   },
   iconIsSmall: {
     left: spacing.d,
   },
   input: {
-    background: colors.white,
+    backgroundColor: colors.white,
     paddingHorizontal: spacing.e,
-    height: fontSizes.c * lineHeights.normal * 2,
+    height: fontSizes.c * lineHeights.normal * 1.5,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -46,4 +48,4 @@ export default {
   inputWithIconIsSmall: {
     paddingLeft: 30,
   },
-};
+});

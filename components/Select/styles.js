@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import {
   colors,
   fontSizes,
@@ -6,7 +7,7 @@ import {
   borderRadii,
 } from '../../lib/styling';
 
-export default {
+export default StyleSheet.create({
   root: {
     position: 'relative',
   },
@@ -18,11 +19,12 @@ export default {
     pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
+    color: colors.text,
   },
   select: {
-    background: colors.white,
+    backgroundColor: colors.white,
     padding: `0 ${spacing.e}px`,
-    height: fontSizes.c * lineHeights.normal * 2,
+    height: fontSizes.c * lineHeights.normal * 1.5,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -36,4 +38,4 @@ export default {
   selectWithIcon: {
     paddingLeft: 46,
   },
-};
+});

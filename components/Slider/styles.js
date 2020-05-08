@@ -1,6 +1,7 @@
+import { StyleSheet } from 'react-native';
 import { borderRadii, colors } from '../../lib/styling';
 
-export default {
+export default StyleSheet.create({
   root: {
     position: 'relative',
     height: 20,
@@ -30,8 +31,8 @@ export default {
     width: 20,
     height: 20,
     borderRadius: borderRadii.b,
-    background: colors.white,
+    backgroundColor: colors.white,
     top: 0,
     boxShadow: 'rgba(0, 0, 0, 0.5) 0px 1px 3px',
   },
-};
+});

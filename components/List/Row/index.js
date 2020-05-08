@@ -21,8 +21,7 @@ const Row = memo(({ style, index, data }) => {
 
   return (
     <TouchableOpacity
-      style={Object.assign(
-        {},
+      style={[
         style,
         styles.root,
         source === 'playlists' ? styles.rootPlaylists : {},
@@ -30,7 +29,7 @@ const Row = memo(({ style, index, data }) => {
         source === 'recent' ? styles.rootRecent : {},
         index % 2 ? styles.rootOdd : {},
         rowData.path === currentPath ? styles.rootActive : {},
-      )}
+      ]}
       onClick={() => onRowClick({ index, rowData })}
     >
       {columns.map(({ key }) => (

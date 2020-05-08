@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { merge } from 'lodash';
 import { colors } from '../../lib/styling';
 import styles from './styles';
 
@@ -40,7 +39,7 @@ const Slider = ({ color, value, min, max, onChange, style, ...props }) => {
 
   return (
     <View
-      style={Object.assign({}, styles.root, style)}
+      style={[styles.root, style]}
       onClick={onClick}
       onMouseDown={() => isMovingSet(true)}
       onMouseUp={() => isMovingSet(false)}
@@ -48,12 +47,15 @@ const Slider = ({ color, value, min, max, onChange, style, ...props }) => {
       {...props}
     >
       <View
-        style={merge({}, styles.rail, {
-          background: `linear-gradient(to right, ${color} ${progress}%, rgba(0, 0, 0, 0.3) ${progress}%)`,
-        })}
+        style={[
+          styles.rail,
+          {
+            backgroundColor: `linear-gradient(to right, ${color} ${progress}%, rgba(0, 0, 0, 0.3) ${progress}%)`,
+          },
+        ]}
       />
       <View style={styles.handleContainer}>
-        <View style={merge({}, styles.handle, { left: `${progress}%` })} />
+        <View style={[styles.handle, { left: `${progress}%` }]} />
       </View>
     </View>
   );

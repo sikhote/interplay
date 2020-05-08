@@ -18,8 +18,7 @@ const Button = ({
   isEnclosed,
 }) => (
   <TouchableOpacity
-    style={Object.assign(
-      {},
+    style={[
       styles.root,
       theme === 'secondary' ? styles.rootIsSecondary : {},
       theme === 'subtle' ? styles.rootIsSubtle : {},
@@ -31,33 +30,31 @@ const Button = ({
       size === 'large' && shape === 'circle' ? styles.rootIsLargeCircle : {},
       isEnclosed ? {} : styles.rootIsNotEnclosed,
       style,
-    )}
+    ]}
     onPress={
       !isLoading || (isLoading && isAllowingLoadingClicks) ? onPress : undefined
     }
   >
     <View>
-      <Text color="white" style={isLoading ? styles.childrenIsLoading : {}}>
+      <Text style={[styles.text, isLoading ? styles.childrenIsLoading : {}]}>
         {Boolean(icon) && (
           <Icon
             icon={icon}
-            style={Object.assign(
-              {},
+            style={[
               theme === 'subtle' && !isEnclosed
                 ? styles.iconIsNotEnclosedIsSubtle
                 : {},
               children ? styles.iconWithChildren : {},
-            )}
+            ]}
           />
         )}
         {children}
       </Text>
       <Icon
-        style={Object.assign(
-          {},
+        style={[
           styles.loadingIcon,
           isLoading ? styles.loadingIconIsLoading : {},
-        )}
+        ]}
         icon="loading animate-spin"
       />
     </View>
@@ -72,7 +69,7 @@ Button.propTypes = {
   size: PropTypes.string,
   isAllowingLoadingClicks: PropTypes.bool,
   theme: PropTypes.string,
-  style: PropTypes.object,
+  style: PropTypes.any,
   onPress: PropTypes.func.isRequired,
   isEnclosed: PropTypes.bool,
 };

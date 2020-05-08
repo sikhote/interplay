@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
 import { View, TouchableWithoutFeedback } from 'react-native';
-import { merge } from 'lodash';
 import arrayMove from 'array-move';
 import Button from '../Button';
 import Select from '../Select';
@@ -78,7 +77,7 @@ const Options = ({ dispatch, store }) => {
   };
 
   return (
-    <View style={merge({}, styles.root, key && value ? styles.rootShow : {})}>
+    <View style={[styles.root, key && value ? styles.rootShow : {}]}>
       <TouchableWithoutFeedback onPress={reset}>
         <View style={styles.close} />
       </TouchableWithoutFeedback>
@@ -119,7 +118,7 @@ const Options = ({ dispatch, store }) => {
                   value: name,
                   title: name,
                 }))}
-                onChange={(event) => selectedPlaylistSet(event.target.value)}
+                onValueChange={(value) => selectedPlaylistSet(value)}
               />
               <Button
                 shape="circle"

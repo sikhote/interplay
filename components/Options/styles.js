@@ -1,6 +1,7 @@
+import { StyleSheet } from 'react-native';
 import { spacing, zIndexes, colors, speeds } from '../../lib/styling';
 
-export default {
+export default StyleSheet.create({
   root: {
     zIndex: zIndexes.options,
     position: 'fixed',
@@ -22,8 +23,10 @@ export default {
   },
   inner: {
     flex: '0 0 auto',
-    background: 'rgba(255, 255, 255, 1)',
-    borderLeft: `1px solid ${colors.border}`,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderLeftWidth: 1,
+    borderLeftStyle: 'solid',
+    borderLeftColor: colors.border,
     width: 300,
     height: '100%',
     display: 'grid',
@@ -55,4 +58,4 @@ export default {
     marginLeft: spacing.b,
     width: '50%',
   },
-};
+});

@@ -1,9 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Text from '../Text';
 import styles from './styles';
 
-const H1 = (props) => (
-  <Text style={styles.root} fontSize="h1" lineHeight="close" {...props} />
+const H1 = ({ style, ...props }) => (
+  <Text style={[styles.root, style]} {...props} />
 );
+
+H1.propTypes = {
+  style: PropTypes.any,
+};
+
+H1.defaultProps = {
+  style: {},
+};
 
 export default H1;

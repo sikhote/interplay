@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import {
   colors,
   spacing,
@@ -6,7 +7,7 @@ import {
   lineHeights,
 } from '../../lib/styling';
 
-export default {
+export default StyleSheet.create({
   root: {
     position: 'relative',
     padding: `0 ${spacing.e}px`,
@@ -14,13 +15,13 @@ export default {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: borderRadii.a,
-    background: colors.a,
+    backgroundColor: colors.a,
   },
   rootIsSecondary: {
-    background: colors.c,
+    backgroundColor: colors.c,
   },
   rootIsSubtle: {
-    background: 'rgba(0, 0, 0, .3)',
+    backgroundColor: 'rgba(0, 0, 0, .3)',
   },
   rootIsLoading: {
     pointerEvents: 'none',
@@ -42,7 +43,7 @@ export default {
     width: fontSizes.c * lineHeights.normal * 2,
   },
   rootIsNotEnclosed: {
-    background: 'none',
+    backgroundColor: 'none',
   },
   iconIsNotEnclosedIsSubtle: {
     color: 'rgba(0, 0, 0, .4)',
@@ -67,4 +68,7 @@ export default {
   loadingIconIsLoading: {
     display: 'flex',
   },
-};
+  text: {
+    color: colors.white,
+  },
+});

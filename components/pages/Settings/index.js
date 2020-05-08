@@ -13,6 +13,7 @@ import Text from '../../Text';
 import Icon from '../../Icon';
 import PageTitle from '../../PageTitle';
 import getStyles from './get-styles';
+import { colors } from '../../../lib/styling';
 
 const Settings = ({ store, dispatch }) => {
   const {
@@ -105,7 +106,7 @@ const Settings = ({ store, dispatch }) => {
 
           return (
             <Text key={key} style={styles.statusLine}>
-              <Text color={success ? 'a' : 'c'}>
+              <Text style={{ color: success ? colors.a : colors.c }}>
                 <Icon icon={success ? 'check' : 'cancel'} />
               </Text>
               {capitalize(key)} {status}{' '}

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Text from '../../Text';
 import Icon from '../../Icon';
 import getStyles from './get-styles';
+import { colors } from '../../../lib/styling';
 
 const HeaderRow = ({ source, columns, onClickColumn, sortBy }) => {
   const dimensions = useWindowDimensions();
@@ -11,29 +12,24 @@ const HeaderRow = ({ source, columns, onClickColumn, sortBy }) => {
 
   return (
     <View
-      style={Object.assign(
-        {},
+      style={[
         styles.root,
         source === 'playlists' ? styles.rootPlaylists : {},
         source === 'video' ? styles.rootVideo : {},
         source === 'recent' ? styles.rootRecent : {},
-      )}
+      ]}
     >
       {columns.map(({ key, title }) => (
         <Text
           key={key}
-          style={styles.column}
-          color={sortBy === key ? 'text' : 'textFaded'}
-          fontWeight="bold"
-          fontSize="b"
+          style={[
+            styles.column,
+            { color: sortBy === key ? colors.text : colors.textFaded },
+          ]}
           onClick={() => onClickColumn(key)}
         >
           {title}
-          {sortBy === key && (
-            <Text color="text" fontSize="a">
-              <Icon fontSize="a" icon="sort" />
-            </Text>
-          )}
+          {sortBy === key && <Icon style={styles.icon} icon="sort" />}
         </Text>
       ))}
       <div />

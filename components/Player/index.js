@@ -42,7 +42,7 @@ const Player = ({ dispatch, store }) => {
   });
 
   const dimensions = Dimensions.get('window');
-  const styles = getStyles(dimensions);
+  const { styles, player: playerStyles } = getStyles(dimensions);
   const Divider = () => <Text style={styles.divider}> - </Text>;
   const { files, player, playlists, lists } = store;
   const {
@@ -57,7 +57,7 @@ const Player = ({ dispatch, store }) => {
   } = player;
   const { url, album, artist, name, type, category } = file;
   const config = {
-    style: styles.player,
+    style: playerStyles,
     loop,
     muted,
     width: type === 'video' ? 124 : 0,
@@ -133,9 +133,7 @@ const Player = ({ dispatch, store }) => {
         <View style={styles.info}>
           {path ? (
             <>
-              <Text fontWeight="bold" style={styles.name}>
-                {name}
-              </Text>
+              <Text style={styles.name}>{name}</Text>
               {category && (
                 <Text>
                   <Divider />

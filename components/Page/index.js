@@ -30,7 +30,7 @@ const Page = ({ Component, pageProps }) => {
     },
   } = store;
   const dimensions = useWindowDimensions();
-  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
+  const { styles, global } = useMemo(() => getStyles(dimensions), [dimensions]);
 
   useEffect(() => {
     if (status === 'initial') {
@@ -84,6 +84,7 @@ const Page = ({ Component, pageProps }) => {
       <Head>
         <link rel="stylesheet" href="/css/fontello/css/animation.css" />
         <link rel="stylesheet" href="/css/fontello/css/fontello.css" />
+        <style dangerouslySetInnerHTML={{ __html: global }} />
       </Head>
       {status === 'initial' ? (
         <View style={styles.loading}>

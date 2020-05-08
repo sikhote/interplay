@@ -1,9 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Text from '../Text';
 import styles from './styles';
 
-const H2 = (props) => (
-  <Text fontWeight="bold" fontSize="h2" style={styles.root} {...props} />
+const H2 = ({ style, ...props }) => (
+  <Text style={[styles.root, style]} {...props} />
 );
+
+H2.propTypes = {
+  style: PropTypes.any,
+};
+
+H2.defaultProps = {
+  style: {},
+};
 
 export default H2;

@@ -1,18 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import RNLink from 'next/link';
+import { TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'next/router';
+import Text from '../Text';
 
-const Link = ({ style, href, id, label }) => (
-  <RNLink as={id} href={href || id}>
-    <a style={style}>{label}</a>
-  </RNLink>
-);
+const Link = ({ style, asPath, filePath, label }) => {
+  const router = useRouter();
+
+  return (
+    <TouchableOpacity
+      style={style}
+      onPress={() => router.push(filePath, asPath)}
+    >
+      <View>
+        <Text>{label}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 Link.propTypes = {
-  style: PropTypes.object.isRequired,
+  style: PropTypes.any,
   label: PropTypes.any.isRequired,
-  href: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  asPath: PropTypes.string.isRequired,
+  filePath: PropTypes.string.isRequired,
+};
+
+Link.defaultProps = {
+  style: {},
 };
 
 export default Link;

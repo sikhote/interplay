@@ -13,11 +13,14 @@ const Switch = ({
   style,
   ...props
 }) => (
-  <View style={Object.assign({}, styles.root, { color }, style)}>
+  <View style={[styles.root, { color }, style]}>
     <Icon
-      style={Object.assign({}, styles.icon, {
-        color: isOn ? color : colors.textFaded,
-      })}
+      style={[
+        styles.icon,
+        {
+          color: isOn ? color : colors.textFaded,
+        },
+      ]}
       icon={isOn ? checkedIcon : unCheckedIcon}
     />
     <RNSwitch
@@ -35,7 +38,7 @@ Switch.propTypes = {
   checkedIcon: PropTypes.string.isRequired,
   unCheckedIcon: PropTypes.string.isRequired,
   isOn: PropTypes.bool.isRequired,
-  style: PropTypes.object,
+  style: PropTypes.any,
 };
 
 Switch.defaultProps = {

@@ -6,17 +6,13 @@ import Text from '../Text';
 import styles from './styles';
 
 const Select = ({ options, value, icon, style, ...props }) => (
-  <View style={[styles.root, style]}>
+  <View style={[styles.root, icon ? styles.rootWithIcon : {}, style]}>
     {Boolean(icon) && (
       <Text style={styles.icon}>
         <Icon icon={icon} />
       </Text>
     )}
-    <Picker
-      selectedValue={value}
-      style={[styles.select, icon ? styles.selectWithIcon : {}]}
-      {...props}
-    >
+    <Picker selectedValue={value} style={styles.select} {...props}>
       <Picker.Item value="" label="" />
       {options.map(({ key, title, value }) => (
         <Picker.Item key={key} value={value} label={title} />

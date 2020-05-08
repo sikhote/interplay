@@ -10,6 +10,11 @@ import {
 export default StyleSheet.create({
   root: {
     position: 'relative',
+    borderRadius: borderRadii.a,
+    border: `1px solid ${colors.border}`,
+  },
+  rootWithIcon: {
+    paddingLeft: 46,
   },
   icon: {
     position: 'absolute',
@@ -28,14 +33,10 @@ export default StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: borderRadii.a,
-    border: `1px solid ${colors.border}`,
     width: '100%',
     fontSize: fontSizes.c,
     lineHeight: lineHeights.close,
     color: colors.text,
-  },
-  selectWithIcon: {
-    paddingLeft: 46,
+    border: 'none',
   },
 });

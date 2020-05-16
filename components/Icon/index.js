@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Text from '../Text';
+import Text from 'components/Text';
 import styles from './styles';
 
-// Import { glyphs } from '../../public/font/config';
+// Import { glyphs } from 'public/font/config';
 // const glyphsMap = glyphs.reduce(
 //   (acc, cur) => ({
 //     ...acc,

@@ -6,7 +6,7 @@ import {
   bps,
   fontSizes,
   lineHeights,
-} from '../../../lib/styling';
+} from 'lib/styling';
 
 const buttonWidth = fontSizes.c * lineHeights.normal * 1.125;
 

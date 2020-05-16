@@ -3,18 +3,18 @@ import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { v4 as uuidv4 } from 'uuid';
-import Navigation from '../Navigation';
-import Player from '../Player';
-import Options from '../Options';
-import Icon from '../Icon';
-import Notifications from '../Notifications';
-import reducer from '../../lib/reducer';
-import getInitialState from '../../lib/get-initial-state';
+import Navigation from 'components/Navigation';
+import Player from 'components/Player';
+import Options from 'components/Options';
+import Icon from 'components/Icon';
+import Notifications from 'components/Notifications';
+import reducer from 'lib/reducer';
+import getInitialState from 'lib/get-initial-state';
 import {
   cloudGet,
   cloudSavePlaylists,
   cloudSaveOther,
-} from '../../lib/actions/cloud';
+} from 'lib/actions/cloud';
 import getStyles from './get-styles';
 
 const Page = ({ Component, pageProps }) => {

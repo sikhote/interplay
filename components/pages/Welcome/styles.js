@@ -1,4 +1,4 @@
-import { spacing } from '../../../lib/styling';
+import { spacing } from 'lib/styling';
 
 export default {
   root: {

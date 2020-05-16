@@ -2,10 +2,10 @@ import React, { useMemo } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
-import Link from '../Link';
-import Icon from '../Icon';
-import Text from '../Text';
-import { titleToSlug } from '../../lib/playlists';
+import Link from 'components/Link';
+import Icon from 'components/Icon';
+import Text from 'components/Text';
+import { titleToSlug } from 'lib/playlists';
 import getStyles from './get-styles';
 
 const Navigation = ({ router, playlists, status, dispatch }) => {

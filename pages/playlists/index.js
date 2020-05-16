@@ -1,3 +1,3 @@
-import Page from '../../components/pages/Playlists';
+import Page from 'components/pages/Playlists';
 
 export default Page;

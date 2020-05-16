@@ -4,16 +4,16 @@ import { useWindowDimensions, View } from 'react-native';
 import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { get, capitalize } from 'lodash';
-import Button from '../../Button';
-import SettingsFields from '../../SettingsFields';
-import { filesSync } from '../../../lib/actions/files';
-import { cloudSaveFiles } from '../../../lib/actions/cloud';
-import H1 from '../../H1';
-import Text from '../../Text';
-import Icon from '../../Icon';
-import PageTitle from '../../PageTitle';
+import Button from 'components/Button';
+import SettingsFields from 'components/SettingsFields';
+import { filesSync } from 'lib/actions/files';
+import { cloudSaveFiles } from 'lib/actions/cloud';
+import H1 from 'components/H1';
+import Text from 'components/Text';
+import Icon from 'components/Icon';
+import PageTitle from 'components/PageTitle';
 import getStyles from './get-styles';
-import { colors } from '../../../lib/styling';
+import { colors } from 'lib/styling';
 
 const Settings = ({ store, dispatch }) => {
   const {

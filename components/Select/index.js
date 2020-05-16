@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, Picker } from 'react-native';
-import Icon from '../Icon';
-import Text from '../Text';
+import Icon from 'components/Icon';
+import Text from 'components/Text';
 import styles from './styles';
 
 const Select = ({ options, value, icon, style, ...props }) => (

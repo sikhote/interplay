@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { spacing, zIndexes, colors, speeds } from '../../lib/styling';
+import { spacing, zIndexes, colors, speeds } from 'lib/styling';
 
 export default StyleSheet.create({
   root: {

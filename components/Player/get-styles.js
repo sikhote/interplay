@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { spacing, bps, fontWeights } from '../../lib/styling';
+import { spacing, bps, fontWeights } from 'lib/styling';
 
 export default ({ width }) => ({
   player: {

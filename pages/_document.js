@@ -1,7 +1,7 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import React from 'react';
 import { AppRegistry } from 'react-native';
-import config from '../app';
+import config from 'pages/app';
 
 const normalizeNextElements = `
   #__next {

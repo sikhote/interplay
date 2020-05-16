@@ -1,3 +1,3 @@
-import Page from '../components/pages/Audio';
+import Page from 'components/pages/Audio';
 
 export default Page;

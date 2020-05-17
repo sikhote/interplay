@@ -4,10 +4,10 @@ import Cookies from 'js-cookie';
 import Router from 'next/router';
 import { View } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
-import Button from '../Button';
-import Input from '../Input';
-import Select from '../Select';
-import { cloudGet } from '../../lib/actions/cloud';
+import Button from 'components/Button';
+import Input from 'components/Input';
+import Select from 'components/Select';
+import { cloudGet } from 'lib/actions/cloud';
 import styles from './styles';
 
 const SettingsFields = ({ store, dispatch, style, ...props }) => {

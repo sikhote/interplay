@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { transparentize } from 'polished';
-import { colors, spacing, bps } from '../../lib/styling';
+import { colors, spacing, bps } from 'lib/styling';
 
 export default ({ width }) =>
   StyleSheet.create({

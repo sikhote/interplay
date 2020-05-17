@@ -6,13 +6,13 @@ import ReactPlayer from 'react-player';
 import { get, throttle } from 'lodash';
 import screenfull from 'screenfull';
 import moment from 'moment';
-import Button from '../Button';
-import Slider from '../Slider';
-import Switch from '../Switch';
-import Text from '../Text';
-import getFileInDirection from '../../lib/get-file-in-direction';
-import { filesGetUrl } from '../../lib/actions/files';
-import { colors } from '../../lib/styling';
+import Button from 'components/Button';
+import Slider from 'components/Slider';
+import Switch from 'components/Switch';
+import Text from 'components/Text';
+import getFileInDirection from 'lib/get-file-in-direction';
+import { filesGetUrl } from 'lib/actions/files';
+import { colors } from 'lib/styling';
 import getStyles from './get-styles';
 
 const prepareFile = throttle((callback) => callback(), 10000, {

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Error from 'next/error';
 import { useRouter } from 'next/router';
 import { get } from 'lodash';
-import List from '../../../List';
-import { titleToSlug } from '../../../../lib/playlists';
+import List from 'components/List';
+import { titleToSlug } from 'lib/playlists';
 
 const Playlist = ({ store, ...props }) => {
   const router = useRouter();

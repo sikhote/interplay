@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, bps } from '../../lib/styling';
+import { colors, bps } from 'lib/styling';
 
 export default ({ width }) =>
   StyleSheet.create({

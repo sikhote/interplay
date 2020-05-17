@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Text from '../Text';
+import Text from 'components/Text';
 import styles from './styles';
 
 const H2 = ({ style, ...props }) => (

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Router from 'next/router';
 import { View, TouchableWithoutFeedback } from 'react-native';
 import arrayMove from 'array-move';
-import Button from '../Button';
-import Select from '../Select';
-import Input from '../Input';
-import H2 from '../H2';
-import { titleToSlug } from '../../lib/playlists';
+import Button from 'components/Button';
+import Select from 'components/Select';
+import Input from 'components/Input';
+import H2 from 'components/H2';
+import { titleToSlug } from 'lib/playlists';
 import styles from './styles';
 
 const Options = ({ dispatch, store }) => {

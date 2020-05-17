@@ -5,7 +5,7 @@ import {
   lineHeights,
   spacing,
   borderRadii,
-} from '../../lib/styling';
+} from 'lib/styling';
 
 export default StyleSheet.create({
   root: {

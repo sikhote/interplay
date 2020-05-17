@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch as RNSwitch, View } from 'react-native';
-import Icon from '../Icon';
-import { colors } from '../../lib/styling';
+import Icon from 'components/Icon';
+import { colors } from 'lib/styling';
 import styles from './styles';
 
 const Switch = ({

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import SettingsFields from '../../SettingsFields';
-import H1 from '../../H1';
-import Text from '../../Text';
-import PageTitle from '../../PageTitle';
+import SettingsFields from 'components/SettingsFields';
+import H1 from 'components/H1';
+import Text from 'components/Text';
+import PageTitle from 'components/PageTitle';
 import styles from './styles';
 
 const Welcome = ({ store, dispatch }) => (

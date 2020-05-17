@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { borderRadii, colors } from '../../lib/styling';
+import { borderRadii, colors } from 'lib/styling';
 
 export default StyleSheet.create({
   root: {

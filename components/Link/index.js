@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'next/router';
-import Text from '../Text';
+import Text from 'components/Text';
 
 const Link = ({ style, asPath, filePath, label }) => {
   const router = useRouter();

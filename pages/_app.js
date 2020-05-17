@@ -1,9 +1,9 @@
-import App from '../components/App';
+import App from 'components/App';
 // eslint-disable-next-line import/extensions
-import '../public/css/fontello/css/animation.css';
+import 'public/css/fontello/css/animation.css';
 // eslint-disable-next-line import/extensions
-import '../public/css/fontello/css/fontello.css';
+import 'public/css/fontello/css/fontello.css';
 // eslint-disable-next-line import/extensions
-import '../public/css/global.css';
+import 'public/css/global.css';
 
 export default App;

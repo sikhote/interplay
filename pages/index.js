@@ -1,3 +1,3 @@
-import Page from '../components/pages/Settings';
+import Page from 'components/pages/Settings';
 
 export default Page;

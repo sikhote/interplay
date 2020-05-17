@@ -2,8 +2,8 @@ import React, { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, useWindowDimensions } from 'react-native';
 import moment from 'moment';
-import Button from '../../Button';
-import Text from '../../Text';
+import Button from 'components/Button';
+import Text from 'components/Text';
 import getStyles from './get-styles';
 
 const Row = memo(({ style, index, data }) => {

@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
-import Text from '../../Text';
-import Icon from '../../Icon';
+import Text from 'components/Text';
+import Icon from 'components/Icon';
 import getStyles from './get-styles';
-import { colors } from '../../../lib/styling';
+import { colors } from 'lib/styling';
 
 const HeaderRow = ({ source, columns, onClickColumn, sortBy }) => {
   const dimensions = useWindowDimensions();

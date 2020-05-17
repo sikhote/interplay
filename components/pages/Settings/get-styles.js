@@ -1,4 +1,4 @@
-import { spacing, bps } from '../../../lib/styling';
+import { spacing, bps } from 'lib/styling';
 
 export default ({ width }) => ({
   root: {

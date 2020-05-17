@@ -1,6 +1,6 @@
 import React from 'react';
 import NextApp from 'next/app';
-import Page from '../Page';
+import Page from 'components/Page';
 
 class App extends NextApp {
   render() {

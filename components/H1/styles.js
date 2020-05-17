@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { spacing, fontSizes, lineHeights } from '../../lib/styling';
+import { spacing, fontSizes, lineHeights } from 'lib/styling';
 
 export default StyleSheet.create({
   root: {

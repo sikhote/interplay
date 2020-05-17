@@ -8,10 +8,14 @@
 Play media from the cloud on a browser
 
 ## notes
-- Built with react, next, now, xo, lodash, and more
+- Built with react, next, now, xo, lodash, react-native, and more
 - So far, only dropbox is supported and it requires an access token
 
 ## commands
 - `yarn dev` to develop
 - `yarn build` to build for production
 - `yarn start` to run in production mode
+
+## development requirements
+- Web: node and yarn
+- Native: node, yarn, expo-cli, and mac os

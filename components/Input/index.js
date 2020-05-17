@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TextInput, View } from 'react-native';
-import Text from '../Text';
-import Icon from '../Icon';
+import Text from 'components/Text';
+import Icon from 'components/Icon';
 import styles from './styles';
 
 const Input = ({ icon, size, style, ...props }) => (

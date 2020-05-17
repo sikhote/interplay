@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useWindowDimensions, View } from 'react-native';
-import Icon from '../Icon';
-import Text from '../Text';
+import Icon from 'components/Icon';
+import Text from 'components/Text';
 import getStyles from './get-styles';
 
 const halfSteps = [-999, -100, -50, -30, -20, -12, -8, -5, -1];

@@ -1,4 +1,4 @@
-import App from '@components/App/index';
+import App from 'components/App';
 // eslint-disable-next-line import/extensions
 import 'public/css/fontello/css/animation.css';
 // eslint-disable-next-line import/extensions

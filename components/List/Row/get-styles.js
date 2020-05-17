@@ -1,12 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { transparentize } from 'polished';
-import {
-  colors,
-  spacing,
-  bps,
-  fontSizes,
-  lineHeights,
-} from 'lib/styling';
+import { colors, spacing, bps, fontSizes, lineHeights } from 'lib/styling';
 
 const buttonWidth = fontSizes.c * lineHeights.normal * 1.125;
 

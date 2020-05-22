@@ -36,11 +36,9 @@ export default function App(props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.tabBarInfoText}>This is!!!!</Text>
-      <Text style={styles.tabBarInfoText}>This is!!!!</Text>
-      <Text style={styles.tabBarInfoText}>This is!!!!</Text>
-      <Text style={styles.tabBarInfoText}>This is!!!!</Text>
-      <Text style={styles.tabBarInfoText}>This is11111111111</Text>
+      <Text style={styles.tabBarInfoText}>This is</Text>
+      <Text style={styles.tabBarInfoText}>This sdsdsdsd</Text>
+      <Text style={styles.tabBarInfoText}>This sdsdsdsd!!!</Text>
     </View>
   );
 }

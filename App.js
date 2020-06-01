@@ -1,47 +1,13 @@
-import { Ionicons } from '@expo/vector-icons';
-import { SplashScreen } from 'expo';
-import * as Font from 'expo-font';
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import * as React from 'react';
+import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 
-export default function App(props) {
-  const [isLoadingComplete, setLoadingComplete] = React.useState(false);
+import useCachedResources from './lib/hooks/useCachedResources';
+import BottomTabNavigator from './navigation/BottomTabNavigator';
+import LinkingConfiguration from './navigation/LinkingConfiguration';
 
-  // Load any resources or data that we need prior to rendering the app
-  React.useEffect(() => {
-    async function loadResourcesAndDataAsync() {
-      try {
-        SplashScreen.preventAutoHide();
-
-        // Load fonts
-        await Font.loadAsync({
-          ...Ionicons.font,
-          'space-mono': require('./public/fonts/SpaceMono-Regular.ttf'),
-        });
-      } catch (error) {
-        // We might want to provide this error information to an error reporting service
-        console.warn(error);
-      } finally {
-        setLoadingComplete(true);
-        SplashScreen.hide();
-      }
-    }
-
-    loadResourcesAndDataAsync();
-  }, []);
-
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
-    return null;
-  }
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.tabBarInfoText}>This is</Text>
-      <Text style={styles.tabBarInfoText}>This sdsdsdsd</Text>
-      <Text style={styles.tabBarInfoText}>This sdsdsdsd!!!</Text>
-    </View>
-  );
-}
+const Stack = createStackNavigator();
 
 const styles = StyleSheet.create({
   container: {
@@ -49,3 +15,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+export default () => {
+  const isLoadingComplete = useCachedResources();
+
+  if (isLoadingComplete) {
+    return (
+      <View style={styles.container}>
+        {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
+        <NavigationContainer linking={LinkingConfiguration}>
+          <Stack.Navigator>
+            <Stack.Screen name="Root" component={BottomTabNavigator} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </View>
+    );
+  }
+
+  return null;
+};

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
+const Cookies = {};
 import Router from 'next/router';
 import { View } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,6 +10,7 @@ import Input from 'components/Input';
 import Select from 'components/Select';
 import { cloudGet } from 'lib/actions/cloud';
 import styles from './styles';
+
 
 const SettingsFields = ({ store, dispatch, style, ...props }) => {
   const {

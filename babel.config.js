@@ -1,7 +1,4 @@
-module.exports = (api) => {
-  api.cache(true);
-  return {
-    presets: ['babel-preset-expo'],
-    plugins: [['module-resolver', { root: ['.'] }]],
-  };
+module.exports = {
+  presets: ['@expo/next-adapter/babel'],
+  plugins: [["module-resolver", { root: ["."] }]],
 };

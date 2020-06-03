@@ -10,7 +10,6 @@ import Select from 'components/Select';
 import { cloudGet } from 'lib/actions/cloud';
 import styles from './styles';
 
-
 const SettingsFields = ({ store, dispatch, style, ...props }) => {
   const {
     cloud: { user, key, path, type, status },

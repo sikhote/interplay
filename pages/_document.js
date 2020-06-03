@@ -1,4 +1,5 @@
-import Document, { Head, Main, NextScript } from 'next/document';
+import { Head, Main, NextScript } from 'next/document';
+import AdapterDocument from '@expo/next-adapter/document';
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import config from 'app';
@@ -11,7 +12,7 @@ const normalizeNextElements = `
   }
 `;
 
-export default class NextDocument extends Document {
+export default class Document extends AdapterDocument {
   static async getInitialProps({ renderPage }) {
     AppRegistry.registerComponent(config.name, () => Main);
     const { getStyleElement } = AppRegistry.getApplication(config.name);

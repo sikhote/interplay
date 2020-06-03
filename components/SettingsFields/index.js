@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import Cookies from 'js-cookie';
-const Cookies = {};
+import Cookies from 'js-cookie';
 import Router from 'next/router';
 import { View } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';

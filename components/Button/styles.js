@@ -30,7 +30,7 @@ export default StyleSheet.create({
     height: fontSizes.c * lineHeights.normal * 2,
   },
   rootIsCircle: {
-    borderRadius: borderRadii.b,
+    borderRadius: (fontSizes.c * lineHeights.normal * 1.5) / 2,
     width: fontSizes.c * lineHeights.normal * 1.5,
   },
   rootIsSmallCircle: {
@@ -40,7 +40,7 @@ export default StyleSheet.create({
     width: fontSizes.c * lineHeights.normal * 2,
   },
   rootIsNotEnclosed: {
-    backgroundColor: 'none',
+    backgroundColor: colors.transparent,
   },
   icon: {
     color: colors.white,

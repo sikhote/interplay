@@ -9,7 +9,7 @@ export default StyleSheet.create({
   },
   rail: {
     height: 4,
-    borderRadius: borderRadii.b,
+    borderRadius: 2,
     position: 'absolute',
     top: '50%',
     marginTop: -2,
@@ -29,7 +29,7 @@ export default StyleSheet.create({
     zIndex: 1,
     width: 20,
     height: 20,
-    borderRadius: borderRadii.b,
+    borderRadius: 10,
     backgroundColor: colors.white,
     top: 0,
     boxShadow: 'rgba(0, 0, 0, 0.5) 0px 1px 3px',

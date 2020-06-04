@@ -13,7 +13,9 @@ export default () =>
     },
     itemInner: {
       padding: spacing.d,
-      border: `1px solid ${colors.border}`,
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: colors.border,
       zIndex: zIndexes.notification,
       backgroundColor: colors.white,
       maxWidth: 300,

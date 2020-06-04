@@ -5,6 +5,7 @@
   "homepage": "https://interplay.app",
   "version": "0.2.1",
   "private": true,
+  "main": "components/App/index.js",
   "scripts": {
     "dev": "next",
     "now-build": "next build",

@@ -65,12 +65,16 @@ export default ({ width }) =>
       color: colors.white,
     },
     itemTextIcon: {
+      color: 'rgba(255, 255, 255, .4)',
       marginRight: spacing.e,
       ...(width < bps.b
         ? {
             marginRight: 0,
           }
         : {}),
+    },
+    itemTextIconActive: {
+      color: colors.white,
     },
     itemTextContent: {
       ...(width < bps.b

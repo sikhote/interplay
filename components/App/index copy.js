@@ -1,5 +1,4 @@
-// export { default } from './pages/index';
-
+import { registerRootComponent } from 'expo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
@@ -18,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default () => {
+const App = () => {
   const isLoadingComplete = useCachedResources();
 
   if (isLoadingComplete) {
@@ -36,3 +35,5 @@ export default () => {
 
   return null;
 };
+
+registerRootComponent(App);

@@ -21,7 +21,6 @@ export default StyleSheet.create({
     top: 0,
     left: spacing.e,
     height: '100%',
-    pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
     color: colors.text,

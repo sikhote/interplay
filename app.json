@@ -10,7 +10,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./public/images/native/icon.png",
-    "scheme": "myapp",
+    "scheme": "interplay",
     "splash": {
       "image": "./public/images/native/splash.png",
       "resizeMode": "contain",

@@ -1,7 +1,6 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
-import Head from 'next/head';
 import { v4 as uuidv4 } from 'uuid';
 import Navigation from 'components/Navigation';
 import Player from 'components/Player';
@@ -81,9 +80,6 @@ const Page = ({ Component, pageProps }) => {
 
   return (
     <View>
-      <Head>
-        <style dangerouslySetInnerHTML={{ __html: global }} />
-      </Head>
       {status === 'initial' ? (
         <View style={styles.loading}>
           <Icon style={styles.icon} icon="loading animate-spin" />

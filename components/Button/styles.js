@@ -23,9 +23,6 @@ export default StyleSheet.create({
   rootIsSubtle: {
     backgroundColor: 'rgba(0, 0, 0, .3)',
   },
-  rootIsLoading: {
-    pointerEvents: 'none',
-  },
   rootIsSmall: {
     height: fontSizes.c * lineHeights.normal * 1.125,
   },
@@ -44,6 +41,9 @@ export default StyleSheet.create({
   },
   rootIsNotEnclosed: {
     backgroundColor: 'none',
+  },
+  icon: {
+    color: colors.white,
   },
   iconIsNotEnclosedIsSubtle: {
     color: 'rgba(0, 0, 0, .4)',

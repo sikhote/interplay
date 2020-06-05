@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
+import Head from 'next/head';
 import { v4 as uuidv4 } from 'uuid';
 import Navigation from 'components/Navigation';
 import Player from 'components/Player';
@@ -15,6 +16,8 @@ import {
   cloudSaveOther,
 } from 'lib/actions/cloud';
 import getStyles from './get-styles';
+import storage from 'lib/storage';
+import cloudStatuses from 'lib/cloud-statuses';
 
 const Page = ({ Component, pageProps }) => {
   const [store, dispatch] = useReducer(reducer, null, getInitialState);
@@ -32,7 +35,21 @@ const Page = ({ Component, pageProps }) => {
   const styles = useMemo(() => getStyles(dimensions), [dimensions]);
 
   useEffect(() => {
-    if (status === 'initial') {
+    storage.multiGet(['type', 'key', 'path', 'user']).then((pairs) => {
+      const data = pairs.reduce((data, [key, value]) => {
+        data[key] = key === 'type' ? value || 'dropbox' : value || '';
+        return data;
+      }, {});
+
+      dispatch({
+        type: 'cloud-update-many',
+        payload: { status: cloudStatuses.readyToGet, ...data },
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (status === cloudStatuses.readyToGet) {
       if (key && path && user) {
         cloudGet(store)
           .then((storeUpdates) => {
@@ -49,7 +66,7 @@ const Page = ({ Component, pageProps }) => {
           .catch(() => {
             dispatch({
               type: 'cloud-update',
-              payload: ['status', 'disconnected'],
+              payload: ['status', cloudStatuses.disconnected],
             });
             dispatch({
               type: 'notifications-add',
@@ -61,26 +78,41 @@ const Page = ({ Component, pageProps }) => {
             });
           });
       } else {
-        dispatch({ type: 'cloud-update', payload: ['status', 'disconnected'] });
+        dispatch({
+          type: 'cloud-update',
+          payload: ['status', cloudStatuses.disconnected],
+        });
       }
     }
   }, [status, key, path, user, store]);
 
   useEffect(() => {
-    if (!['initial', 'disconnected'].includes(status)) {
+    if (
+      ![
+        cloudStatuses.readyToGet,
+        cloudStatuses.initial,
+        cloudStatuses.disconnected,
+      ].includes(status)
+    ) {
       cloudSavePlaylists(store);
     }
   }, [playlistsChanges, status, store]);
 
   useEffect(() => {
-    if (!['initial', 'disconnected'].includes(status)) {
+    if (
+      ![
+        cloudStatuses.readyToGet,
+        cloudStatuses.initial,
+        cloudStatuses.disconnected,
+      ].includes(status)
+    ) {
       cloudSaveOther(store);
     }
   }, [status, store, otherChanges]);
 
   return (
     <View>
-      {status === 'initial' ? (
+      {[cloudStatuses.readyToGet, cloudStatuses.initial].includes(status) ? (
         <View style={styles.loading}>
           <Icon style={styles.icon} icon="loading animate-spin" />
         </View>

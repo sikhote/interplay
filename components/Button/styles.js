@@ -37,6 +37,7 @@ export default StyleSheet.create({
     width: fontSizes.c * lineHeights.normal * 1.125,
   },
   rootIsLargeCircle: {
+    borderRadius: (fontSizes.c * lineHeights.normal * 2) / 2,
     width: fontSizes.c * lineHeights.normal * 2,
   },
   rootIsNotEnclosed: {

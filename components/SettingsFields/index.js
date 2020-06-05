@@ -9,6 +9,7 @@ import Input from 'components/Input';
 import Select from 'components/Select';
 import { cloudGet } from 'lib/actions/cloud';
 import styles from './styles';
+import cloudStatuses from 'lib/cloud-statuses';
 
 const SettingsFields = ({ store, dispatch, style, ...props }) => {
   const {
@@ -92,7 +93,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
           onPress={() => {
             dispatch({
               type: 'cloud-update',
-              payload: ['status', 'connecting'],
+              payload: ['status', cloudStatuses.connecting],
             });
 
             cloudGet(store)
@@ -112,7 +113,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
               .catch(() => {
                 dispatch({
                   type: 'cloud-update',
-                  payload: ['status', 'disconnected'],
+                  payload: ['status', cloudStatuses.disconnected],
                 });
                 dispatch({
                   type: 'notifications-add',

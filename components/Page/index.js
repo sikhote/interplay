@@ -1,7 +1,6 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
-import Head from 'next/head';
 import { v4 as uuidv4 } from 'uuid';
 import Navigation from 'components/Navigation';
 import Player from 'components/Player';
@@ -37,7 +36,17 @@ const Page = ({ Component, pageProps }) => {
   useEffect(() => {
     storage.multiGet(['type', 'key', 'path', 'user']).then((pairs) => {
       const data = pairs.reduce((data, [key, value]) => {
-        data[key] = key === 'type' ? value || 'dropbox' : value || '';
+        switch (key) {
+          case 'type':
+            data[key] = value || 'dropbox';
+            break;
+          case 'user':
+            data[key] = value || 'default';
+            break;
+          default:
+            data[key] = value || '';
+        }
+
         return data;
       }, {});
 

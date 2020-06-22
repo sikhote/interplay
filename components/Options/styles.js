@@ -1,20 +1,19 @@
 import { StyleSheet } from 'react-native';
-import { spacing, zIndexes, colors, speeds } from 'lib/styling';
+import { spacing, zIndexes, colors } from 'lib/styling';
 
 export default StyleSheet.create({
   root: {
     zIndex: zIndexes.options,
-    position: 'fixed',
+    position: 'absolute',
     top: 0,
     right: 0,
     height: '100%',
     width: '100%',
-    transition: `all ease ${speeds.a}s`,
-    transform: 'translateX(100%)',
+    transform: [{ translateX: '100%' }],
     flexDirection: 'row',
   },
   rootShow: {
-    transform: 'translateX(0)',
+    transform: [{ translateX: 0 }],
   },
   close: {
     flexGrow: 1,

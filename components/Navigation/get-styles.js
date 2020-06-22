@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { transparentize } from 'polished';
 import { colors, spacing, bps } from 'lib/styling';
 
@@ -37,7 +37,11 @@ export default ({ width }) =>
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       overflowX: 'hidden',
-      cursor: 'pointer',
+      ...(Platform.OS === 'web'
+        ? {
+            cursor: 'pointer',
+          }
+        : {}),
       ...(width < bps.b
         ? {
             paddingLeft: 0,

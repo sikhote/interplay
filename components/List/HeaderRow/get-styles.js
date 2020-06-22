@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import {
   colors,
   spacing,
@@ -19,7 +19,11 @@ export default ({ width }) =>
       paddingHorizontal: spacing.e,
       boxSizing: 'border-box',
       alignItems: 'center',
-      cursor: 'pointer',
+      ...(Platform.OS === 'web'
+        ? {
+            cursor: 'pointer',
+          }
+        : {}),
       borderTopWidth: 1,
       borderTopStyle: 'solid',
       borderTopColor: colors.border,

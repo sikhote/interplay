@@ -4,7 +4,7 @@ import { colors, spacing, zIndexes } from 'lib/styling';
 export default () =>
   StyleSheet.create({
     item: {
-      position: 'fixed',
+      position: 'absolute',
       left: 0,
       width: '100%',
       flexWrap: 'wrap',

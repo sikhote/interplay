@@ -1,10 +1,14 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { spacing, bps, fontWeights } from 'lib/styling';
 
 export default ({ width }) => ({
   player: {
     overflow: 'hidden',
-    cursor: 'pointer',
+    ...(Platform.OS === 'web'
+      ? {
+          cursor: 'pointer',
+        }
+      : {}),
     backgroundColor: 'black',
   },
   styles: StyleSheet.create({

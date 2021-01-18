@@ -45,7 +45,7 @@ const Row = memo(({ style, index, data }) => {
               style={[
                 styles.column,
                 {
-                  width: columnWidths.default.desktop[index],
+                  width: columnWidths.desktop[index],
                 },
               ]}
             >

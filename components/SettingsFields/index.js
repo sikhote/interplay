@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
 import Router from 'next/router';
 import { View } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,6 +8,8 @@ import Input from 'components/Input';
 import Select from 'components/Select';
 import { cloudGet } from 'lib/actions/cloud';
 import styles from './styles';
+import cloudStatuses from 'lib/cloud-statuses';
+import storage from 'lib/storage';
 
 const SettingsFields = ({ store, dispatch, style, ...props }) => {
   const {
@@ -23,7 +24,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         value={type}
         options={[{ title: 'Dropbox', value: 'dropbox', key: 'dropbox' }]}
         onValueChange={(value) => {
-          Cookies.set('type', value);
+          storage.setItem('type', value);
           dispatch({
             type: 'cloud-update',
             payload: ['user', value],
@@ -37,7 +38,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         placeholder="Person"
         value={user}
         onChangeText={(text) => {
-          Cookies.set('user', text);
+          storage.setItem('user', text);
           dispatch({
             type: 'cloud-update',
             payload: ['user', text],
@@ -51,7 +52,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         placeholder="ABC123"
         value={key}
         onChangeText={(text) => {
-          Cookies.set('key', text);
+          storage.setItem('key', text);
           dispatch({
             type: 'cloud-update',
             payload: ['key', text],
@@ -65,7 +66,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         placeholder="itunes/itunes music"
         value={path}
         onChangeText={(text) => {
-          Cookies.set('path', text.toLowerCase());
+          storage.setItem('path', text.toLowerCase());
           dispatch({
             type: 'cloud-update',
             payload: ['path', text.toLowerCase()],
@@ -92,7 +93,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
           onPress={() => {
             dispatch({
               type: 'cloud-update',
-              payload: ['status', 'connecting'],
+              payload: ['status', cloudStatuses.connecting],
             });
 
             cloudGet(store)
@@ -112,7 +113,7 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
               .catch(() => {
                 dispatch({
                   type: 'cloud-update',
-                  payload: ['status', 'disconnected'],
+                  payload: ['status', cloudStatuses.disconnected],
                 });
                 dispatch({
                   type: 'notifications-add',

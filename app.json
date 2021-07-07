@@ -1,4 +1,32 @@
 {
-  "name": "interplay",
-  "displayName": "interplay"
+  "expo": {
+    "name": "interplay",
+    "slug": "interplay",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./public/images/native/icon.png",
+    "scheme": "interplay",
+    "splash": {
+      "image": "./public/images/native/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "favicon": "./public/images/native/favicon.png"
+    }
+  }
 }

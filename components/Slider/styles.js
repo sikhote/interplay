@@ -1,15 +1,19 @@
-import { StyleSheet } from 'react-native';
-import { borderRadii, colors } from 'lib/styling';
+import { StyleSheet, Platform } from 'react-native';
+import { colors } from 'lib/styling';
 
 export default StyleSheet.create({
   root: {
     position: 'relative',
     height: 20,
-    cursor: 'pointer',
+    ...(Platform.OS === 'web'
+      ? {
+          cursor: 'pointer',
+        }
+      : {}),
   },
   rail: {
     height: 4,
-    borderRadius: borderRadii.b,
+    borderRadius: 2,
     position: 'absolute',
     top: '50%',
     marginTop: -2,
@@ -22,7 +26,6 @@ export default StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    pointerEvents: 'none',
     paddingRight: 20,
   },
   handle: {
@@ -30,9 +33,22 @@ export default StyleSheet.create({
     zIndex: 1,
     width: 20,
     height: 20,
-    borderRadius: borderRadii.b,
+    borderRadius: 10,
     backgroundColor: colors.white,
     top: 0,
-    boxShadow: 'rgba(0, 0, 0, 0.5) 0px 1px 3px',
+    ...(Platform.OS === 'web'
+      ? {
+          boxShadow: 'rgba(0, 0, 0, 0.5) 0px 1px 3px',
+        }
+      : {
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.18,
+          shadowRadius: 1,
+          elevation: 1,
+        }),
   },
 });

@@ -15,7 +15,7 @@ import getSourcedData from 'lib/get-sourced-data';
 import getDefaultListSettings from 'lib/get-default-list-settings';
 import { titleToSlug } from 'lib/playlists';
 import { filesGetUrl } from 'lib/actions/files';
-import getListColumns from 'lib/get-list-columns';
+import { getColumnRows } from 'lib/columns';
 import Row from './Row';
 import HeaderRow from './HeaderRow';
 import getStyles from './get-styles';
@@ -70,7 +70,7 @@ const List = ({ title, header, source, store, dispatch }) => {
       sortedData,
       source,
       currentPath,
-      columns: getListColumns(source),
+      columns: getColumnRows(source),
       onRowClick: ({ rowData, index }) => {
         const path = get(rowData, 'path');
 
@@ -144,7 +144,7 @@ const List = ({ title, header, source, store, dispatch }) => {
             sortedData,
             source,
             currentPath,
-            columns: getListColumns(source),
+            columns: getColumnRows(source),
             isPlaylist: !['video', 'audio', 'playlists', 'recent'].includes(
               source,
             ),

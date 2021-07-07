@@ -47,7 +47,13 @@ const Navigation = ({ router, playlists, status, dispatch }) => {
                 router.asPath === id ? styles.itemTextActive : {},
               ]}
             >
-              <Icon style={styles.itemTextIcon} icon={icon} />
+              <Icon
+                style={[
+                  styles.itemTextIcon,
+                  router.asPath === id ? styles.itemTextIconActive : {},
+                ]}
+                icon={icon}
+              />
               <Text
                 style={[
                   styles.itemText,

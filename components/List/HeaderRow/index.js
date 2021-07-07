@@ -5,9 +5,11 @@ import Text from 'components/Text';
 import Icon from 'components/Icon';
 import getStyles from './get-styles';
 import { colors } from 'lib/styling';
+import { getColumnWidths } from 'lib/columns';
 
 const HeaderRow = ({ source, columns, onClickColumn, sortBy }) => {
   const dimensions = useWindowDimensions();
+  const columnWidths = useMemo(() => getColumnWidths(source), [source]);
   const styles = useMemo(() => getStyles(dimensions), [dimensions]);
 
   return (
@@ -19,11 +21,14 @@ const HeaderRow = ({ source, columns, onClickColumn, sortBy }) => {
         source === 'recent' ? styles.rootRecent : {},
       ]}
     >
-      {columns.map(({ key, title }) => (
+      {columns.map(({ key, title }, index) => (
         <Text
           key={key}
           style={[
             styles.column,
+            {
+              width: columnWidths.desktop[index],
+            },
             { color: sortBy === key ? colors.text : colors.textFaded },
           ]}
           onClick={() => onClickColumn(key)}

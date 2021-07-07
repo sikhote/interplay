@@ -54,6 +54,11 @@ const Options = ({ dispatch, store }) => {
     const currentPlaylist = playlists.find(
       ({ name }) => name === selectedPlaylist,
     );
+
+    if (!currentPlaylist) {
+      return;
+    }
+
     currentPlaylist.tracks.push(value);
     dispatch({ type: 'playlists-update', payload: currentPlaylist });
     reset();

@@ -1,10 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, useWindowDimensions } from 'react-native';
+import { TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import moment from 'moment';
 import Button from 'components/Button';
 import Text from 'components/Text';
 import getStyles from './get-styles';
+import { getColumnWidths } from 'lib/columns';
 
 const Row = memo(({ style, index, data }) => {
   const dimensions = useWindowDimensions();
@@ -18,27 +19,44 @@ const Row = memo(({ style, index, data }) => {
     source,
   } = data;
   const rowData = sortedData[index] || {};
+  const columnWidths = useMemo(() => getColumnWidths(source), [source]);
 
   return (
-    <TouchableOpacity
+    <View
       style={[
         style,
         styles.root,
-        source === 'playlists' ? styles.rootPlaylists : {},
-        source === 'video' ? styles.rootVideo : {},
-        source === 'recent' ? styles.rootRecent : {},
         index % 2 ? styles.rootOdd : {},
         rowData.path === currentPath ? styles.rootActive : {},
       ]}
-      onClick={() => onRowClick({ index, rowData })}
     >
-      {columns.map(({ key }) => (
-        <Text key={key} style={styles.column}>
-          {key === 'dateAdded'
-            ? moment(rowData[key]).format('YYYY/MM/DD HH:mm:ss')
-            : rowData[key]}
-        </Text>
-      ))}
+      <TouchableOpacity
+        style={[
+          styles.inner,
+          source === 'playlists' ? styles.innerPlaylists : {},
+          source === 'video' ? styles.innerVideo : {},
+          source === 'recent' ? styles.innerRecent : {},
+        ]}
+        onClick={() => onRowClick({ index, rowData })}
+      >
+        {columns.map(({ key }, index) => (
+          <React.Fragment key={key}>
+            <Text
+              style={[
+                styles.column,
+                {
+                  width: columnWidths.desktop[index],
+                },
+              ]}
+            >
+              {key === 'dateAdded'
+                ? moment(rowData[key]).format('YYYY/MM/DD HH:mm:ss')
+                : rowData[key]}
+            </Text>
+            <View style={styles.columnGap} />
+          </React.Fragment>
+        ))}
+      </TouchableOpacity>
       <Button
         isEnclosed={false}
         theme="subtle"
@@ -47,7 +65,7 @@ const Row = memo(({ style, index, data }) => {
         icon="options"
         onPress={() => onOptionsClick({ rowData, index })}
       />
-    </TouchableOpacity>
+    </View>
   );
 });
 

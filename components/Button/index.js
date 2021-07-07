@@ -16,50 +16,56 @@ const Button = ({
   style,
   onPress,
   isEnclosed,
-}) => (
-  <TouchableOpacity
-    style={[
-      styles.root,
-      theme === 'secondary' ? styles.rootIsSecondary : {},
-      theme === 'subtle' ? styles.rootIsSubtle : {},
-      isLoading && !isAllowingLoadingClicks ? styles.rootIsLoading : {},
-      shape === 'circle' ? styles.rootIsCircle : {},
-      size === 'small' ? styles.rootIsSmall : {},
-      size === 'small' && shape === 'circle' ? styles.rootIsSmallCircle : {},
-      size === 'large' ? styles.rootIsLarge : {},
-      size === 'large' && shape === 'circle' ? styles.rootIsLargeCircle : {},
-      isEnclosed ? {} : styles.rootIsNotEnclosed,
-      style,
-    ]}
-    onPress={
-      !isLoading || (isLoading && isAllowingLoadingClicks) ? onPress : undefined
-    }
-  >
-    <View>
-      <Text style={[styles.text, isLoading ? styles.childrenIsLoading : {}]}>
-        {Boolean(icon) && (
-          <Icon
-            icon={icon}
-            style={[
-              theme === 'subtle' && !isEnclosed
-                ? styles.iconIsNotEnclosedIsSubtle
-                : {},
-              children ? styles.iconWithChildren : {},
-            ]}
-          />
-        )}
-        {children}
-      </Text>
-      <Icon
-        style={[
-          styles.loadingIcon,
-          isLoading ? styles.loadingIconIsLoading : {},
-        ]}
-        icon="loading animate-spin"
-      />
-    </View>
-  </TouchableOpacity>
-);
+}) => {
+  const Root = isLoading && !isAllowingLoadingClicks ? View : TouchableOpacity;
+
+  return (
+    <Root
+      style={[
+        styles.root,
+        theme === 'secondary' ? styles.rootIsSecondary : {},
+        theme === 'subtle' ? styles.rootIsSubtle : {},
+        shape === 'circle' ? styles.rootIsCircle : {},
+        size === 'small' ? styles.rootIsSmall : {},
+        size === 'small' && shape === 'circle' ? styles.rootIsSmallCircle : {},
+        size === 'large' ? styles.rootIsLarge : {},
+        size === 'large' && shape === 'circle' ? styles.rootIsLargeCircle : {},
+        isEnclosed ? {} : styles.rootIsNotEnclosed,
+        style,
+      ]}
+      onPress={
+        !isLoading || (isLoading && isAllowingLoadingClicks)
+          ? onPress
+          : undefined
+      }
+    >
+      <View>
+        <Text style={[styles.text, isLoading ? styles.childrenIsLoading : {}]}>
+          {Boolean(icon) && (
+            <Icon
+              icon={icon}
+              style={[
+                styles.icon,
+                theme === 'subtle' && !isEnclosed
+                  ? styles.iconIsNotEnclosedIsSubtle
+                  : {},
+                children ? styles.iconWithChildren : {},
+              ]}
+            />
+          )}
+          {children}
+        </Text>
+        <Icon
+          style={[
+            styles.loadingIcon,
+            isLoading ? styles.loadingIconIsLoading : {},
+          ]}
+          icon="loading animate-spin"
+        />
+      </View>
+    </Root>
+  );
+};
 
 Button.propTypes = {
   children: PropTypes.any,

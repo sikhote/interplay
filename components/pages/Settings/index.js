@@ -14,6 +14,7 @@ import Icon from 'components/Icon';
 import PageTitle from 'components/PageTitle';
 import getStyles from './get-styles';
 import { colors } from 'lib/styling';
+import cloudStatuses from 'lib/cloud-statuses';
 
 const Settings = ({ store, dispatch }) => {
   const {
@@ -57,7 +58,7 @@ const Settings = ({ store, dispatch }) => {
                 type: 'cloud-update-many',
                 payload: {
                   files: { status: 'synced', date: Date.now() },
-                  status: 'connected',
+                  status: cloudStatuses.connected,
                 },
               });
               return cloudSaveFiles({ ...store, files });

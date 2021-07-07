@@ -11,7 +11,9 @@ export default StyleSheet.create({
   root: {
     position: 'relative',
     borderRadius: borderRadii.a,
-    border: `1px solid ${colors.border}`,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: colors.border,
   },
   rootWithIcon: {
     paddingLeft: 46,
@@ -21,7 +23,6 @@ export default StyleSheet.create({
     top: 0,
     left: spacing.e,
     height: '100%',
-    pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
     color: colors.text,
@@ -37,6 +38,6 @@ export default StyleSheet.create({
     fontSize: fontSizes.c,
     lineHeight: lineHeights.close,
     color: colors.text,
-    border: 'none',
+    borderWidth: 0,
   },
 });

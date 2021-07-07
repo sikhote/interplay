@@ -23,9 +23,6 @@ export default StyleSheet.create({
   rootIsSubtle: {
     backgroundColor: 'rgba(0, 0, 0, .3)',
   },
-  rootIsLoading: {
-    pointerEvents: 'none',
-  },
   rootIsSmall: {
     height: fontSizes.c * lineHeights.normal * 1.125,
   },
@@ -33,17 +30,21 @@ export default StyleSheet.create({
     height: fontSizes.c * lineHeights.normal * 2,
   },
   rootIsCircle: {
-    borderRadius: borderRadii.b,
+    borderRadius: (fontSizes.c * lineHeights.normal * 1.5) / 2,
     width: fontSizes.c * lineHeights.normal * 1.5,
   },
   rootIsSmallCircle: {
     width: fontSizes.c * lineHeights.normal * 1.125,
   },
   rootIsLargeCircle: {
+    borderRadius: (fontSizes.c * lineHeights.normal * 2) / 2,
     width: fontSizes.c * lineHeights.normal * 2,
   },
   rootIsNotEnclosed: {
-    backgroundColor: 'none',
+    backgroundColor: colors.transparent,
+  },
+  icon: {
+    color: colors.white,
   },
   iconIsNotEnclosedIsSubtle: {
     color: 'rgba(0, 0, 0, .4)',

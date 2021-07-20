@@ -41,7 +41,7 @@
     "prop-types": "15.7.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-native": "^0.62.2",
+    "react-native": "^0.62.3",
     "react-native-web": "^0.12.2",
     "react-player": "^2.0.1",
     "react-virtualized-auto-sizer": "^1.0.2",

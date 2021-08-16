@@ -1,11 +1,11 @@
-import { spacing } from 'lib/styling';
-
-export default {
+const styles = {
   root: {
-    padding: spacing.page,
+    padding: 'var(--s-page)',
     maxWidth: 600,
   },
   settingsFields: {
-    marginTop: spacing.e,
+    marginTop: 'var(--s-block)',
   },
 };
+
+export default styles;

@@ -9,11 +9,10 @@ import SettingsFields from 'components/SettingsFields';
 import { filesSync } from 'lib/actions/files';
 import { cloudSaveFiles } from 'lib/actions/cloud';
 import H1 from 'components/H1';
-import Text from 'components/Text';
 import Icon from 'components/Icon';
 import PageTitle from 'components/PageTitle';
 import getStyles from './get-styles';
-import { colors } from 'lib/styling';
+import { c } from 'lib/styling';
 
 const Settings = ({ store, dispatch }) => {
   const {
@@ -105,13 +104,13 @@ const Settings = ({ store, dispatch }) => {
           const success = ['connected', 'synced'].includes(status);
 
           return (
-            <Text key={key} style={styles.statusLine}>
-              <Text style={{ color: success ? colors.a : colors.c }}>
+            <span key={key} style={styles.statusLine}>
+              <span style={{ color: success ? c.a : c.c }}>
                 <Icon icon={success ? 'check' : 'cancel'} />
-              </Text>
+              </span>
               {capitalize(key)} {status}{' '}
               {success && date && moment(date).fromNow()}
-            </Text>
+            </span>
           );
         })}
       </View>

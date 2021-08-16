@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import { colors } from 'lib/styling';
+import { c } from 'lib/styling';
 import styles from './styles';
 
 const Slider = ({ color, value, min, max, onChange, style, ...props }) => {
@@ -71,7 +71,7 @@ Slider.propTypes = {
 };
 
 Slider.defaultProps = {
-  color: colors.a,
+  color: c.a,
   style: {},
 };
 

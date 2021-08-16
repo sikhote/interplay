@@ -1,11 +1,10 @@
-import { StyleSheet } from 'react-native';
-import { spacing } from 'lib/styling';
-
-export default StyleSheet.create({
+const styles = {
   root: {
-    maxWidth: 400,
+    maxWidth: 300,
   },
-  marginTop: {
-    marginTop: spacing.c,
+  block: {
+    marginTop: 'var(--s-block)',
   },
-});
+};
+
+export default styles;

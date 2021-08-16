@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { transparentize } from 'polished';
-import { colors, spacing, bps } from 'lib/styling';
+import { c, spacing, bps } from 'lib/styling';
 
 export default ({ width }) =>
   StyleSheet.create({
     root: {
       width: 240,
-      backgroundColor: colors.b,
+      backgroundColor: c.b,
       overflowY: 'auto',
       height: '100%',
       gridArea: 'navigation',
@@ -17,7 +17,6 @@ export default ({ width }) =>
         : {}),
     },
     inner: {
-      paddingVertical: spacing.e,
       display: 'grid',
       gridAutoFlow: 'row',
       alignContent: 'start',
@@ -25,7 +24,6 @@ export default ({ width }) =>
         ? {
             gridAutoFlow: 'column',
             alignContent: 'stretch',
-            paddingVertical: 0,
           }
         : {}),
     },
@@ -49,7 +47,7 @@ export default ({ width }) =>
     itemActive: {
       ...(width < bps.b
         ? {
-            backgroundColor: transparentize(0.8, colors.white),
+            backgroundColor: transparentize(0.8, c.white),
           }
         : {}),
     },
@@ -62,7 +60,7 @@ export default ({ width }) =>
         : {}),
     },
     itemTextActive: {
-      color: colors.white,
+      color: c.white,
     },
     itemTextIcon: {
       marginRight: spacing.e,

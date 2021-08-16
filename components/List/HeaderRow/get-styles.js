@@ -1,14 +1,14 @@
 import { StyleSheet } from 'react-native';
 import {
-  colors,
+  c,
   spacing,
   bps,
-  fontSizes,
-  lineHeights,
+  fS,
+  lH,
   fontWeights,
 } from 'lib/styling';
 
-const buttonWidth = fontSizes.c * lineHeights.normal * 1.125;
+const buttonWidth = fS.c * lH.normal * 1.125;
 
 export default ({ width }) =>
   StyleSheet.create({
@@ -16,21 +16,19 @@ export default ({ width }) =>
       display: 'grid',
       gridGap: spacing.e,
       gridTemplateColumns: `40px 1fr 1fr 1fr ${buttonWidth}px`,
-      paddingHorizontal: spacing.e,
       boxSizing: 'border-box',
       alignItems: 'center',
       cursor: 'pointer',
       borderTopWidth: 1,
       borderTopStyle: 'solid',
-      borderTopColor: colors.border,
+      borderTopColor: c.border,
       borderBottomWidth: 1,
       borderBottomStyle: 'solid',
-      borderBottomColor: colors.border,
+      borderBottomColor: c.border,
       backgroundColor: 'rgba(0, 0, 0, 0.02)',
       overflowY: 'scroll',
       ...(width < bps.b
         ? {
-            paddingHorizontal: spacing.d,
             gridTemplateColumns: `20px 1fr 1fr 1fr ${buttonWidth}px`,
           }
         : {}),
@@ -58,11 +56,11 @@ export default ({ width }) =>
       justifyContent: 'start',
       alignItems: 'center',
       height: 26,
-      fontWeight: fontWeights.bold,
-      fontSize: fontSizes.b,
+      fontWeight: fW.bold,
+      fontSize: fS.b,
     },
     icon: {
-      color: colors.text,
-      fontSize: fontSizes.a,
+      color: c.text,
+      fontSize: fS.a,
     },
   });

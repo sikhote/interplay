@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native';
 import { transparentize } from 'polished';
-import { colors, spacing, bps, fontSizes, lineHeights } from 'lib/styling';
+import { c, spacing, bps, fS, lH } from 'lib/styling';
 
-const buttonWidth = fontSizes.c * lineHeights.normal * 1.125;
+const buttonWidth = fS.c * lH.normal * 1.125;
 
 export default ({ width }) =>
   StyleSheet.create({
@@ -10,13 +10,11 @@ export default ({ width }) =>
       display: 'grid',
       gridGap: spacing.e,
       gridTemplateColumns: `40px 1fr 1fr 1fr ${buttonWidth}px`,
-      paddingHorizontal: spacing.e,
       boxSizing: 'border-box',
       alignItems: 'center',
       cursor: 'pointer',
       ...(width < bps.b
         ? {
-            paddingHorizontal: spacing.d,
             gridTemplateColumns: `20px 1fr 1fr 1fr ${buttonWidth}px`,
           }
         : {}),
@@ -39,7 +37,7 @@ export default ({ width }) =>
         : {}),
     },
     rootActive: {
-      backgroundColor: `${transparentize(0.8, colors.a)}`,
+      backgroundColor: `${transparentize(0.8, c.a)}`,
     },
     column: {
       textOverflow: 'ellipsis',

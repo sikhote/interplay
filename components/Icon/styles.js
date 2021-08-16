@@ -1,8 +1,9 @@
-import { StyleSheet } from 'react-native';
-import { colors } from 'lib/styling';
-
-export default StyleSheet.create({
+const styles = {
   root: {
-    color: colors.inherit,
+    color: 'inherit',
+    display: 'flex',
+    alignItems: 'center',
   },
-});
+};
+
+export default styles;

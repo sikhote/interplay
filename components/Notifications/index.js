@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useWindowDimensions, View } from 'react-native';
 import Icon from 'components/Icon';
-import Text from 'components/Text';
 import getStyles from './get-styles';
 
 const halfSteps = [-999, -100, -50, -30, -20, -12, -8, -5, -1];
@@ -49,7 +48,7 @@ const Notifications = ({ notifications, dispatch }) => {
   return messages.map(({ stepIndex = 0, type, message, id }) => (
     <View key={id} style={[styles.item, { top: steps[stepIndex] }]}>
       <View key={id} style={styles.itemInner}>
-        <Text>
+        <span>
           <Icon
             style={[
               styles.icon,
@@ -58,7 +57,7 @@ const Notifications = ({ notifications, dispatch }) => {
             icon={type === 'success' ? 'check' : 'cancel'}
           />
           {message}
-        </Text>
+        </span>
       </View>
     </View>
   ));

@@ -33,11 +33,11 @@ const Row = memo(({ style, index, data }) => {
       onClick={() => onRowClick({ index, rowData })}
     >
       {columns.map(({ key }) => (
-        <Text key={key} style={styles.column}>
+        <span key={key} style={styles.column}>
           {key === 'dateAdded'
             ? moment(rowData[key]).format('YYYY/MM/DD HH:mm:ss')
             : rowData[key]}
-        </Text>
+        </span>
       ))}
       <Button
         isEnclosed={false}

@@ -1,18 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Text from 'components/Text';
 import styles from './styles';
 
-const H2 = ({ style, ...props }) => (
-  <Text style={[styles.root, style]} {...props} />
+const H2 = ({ rootCss, ...props }) => (
+  <div css={[styles.root, ...rootCss]} {...props} />
 );
 
 H2.propTypes = {
-  style: PropTypes.any,
+  rootCss: PropTypes.array,
 };
 
 H2.defaultProps = {
-  style: {},
+  rootCss: [],
 };
 
-export default H2;
+export default H1;

@@ -1,10 +1,10 @@
-import { StyleSheet } from 'react-native';
-import { spacing, fontSizes, fontWeights } from 'lib/styling';
-
-export default StyleSheet.create({
+const styles = {
   root: {
-    paddingBottom: spacing.c,
-    fontSize: fontSizes.h2,
-    fontWeight: fontWeights.bold,
+    paddingBottom: 4,
+    fontSize: 'var(--fs-large)',
+    fontWeight: '600',
+    lineHeight: 'var(--lh-normal)',
   },
-});
+};
+
+export default styles;

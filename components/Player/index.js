@@ -9,10 +9,9 @@ import moment from 'moment';
 import Button from 'components/Button';
 import Slider from 'components/Slider';
 import Switch from 'components/Switch';
-import Text from 'components/Text';
 import getFileInDirection from 'lib/get-file-in-direction';
 import { filesGetUrl } from 'lib/actions/files';
-import { colors } from 'lib/styling';
+import { c } from 'lib/styling';
 import getStyles from './get-styles';
 
 const prepareFile = throttle((callback) => callback(), 10000, {
@@ -43,7 +42,7 @@ const Player = ({ dispatch, store }) => {
 
   const dimensions = Dimensions.get('window');
   const { styles, player: playerStyles } = getStyles(dimensions);
-  const Divider = () => <Text style={styles.divider}> - </Text>;
+  const Divider = () => <span style={styles.divider}> - </span>;
   const { files, player, playlists, lists } = store;
   const {
     source,
@@ -133,28 +132,28 @@ const Player = ({ dispatch, store }) => {
         <View style={styles.info}>
           {path ? (
             <>
-              <Text style={styles.name}>{name}</Text>
+              <span style={styles.name}>{name}</span>
               {category && (
-                <Text>
+                <span>
                   <Divider />
                   {category}
-                </Text>
+                </span>
               )}
               {artist && (
-                <Text>
+                <span>
                   <Divider />
                   {artist}
-                </Text>
+                </span>
               )}
               {album && (
-                <Text>
+                <span>
                   <Divider />
                   {album}
-                </Text>
+                </span>
               )}
             </>
           ) : (
-            <Text>Add credentials and play some media</Text>
+            <span>Add credentials and play some media</span>
           )}
         </View>
         <View style={styles.directions}>
@@ -230,7 +229,7 @@ const Player = ({ dispatch, store }) => {
             <ShuffleButton style={styles.shuffleSound} />
             <LoopButton style={styles.loopSound} />
             <Switch
-              color={colors.c}
+              color={c.c}
               checkedIcon="volume"
               unCheckedIcon="mute"
               isOn={!muted}
@@ -243,7 +242,7 @@ const Player = ({ dispatch, store }) => {
             />
           </View>
           <Slider
-            color={colors.c}
+            color={c.c}
             value={volume}
             min={0}
             max={1}

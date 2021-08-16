@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'next/router';
 import Link from 'components/Link';
 import Icon from 'components/Icon';
-import Text from 'components/Text';
 import { titleToSlug } from 'lib/playlists';
 import getStyles from './get-styles';
 
@@ -41,14 +40,14 @@ const Navigation = ({ router, playlists, status, dispatch }) => {
       <View style={styles.inner}>
         {items.map(({ id, filePath, title, icon, style = {}, onClick }) => {
           const inner = (
-            <Text
+            <span
               style={[
                 styles.itemText,
                 router.asPath === id ? styles.itemTextActive : {},
               ]}
             >
               <Icon style={styles.itemTextIcon} icon={icon} />
-              <Text
+              <span
                 style={[
                   styles.itemText,
                   router.asPath === id ? styles.itemTextActive : {},
@@ -56,8 +55,8 @@ const Navigation = ({ router, playlists, status, dispatch }) => {
                 ]}
               >
                 {title}
-              </Text>
-            </Text>
+              </span>
+            </span>
           );
 
           return onClick ? (

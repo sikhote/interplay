@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
-import Text from 'components/Text';
 import Icon from 'components/Icon';
 import getStyles from './get-styles';
-import { colors } from 'lib/styling';
+import { c } from 'lib/styling';
 
 const HeaderRow = ({ source, columns, onClickColumn, sortBy }) => {
   const dimensions = useWindowDimensions();
@@ -20,17 +19,17 @@ const HeaderRow = ({ source, columns, onClickColumn, sortBy }) => {
       ]}
     >
       {columns.map(({ key, title }) => (
-        <Text
+        <span
           key={key}
           style={[
             styles.column,
-            { color: sortBy === key ? colors.text : colors.textFaded },
+            { color: sortBy === key ? c.text : c.textFaded },
           ]}
           onClick={() => onClickColumn(key)}
         >
           {title}
           {sortBy === key && <Icon style={styles.icon} icon="sort" />}
-        </Text>
+        </span>
       ))}
       <div />
     </View>

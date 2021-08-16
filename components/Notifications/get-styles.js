@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, spacing, zIndexes } from 'lib/styling';
+import { c, spacing, zIndexes } from 'lib/styling';
 
 export default () =>
   StyleSheet.create({
@@ -13,18 +13,18 @@ export default () =>
     },
     itemInner: {
       padding: spacing.d,
-      border: `1px solid ${colors.border}`,
-      zIndex: zIndexes.notification,
-      backgroundColor: colors.white,
+      border: `1px solid ${c.border}`,
+      zIndex: zI.notification,
+      backgroundColor: c.white,
       maxWidth: 300,
     },
     icon: {
       marginRight: spacing.c,
     },
     iconSuccess: {
-      color: colors.a,
+      color: c.a,
     },
     iconError: {
-      color: colors.c,
+      color: c.c,
     },
   });

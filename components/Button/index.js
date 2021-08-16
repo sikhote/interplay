@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TouchableOpacity, View } from 'react-native';
-import Text from 'components/Text';
 import Icon from 'components/Icon';
 import styles from './styles';
 
@@ -36,7 +35,7 @@ const Button = ({
     }
   >
     <View>
-      <Text style={[styles.text, isLoading ? styles.childrenIsLoading : {}]}>
+      <span css={[styles.text, isLoading ? styles.childrenIsLoading : {}]}>
         {Boolean(icon) && (
           <Icon
             icon={icon}
@@ -49,7 +48,7 @@ const Button = ({
           />
         )}
         {children}
-      </Text>
+      </span>
       <Icon
         style={[
           styles.loadingIcon,

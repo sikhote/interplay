@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import language from 'lib/language';
+import l from 'lib/language';
 
 const PageTitle = ({ title }) => (
   <Head>
     <title>
-      {language.siteName}
-      {title ? `${language.siteDivider}${title}` : ''}
+      {l.global.name}
+      {title ? `${l.global.divider}${title}` : ''}
     </title>
   </Head>
 );

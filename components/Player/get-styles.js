@@ -9,20 +9,12 @@ export default ({ width }) => ({
   },
   styles: StyleSheet.create({
     root: {
-      paddingHorizontal: spacing.page,
-      paddingVertical: spacing.e,
       borderTopWidth: 1,
       borderTopStyle: 'solid',
       borderTopColor: 'rgba(0, 0, 0, 0.15)',
       display: 'grid',
       gridTemplateColumns: '0px 1fr',
       gridArea: 'player',
-      ...(width < bps.c
-        ? {
-            paddingHorizontal: spacing.pageMobile,
-            paddingVertical: spacing.pageMobile,
-          }
-        : {}),
     },
     main: {
       display: 'grid',
@@ -65,10 +57,10 @@ export default ({ width }) => ({
         : {}),
     },
     name: {
-      fontWeight: fontWeights.bold,
+      fontWeight: fW.bold,
       ...(width < bps.c
         ? {
-            fontWeight: fontWeights.normal,
+            fontWeight: fW.normal,
           }
         : {}),
     },

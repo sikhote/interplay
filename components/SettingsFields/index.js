@@ -1,50 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Cookies from 'js-cookie';
-import Router from 'next/router';
-import { View } from 'react-native';
 import { v4 as uuidv4 } from 'uuid';
-import Button from 'components/Button';
+// import Button from 'components/Button';
 import Input from 'components/Input';
 import Select from 'components/Select';
-import { cloudGet } from 'lib/actions/cloud';
+// import { cloudGet } from 'lib/actions/cloud';
 import styles from './styles';
+import l from 'lib/language';
 
-const SettingsFields = ({ store, dispatch, style, ...props }) => {
-  const {
-    cloud: { user, key, path, type, status },
-  } = store;
+const SettingsFields = ({ rootCss }) => {
+  // const {
+  //   cloud: { user, key, path, type, status },
+  // } = store;
+  const status = '';
+  const type = '';
+  const user = '';
 
   return (
-    <View {...props} style={[styles.root, style]}>
+    <div css={[styles.root, ...rootCss]}>
       <Select
         disabled={status === 'connected'}
         icon="cloud"
         value={type}
         options={[{ title: 'Dropbox', value: 'dropbox', key: 'dropbox' }]}
-        onValueChange={(value) => {
-          Cookies.set('type', value);
+        onChange={(e) => {
+          Cookies.set('type', e.target.value);
           dispatch({
             type: 'cloud-update',
-            payload: ['user', value],
+            payload: ['user', e.target.value],
           });
         }}
       />
       <Input
-        style={styles.marginTop}
+        rootCss={[styles.block]}
         editable={status !== 'connected'}
         icon="user"
         placeholder="Person"
         value={user}
-        onChangeText={(text) => {
-          Cookies.set('user', text);
+        onChange={(e) => {
+          Cookies.set('user', e.target.value);
           dispatch({
             type: 'cloud-update',
-            payload: ['user', text],
+            payload: ['user', e.target.value],
           });
         }}
       />
-      <Input
+      {/* <Input
         style={styles.marginTop}
         editable={status !== 'connected'}
         icon="key"
@@ -83,8 +84,8 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         >
           Log Out
         </Button>
-      )}
-      {status !== 'connected' && (
+      )} */}
+      {/* {status !== 'connected' && (
         <Button
           style={styles.marginTop}
           icon="login"
@@ -127,19 +128,17 @@ const SettingsFields = ({ store, dispatch, style, ...props }) => {
         >
           Log In
         </Button>
-      )}
-    </View>
+      )} */}
+    </div>
   );
 };
 
 SettingsFields.propTypes = {
-  store: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  style: PropTypes.any,
+  rootCss: PropTypes.array,
 };
 
 SettingsFields.defaultProps = {
-  style: {},
+  rootCss: [],
 };
 
 export default SettingsFields;

@@ -1,24 +1,24 @@
 import { StyleSheet } from 'react-native';
 import {
-  colors,
+  c,
   spacing,
-  borderRadii,
-  fontSizes,
-  lineHeights,
+  bR,
+  fS,
+  lH,
 } from 'lib/styling';
 
 export default StyleSheet.create({
   root: {
     position: 'relative',
     padding: `0 ${spacing.e}px`,
-    height: fontSizes.c * lineHeights.normal * 1.5,
+    height: fS.c * lH.normal * 1.5,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: borderRadii.a,
-    backgroundColor: colors.a,
+    borderRadius: bR.a,
+    backgroundColor: c.a,
   },
   rootIsSecondary: {
-    backgroundColor: colors.c,
+    backgroundColor: c.c,
   },
   rootIsSubtle: {
     backgroundColor: 'rgba(0, 0, 0, .3)',
@@ -27,20 +27,20 @@ export default StyleSheet.create({
     pointerEvents: 'none',
   },
   rootIsSmall: {
-    height: fontSizes.c * lineHeights.normal * 1.125,
+    height: fS.c * lH.normal * 1.125,
   },
   rootIsLarge: {
-    height: fontSizes.c * lineHeights.normal * 2,
+    height: fS.c * lH.normal * 2,
   },
   rootIsCircle: {
-    borderRadius: borderRadii.b,
-    width: fontSizes.c * lineHeights.normal * 1.5,
+    borderRadius: bR.b,
+    width: fS.c * lH.normal * 1.5,
   },
   rootIsSmallCircle: {
-    width: fontSizes.c * lineHeights.normal * 1.125,
+    width: fS.c * lH.normal * 1.125,
   },
   rootIsLargeCircle: {
-    width: fontSizes.c * lineHeights.normal * 2,
+    width: fS.c * lH.normal * 2,
   },
   rootIsNotEnclosed: {
     backgroundColor: 'none',
@@ -63,12 +63,12 @@ export default StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    color: colors.white,
+    color: c.white,
   },
   loadingIconIsLoading: {
     display: 'flex',
   },
   text: {
-    color: colors.white,
+    color: c.white,
   },
 });

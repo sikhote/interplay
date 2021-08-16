@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
-import { spacing, zIndexes, colors, speeds } from 'lib/styling';
+import { spacing, zIndexes, c, speeds } from 'lib/styling';
 
 export default StyleSheet.create({
   root: {
-    zIndex: zIndexes.options,
+    zIndex: zI.options,
     position: 'fixed',
     top: 0,
     right: 0,
@@ -26,7 +26,7 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 1)',
     borderLeftWidth: 1,
     borderLeftStyle: 'solid',
-    borderLeftColor: colors.border,
+    borderLeftColor: c.border,
     width: 300,
     height: '100%',
     display: 'grid',

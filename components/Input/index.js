@@ -1,39 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextInput, View } from 'react-native';
-import Text from 'components/Text';
 import Icon from 'components/Icon';
 import styles from './styles';
 
-const Input = ({ icon, size, style, ...props }) => (
-  <View style={[styles.root, style]}>
+const Input = ({ icon, size, rootCss, ...props }) => (
+  <div
+    css={[
+      styles.root,
+      icon ? styles.rootWithIcon : {},
+      size === 'small' ? styles.rootIsSmall : {},
+      size === 'small' && icon ? styles.rootWithIconIsSmall : {},
+      ...rootCss,
+    ]}
+  >
     {Boolean(icon) && (
-      <Text style={[styles.icon, size === 'small' ? styles.iconIsSmall : {}]}>
-        <Icon icon={icon} />
-      </Text>
+      <Icon
+        rootCss={[styles.icon, size === 'small' ? styles.iconIsSmall : {}]}
+        icon={icon}
+      />
     )}
-    <TextInput
-      style={[
-        styles.input,
-        icon ? styles.inputWithIcon : {},
-        size === 'small' ? styles.inputIsSmall : {},
-        size === 'small' && icon ? styles.inputWithIconIsSmall : {},
-      ]}
-      {...props}
-    />
-  </View>
+    <input {...props} />
+  </div>
 );
 
 Input.propTypes = {
   icon: PropTypes.string,
   size: PropTypes.string,
-  style: PropTypes.any,
+  rootCss: PropTypes.any,
 };
 
 Input.defaultProps = {
   icon: '',
   size: 'medium',
-  style: {},
+  rootCss: [],
 };
 
 export default Input;

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch as RNSwitch, View } from 'react-native';
 import Icon from 'components/Icon';
-import { colors } from 'lib/styling';
+import { c } from 'lib/styling';
 import styles from './styles';
 
 const Switch = ({
@@ -18,13 +18,13 @@ const Switch = ({
       style={[
         styles.icon,
         {
-          color: isOn ? color : colors.textFaded,
+          color: isOn ? color : c.textFaded,
         },
       ]}
       icon={isOn ? checkedIcon : unCheckedIcon}
     />
     <RNSwitch
-      activeThumbColor={colors.white}
+      activeThumbColor={c.white}
       trackColor="rgb(204, 204, 204)"
       activeTrackColor={color}
       value={isOn}
@@ -42,7 +42,7 @@ Switch.propTypes = {
 };
 
 Switch.defaultProps = {
-  color: colors.a,
+  color: c.a,
   style: {},
 };
 

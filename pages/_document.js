@@ -1,42 +1,48 @@
-import Document, { Head, Main, NextScript } from 'next/document';
-import React from 'react';
-import { AppRegistry } from 'react-native';
-import config from 'app';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
+import * as React from 'react';
+import createEmotionServer from '@emotion/server/create-instance';
+import { cache } from '@emotion/css';
 
-const normalizeNextElements = `
-  #__next {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+const renderStatic = async (html) => {
+  if (html === undefined) {
+    throw new Error('did you forget to return html from renderToString?');
   }
-`;
+  const { extractCritical } = createEmotionServer(cache);
+  const { ids, css } = extractCritical(html);
 
-export default class NextDocument extends Document {
-  static async getInitialProps({ renderPage }) {
-    AppRegistry.registerComponent(config.name, () => Main);
-    const { getStyleElement } = AppRegistry.getApplication(config.name);
-    const page = renderPage();
-    const styles = [
-      <style
-        key="a"
-        dangerouslySetInnerHTML={{ __html: normalizeNextElements }}
-      />,
-      getStyleElement(),
-    ];
-    return { ...page, styles: React.Children.toArray(styles) };
+  return { html, ids, css };
+};
+
+export default class AppDocument extends Document {
+  static async getInitialProps(ctx) {
+    const page = await ctx.renderPage();
+    const { css, ids } = await renderStatic(page.html);
+    const initialProps = await Document.getInitialProps(ctx);
+    return {
+      ...initialProps,
+      styles: (
+        <React.Fragment>
+          {initialProps.styles}
+          <style
+            data-emotion={`css ${ids.join(' ')}`}
+            dangerouslySetInnerHTML={{ __html: css }}
+          />
+        </React.Fragment>
+      ),
+    };
   }
 
   render() {
     return (
-      <html style={{ height: '100%' }}>
+      <Html>
         <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <link rel="icon" href="/assets/images/favicon.svg" />
         </Head>
-        <body style={{ height: '100%', overflow: 'hidden' }}>
+        <body>
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }

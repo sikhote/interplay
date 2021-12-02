@@ -1,58 +1,59 @@
-import { StyleSheet } from 'react-native';
-import {
-  c,
-  spacing,
-  bR,
-  fS,
-  lH,
-} from 'lib/styling';
-
-export default StyleSheet.create({
+const styles = {
   root: {
     position: 'relative',
-    padding: `0 ${spacing.e}px`,
-    height: fS.c * lH.normal * 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: bR.a,
-    backgroundColor: c.a,
+    padding: '0 6px',
+    height: 15 * 1.4 * 1.5,
+    borderRadius: 2,
+    background: 'var(--c-main)',
+    border: 'none',
+    width: '100%',
+    cursor: 'pointer',
+    fontSize: 'inherit',
+    color: 'white',
   },
   rootIsSecondary: {
-    backgroundColor: c.c,
+    background: 'var(--c-alt)',
   },
   rootIsSubtle: {
-    backgroundColor: 'rgba(0, 0, 0, .3)',
+    background: 'rgba(0, 0, 0, .3)',
   },
   rootIsLoading: {
     pointerEvents: 'none',
+    cursor: 'default',
   },
   rootIsSmall: {
-    height: fS.c * lH.normal * 1.125,
+    height: 15 * 1.4 * 1.125,
   },
   rootIsLarge: {
-    height: fS.c * lH.normal * 2,
+    height: 15 * 1.4 * 2,
   },
   rootIsCircle: {
-    borderRadius: bR.b,
-    width: fS.c * lH.normal * 1.5,
+    borderRadius: '50%',
+    width: 15 * 1.4 * 1.5,
   },
   rootIsSmallCircle: {
-    width: fS.c * lH.normal * 1.125,
+    width: 15 * 1.4 * 1.125,
   },
   rootIsLargeCircle: {
-    width: fS.c * lH.normal * 2,
+    width: 15 * 1.4 * 2,
   },
   rootIsNotEnclosed: {
-    backgroundColor: 'none',
+    background: 'none',
+    color: 'black',
   },
   iconIsNotEnclosedIsSubtle: {
     color: 'rgba(0, 0, 0, .4)',
+  },
+  children: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
   },
   childrenIsLoading: {
     opacity: 0,
   },
   iconWithChildren: {
-    marginRight: spacing.c,
+    marginRight: 6,
   },
   loadingIcon: {
     display: 'none',
@@ -63,12 +64,10 @@ export default StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    color: c.white,
   },
   loadingIconIsLoading: {
     display: 'flex',
   },
-  text: {
-    color: c.white,
-  },
-});
+};
+
+export default styles;

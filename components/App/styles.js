@@ -28,6 +28,7 @@ const styles = {
       '--bps-d': '1200px',
       '--s-page': '32px',
       '--s-block': '16px',
+      '--s-element': '6px',
       '@media (max-width: 768px)': {
         '--fs-large': '18px',
         '--fs-huge': '22px',

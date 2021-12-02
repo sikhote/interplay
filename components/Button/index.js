@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, View } from 'react-native';
 import Icon from 'components/Icon';
 import styles from './styles';
 
@@ -10,54 +9,49 @@ const Button = ({
   icon,
   shape,
   isLoading,
-  isAllowingLoadingClicks,
   size,
-  style,
-  onPress,
+  rootCss,
+  onClick,
   isEnclosed,
 }) => (
-  <TouchableOpacity
-    style={[
+  <button
+    css={[
       styles.root,
       theme === 'secondary' ? styles.rootIsSecondary : {},
       theme === 'subtle' ? styles.rootIsSubtle : {},
-      isLoading && !isAllowingLoadingClicks ? styles.rootIsLoading : {},
+      isLoading ? styles.rootIsLoading : {},
       shape === 'circle' ? styles.rootIsCircle : {},
       size === 'small' ? styles.rootIsSmall : {},
       size === 'small' && shape === 'circle' ? styles.rootIsSmallCircle : {},
       size === 'large' ? styles.rootIsLarge : {},
       size === 'large' && shape === 'circle' ? styles.rootIsLargeCircle : {},
       isEnclosed ? {} : styles.rootIsNotEnclosed,
-      style,
+      ...rootCss,
     ]}
-    onPress={
-      !isLoading || (isLoading && isAllowingLoadingClicks) ? onPress : undefined
-    }
+    onClick={onClick}
   >
-    <View>
-      <span css={[styles.text, isLoading ? styles.childrenIsLoading : {}]}>
-        {Boolean(icon) && (
-          <Icon
-            icon={icon}
-            style={[
-              theme === 'subtle' && !isEnclosed
-                ? styles.iconIsNotEnclosedIsSubtle
-                : {},
-              children ? styles.iconWithChildren : {},
-            ]}
-          />
-        )}
-        {children}
-      </span>
-      <Icon
-        style={[
-          styles.loadingIcon,
-          isLoading ? styles.loadingIconIsLoading : {},
-        ]}
-        icon="loading animate-spin"
-      />
-    </View>
-  </TouchableOpacity>
+    <div css={[styles.children, isLoading ? styles.childrenIsLoading : {}]}>
+      {Boolean(icon) && (
+        <Icon
+          icon={icon}
+          rootCss={[
+            theme === 'subtle' && !isEnclosed
+              ? styles.iconIsNotEnclosedIsSubtle
+              : {},
+            children ? styles.iconWithChildren : {},
+          ]}
+        />
+      )}
+      {children}
+    </div>
+    <Icon
+      rootCss={[
+        styles.loadingIcon,
+        isLoading ? styles.loadingIconIsLoading : {},
+      ]}
+      icon="loading animate-spin"
+    />
+  </button>
 );
 
 Button.propTypes = {
@@ -66,10 +60,9 @@ Button.propTypes = {
   icon: PropTypes.string,
   shape: PropTypes.string,
   size: PropTypes.string,
-  isAllowingLoadingClicks: PropTypes.bool,
   theme: PropTypes.string,
-  style: PropTypes.any,
-  onPress: PropTypes.func.isRequired,
+  rootCss: PropTypes.array,
+  onClick: PropTypes.func.isRequired,
   isEnclosed: PropTypes.bool,
 };
 
@@ -79,9 +72,8 @@ Button.defaultProps = {
   icon: '',
   shape: 'rectangle',
   size: 'medium',
-  isAllowingLoadingClicks: false,
   theme: 'primary',
-  style: {},
+  rootCss: [],
   isEnclosed: true,
 };
 

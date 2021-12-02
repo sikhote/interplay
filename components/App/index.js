@@ -18,8 +18,10 @@ import { Global } from '@emotion/react';
 
 const App = ({ Component, pageProps }) => (
   <ConnectedRouter>
-    <Global styles={styles.global} />
-    <Component {...{ ...pageProps }} />
+    <div>
+      <Global styles={styles.global} />
+      <Component {...{ ...pageProps }} />
+    </div>
   </ConnectedRouter>
 );
 

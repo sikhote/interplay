@@ -1,41 +1,34 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
-// import Button from 'components/Button';
-import Input from 'components/Input';
-import Select from 'components/Select';
+import Button from 'components/Button';
+import InputText from 'components/InputText';
+import InputSelect from 'components/InputSelect';
 // import { cloudGet } from 'lib/actions/cloud';
 import styles from './styles';
 import l from 'lib/language';
+import { startAuth, attemptConnect } from 'lib/features/auth';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 const SettingsFields = ({ rootCss }) => {
-  // const {
-  //   cloud: { user, key, path, type, status },
-  // } = store;
-  const status = '';
-  const type = '';
-  const user = '';
+  const router = useRouter();
+  const auth = useSelector((state) => state.auth);
+  console.log(auth);
+  const { user, folder } = useSelector((state) => state.prefs);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(startAuth());
+  }, []);
 
   return (
     <div css={[styles.root, ...rootCss]}>
-      <Select
-        disabled={status === 'connected'}
-        icon="cloud"
-        value={type}
-        options={[{ title: 'Dropbox', value: 'dropbox', key: 'dropbox' }]}
-        onChange={(e) => {
-          Cookies.set('type', e.target.value);
-          dispatch({
-            type: 'cloud-update',
-            payload: ['user', e.target.value],
-          });
-        }}
-      />
-      <Input
-        rootCss={[styles.block]}
-        editable={status !== 'connected'}
+      <InputText
+        rootCss={[styles.element]}
+        disabled={auth.status.type === 'connected'}
         icon="user"
-        placeholder="Person"
+        placeholder={l.settingsFields.user}
         value={user}
         onChange={(e) => {
           Cookies.set('user', e.target.value);
@@ -45,35 +38,30 @@ const SettingsFields = ({ rootCss }) => {
           });
         }}
       />
-      {/* <Input
-        style={styles.marginTop}
-        editable={status !== 'connected'}
-        icon="key"
-        placeholder="ABC123"
-        value={key}
-        onChangeText={(text) => {
-          Cookies.set('key', text);
-          dispatch({
-            type: 'cloud-update',
-            payload: ['key', text],
-          });
-        }}
-      />
-      <Input
-        style={styles.marginTop}
-        editable={status !== 'connected'}
+      <InputText
+        rootCss={[styles.element]}
+        disabled={auth.status.type === 'connected'}
         icon="folder"
         placeholder="itunes/itunes music"
-        value={path}
-        onChangeText={(text) => {
-          Cookies.set('path', text.toLowerCase());
+        value={folder}
+        onChange={(e) => {
+          Cookies.set('path', e.target.value.toLowerCase());
           dispatch({
             type: 'cloud-update',
-            payload: ['path', text.toLowerCase()],
+            payload: ['path', e.target.value.toLowerCase()],
           });
         }}
       />
-      {status === 'connected' && (
+      <Button
+        rootCss={[styles.element]}
+        icon="login"
+        isLoading={auth.status.type === 'connecting'}
+        onClick={() => dispatch(attemptConnect())}
+      >
+        {l.settingsFields.dropbox}
+      </Button>
+      {auth.status.type === 'error' && <div>{auth.status.error}</div>}
+      {/* {status === 'connected' && (
         <Button
           style={styles.marginTop}
           icon="logout"

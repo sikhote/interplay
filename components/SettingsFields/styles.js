@@ -2,8 +2,8 @@ const styles = {
   root: {
     maxWidth: 300,
   },
-  block: {
-    marginTop: 'var(--s-block)',
+  element: {
+    marginTop: 'var(--s-element)',
   },
 };
 

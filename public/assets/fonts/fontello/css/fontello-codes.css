@@ -32,6 +32,6 @@
 .icon-login:before { content: '\e81e'; } /* '' */
 .icon-calendar:before { content: '\e81f'; } /* '' */
 .icon-options:before { content: '\e820'; } /* '' */
-.icon-loading:before { content: '\e834'; } /* '' */
+.icon-member:before { content: '\e821'; } /* '' */
 .icon-upload-cloud:before { content: '\f014'; } /* '' */
 .icon-download-cloud:before { content: '\f015'; } /* '' */

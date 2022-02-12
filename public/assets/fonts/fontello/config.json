@@ -169,12 +169,6 @@
       "src": "entypo"
     },
     {
-      "uid": "9bd60140934a1eb9236fd7a8ab1ff6ba",
-      "css": "loading",
-      "code": 59444,
-      "src": "fontelico"
-    },
-    {
       "uid": "0a3192de65a73ca1501b073ad601f87d",
       "css": "sort",
       "code": 59417,
@@ -221,6 +215,12 @@
       "css": "options",
       "code": 59424,
       "src": "entypo"
+    },
+    {
+      "uid": "e36d581e4f2844db345bddc205d15dda",
+      "css": "member",
+      "code": 59425,
+      "src": "elusive"
     },
     {
       "uid": "1cbd1fb0b01f1e777d429a5f9e56cb41",

@@ -1,71 +1,34 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types';
-import { useWindowDimensions, View } from 'react-native';
-import Icon from 'components/Icon';
-import getStyles from './get-styles';
+import React, { useEffect } from 'react';
+import { useNotifications } from '@mantine/notifications';
+import { useSelector, useDispatch } from 'react-redux';
+import { active, remove } from 'lib/features/notifications';
 
-const halfSteps = [-999, -100, -50, -30, -20, -12, -8, -5, -1];
-const steps = [...halfSteps, 0, ...halfSteps.slice().reverse(), -999];
-const stepIntervalMs = 15;
-const middleIntervalMs = 1000;
-
-const Notifications = ({ notifications, dispatch }) => {
-  const dimensions = useWindowDimensions();
-  const styles = useMemo(() => getStyles(dimensions), [dimensions]);
-  const [messages, messagesSet] = useState([]);
-  const updateStepIndex = useCallback(
-    (index, value) => {
-      const newMessages = messages.slice();
-      newMessages[index].stepIndex = value;
-      messagesSet(newMessages);
-    },
-    [messages],
-  );
+const Notifications = () => {
+  const notifications = useSelector((state) => state.notifications);
+  const notificationsSystem = useNotifications();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    messagesSet(notifications.slice());
+    const newOnes = notifications.filter(({ status }) => status === 'new');
+    const handler = (newOne) => {
+      dispatch(active(newOne.id));
+      notificationsSystem.showNotification(newOne);
+      setTimeout(() => {
+        dispatch(remove(newOne.id));
+      }, 3000);
+    };
+
+    if (newOnes.length > 0) {
+      const first = newOnes.shift();
+      handler(first);
+
+      newOnes.forEach((newOne, i) => {
+        setTimeout(() => handler(newOne), 3000 * (i + 1));
+      });
+    }
   }, [notifications]);
 
-  useEffect(() => {
-    messages.forEach((message, index) => {
-      if (message.stepIndex === steps.length - 1) {
-        dispatch({ type: 'notifications-remove', payload: message.id });
-      } else {
-        const interval =
-          steps[message.stepIndex] === 0 ? middleIntervalMs : stepIntervalMs;
-        setTimeout(
-          () =>
-            updateStepIndex(
-              index,
-              message.stepIndex ? message.stepIndex + 1 : 1,
-            ),
-          interval,
-        );
-      }
-    });
-  }, [messages, updateStepIndex, dispatch]);
-
-  return messages.map(({ stepIndex = 0, type, message, id }) => (
-    <View key={id} style={[styles.item, { top: steps[stepIndex] }]}>
-      <View key={id} style={styles.itemInner}>
-        <span>
-          <Icon
-            style={[
-              styles.icon,
-              type === 'success' ? styles.iconSuccess : styles.iconError,
-            ]}
-            icon={type === 'success' ? 'check' : 'cancel'}
-          />
-          {message}
-        </span>
-      </View>
-    </View>
-  ));
-};
-
-Notifications.propTypes = {
-  notifications: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired,
+  return null;
 };
 
 export default Notifications;

@@ -1,6 +1,12 @@
 import React from 'react';
 import List from 'components/List';
+import l from 'lib/language';
 
-export default (props) => (
-  <List {...props} key="audio" title="audio" header="Audio" source="audio" />
+export default () => (
+  <List
+    key="audio"
+    title={l.audio.title}
+    header={l.audio.header}
+    source="audio"
+  />
 );

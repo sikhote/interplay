@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { ConnectedRouter } from 'connected-next-router';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,23 +7,45 @@ import { v4 as uuidv4 } from 'uuid';
 // import Options from 'components/Options';
 // import Icon from 'components/Icon';
 // import Notifications from 'components/Notifications';
-import {
-  cloudGet,
-  cloudSavePlaylists,
-  cloudSaveOther,
-} from 'lib/actions/cloud';
-import styles from './styles';
+// import {
+//   cloudGet,
+//   cloudSavePlaylists,
+//   cloudSaveOther,
+// } from 'lib/actions/cloud';
 import wrapper from 'lib/store';
-import { Global } from '@emotion/react';
+import { MantineProvider } from '@mantine/core';
+import { useColorScheme } from '@mantine/hooks';
+import { NotificationsProvider } from '@mantine/notifications';
+import Auth from 'components/Auth';
+import { useSelector } from 'react-redux';
+import Notifications from 'components/Notifications';
 
-const App = ({ Component, pageProps }) => (
-  <ConnectedRouter>
-    <div>
-      <Global styles={styles.global} />
-      <Component {...{ ...pageProps }} />
-    </div>
-  </ConnectedRouter>
-);
+const App = ({ Component, pageProps }) => {
+  const preferredColorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] = useState('dark');
+
+  useEffect(() => {
+    setColorScheme(preferredColorScheme);
+  }, []);
+
+  return (
+    <ConnectedRouter>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{ colorScheme }}
+      >
+        <NotificationsProvider position="top-center">
+          <div>
+            <Notifications />
+            <Auth />
+            <Component {...{ ...pageProps }} />
+          </div>
+        </NotificationsProvider>
+      </MantineProvider>
+    </ConnectedRouter>
+  );
+};
 
 App.propTypes = {
   Component: PropTypes.any.isRequired,

@@ -1,6 +1,6 @@
 import { spacing, bps } from 'lib/styling';
 
-export default ({ width }) => ({
+const getStyles = ({ width }) => ({
   root: {
     padding: spacing.page,
     maxWidth: 600,
@@ -24,3 +24,5 @@ export default ({ width }) => ({
     display: 'flex',
   },
 });
+
+export default getStyles;

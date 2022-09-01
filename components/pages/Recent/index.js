@@ -1,7 +1,7 @@
 import React from 'react';
 import List from 'components/List';
 
-export default (props) => (
+const Recent = (props) => (
   <List
     {...props}
     key="recent"
@@ -10,3 +10,5 @@ export default (props) => (
     source="recent"
   />
 );
+
+export default Recent;

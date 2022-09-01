@@ -2,7 +2,7 @@ import React from 'react';
 import List from 'components/List';
 import l from 'lib/language';
 
-export default () => (
+const Audio = () => (
   <List
     key="audio"
     title={l.audio.title}
@@ -10,3 +10,5 @@ export default () => (
     source="audio"
   />
 );
+
+export default Audio;

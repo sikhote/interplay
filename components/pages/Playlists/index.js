@@ -1,7 +1,7 @@
 import React from 'react';
 import List from 'components/List';
 
-export default (props) => (
+const Playlists = (props) => (
   <List
     {...props}
     key="playlists"
@@ -10,3 +10,5 @@ export default (props) => (
     source="playlists"
   />
 );
+
+export default Playlists;

@@ -1,6 +1,6 @@
 import { spacing, bps } from 'lib/styling';
 
-export default ({ width }) => ({
+const getStyles = ({ width }) => ({
   root: {
     width: '100%',
     height: '100%',
@@ -48,3 +48,5 @@ export default ({ width }) => ({
     overflowY: 'scroll',
   },
 });
+
+export default getStyles;

@@ -21,7 +21,7 @@ const Auth = () => {
 
   useEffect(() => {
     dispatch(authActions.startAuth());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Modal

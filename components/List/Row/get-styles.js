@@ -4,7 +4,7 @@ import { c, spacing, bps, fS, lH } from 'lib/styling';
 
 const buttonWidth = fS.c * lH.normal * 1.125;
 
-export default ({ width }) =>
+const getStyles = ({ width }) =>
   StyleSheet.create({
     root: {
       display: 'grid',
@@ -45,3 +45,5 @@ export default ({ width }) =>
       overflow: 'hidden',
     },
   });
+
+export default getStyles;

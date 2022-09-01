@@ -1,16 +1,9 @@
 import { StyleSheet } from 'react-native';
-import {
-  c,
-  spacing,
-  bps,
-  fS,
-  lH,
-  fontWeights,
-} from 'lib/styling';
+import { c, spacing, bps, fS, lH, fontWeights } from 'lib/styling';
 
 const buttonWidth = fS.c * lH.normal * 1.125;
 
-export default ({ width }) =>
+const getStyles = ({ width }) =>
   StyleSheet.create({
     root: {
       display: 'grid',
@@ -64,3 +57,5 @@ export default ({ width }) =>
       fontSize: fS.a,
     },
   });
+
+export default getStyles;

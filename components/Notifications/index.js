@@ -26,7 +26,7 @@ const Notifications = () => {
         setTimeout(() => handler(newOne), 3000 * (i + 1));
       });
     }
-  }, [notifications]);
+  }, [notifications, dispatch, notificationsSystem]);
 
   return null;
 };

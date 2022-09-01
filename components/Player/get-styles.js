@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { spacing, bps, fontWeights } from 'lib/styling';
 
-export default ({ width }) => ({
+const getStyles = ({ width }) => ({
   player: {
     overflow: 'hidden',
     cursor: 'pointer',
@@ -169,3 +169,5 @@ export default ({ width }) => ({
 //     width: '100% !important',
 //     height: '100% !important',
 //   }
+
+export default getStyles;

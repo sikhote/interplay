@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { transparentize } from 'polished';
 import { c, spacing, bps } from 'lib/styling';
 
-export default ({ width }) =>
+const getStyles = ({ width }) =>
   StyleSheet.create({
     root: {
       width: 240,
@@ -85,3 +85,5 @@ export default ({ width }) =>
         : {}),
     },
   });
+
+export default getStyles;

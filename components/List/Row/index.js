@@ -6,7 +6,7 @@ import Button from 'components/Button';
 import Text from 'components/Text';
 import getStyles from './get-styles';
 
-const Row = memo(({ style, index, data }) => {
+const Row = ({ style, index, data }) => {
   const dimensions = useWindowDimensions();
   const styles = useMemo(() => getStyles(dimensions), [dimensions]);
   const {
@@ -49,7 +49,7 @@ const Row = memo(({ style, index, data }) => {
       />
     </TouchableOpacity>
   );
-});
+};
 
 Row.propTypes = {
   index: PropTypes.number,
@@ -63,4 +63,6 @@ Row.defaultProps = {
   data: {},
 };
 
-export default Row;
+const MemoRow = memo(Row);
+
+export default MemoRow;

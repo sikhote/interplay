@@ -5,17 +5,21 @@
 [![Blazing Fast](https://img.shields.io/badge/speed-blazing%20%F0%9F%94%A5-brightgreen.svg)](https://twitter.com/acdlite/status/974390255393505280)
 
 # interplay
+
 Play media from the cloud on a browser
 
 ## notes
+
 - Built with react, next, now, xo, lodash, react-native, and more
 - So far, only dropbox is supported and it requires an access token
 
 ## commands
+
 - `yarn dev` to develop
 - `yarn build` to build for production
 - `yarn start` to run in production mode
 
 ## development requirements
+
 - Web: node and yarn
 - Native: node, yarn, expo-cli, and mac os

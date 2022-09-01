@@ -26,14 +26,14 @@ const App = ({ Component, pageProps }) => {
 
   useEffect(() => {
     setColorScheme(preferredColorScheme);
-  }, []);
+  }, [preferredColorScheme]);
 
   return (
     <ConnectedRouter>
       <MantineProvider
         withGlobalStyles
         withNormalizeCSS
-        theme={{ colorScheme }}
+        theme={{ colorScheme, primaryColor: 'teal' }}
       >
         <NotificationsProvider position="top-center">
           <div>

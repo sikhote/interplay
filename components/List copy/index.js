@@ -28,11 +28,10 @@ const List = ({ title, header, source, store, dispatch }) => {
   const { lists, player, files, playlists } = store;
   const { position, sortBy, sortDirection, search } =
     lists[source] || getDefaultListSettings(source);
-  const sourcedData = useMemo(() => getSourcedData(files, source, playlists), [
-    files,
-    source,
-    playlists,
-  ]);
+  const sourcedData = useMemo(
+    () => getSourcedData(files, source, playlists),
+    [files, source, playlists],
+  );
   const searchedData = useMemo(
     () => getSearchedData(sourcedData, source, search),
     [sourcedData, source, search],

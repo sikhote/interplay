@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import Icon from 'components/Icon';
 import styles from './styles';
 import l from 'lib/language';
@@ -7,38 +7,37 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   Button,
   TextInput,
-  Text,
   Title,
   Modal,
   Space,
   Select,
   Loader,
 } from '@mantine/core';
+import Text from 'components/Text';
 
 const Auth = () => {
   const auth = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(authActions.startAuth());
-  }, [dispatch]);
 
   return (
     <Modal
       centered
-      hideCloseButton
+      withCloseButton={false}
+      closeOnClickOutside={false}
+      closeOnEscape={false}
       opened={auth.status !== 'authed'}
       styles={{ modal: styles.modal }}
       padding="xl"
       size={540}
     >
       <Title>{l.auth.header}</Title>
-      <Text size="xl">{l.auth.body}</Text>
+      <Text shade={3} size="xl">
+        {l.auth.body}
+      </Text>
       <Space h="xl" />
       {['starting'].includes(auth.status) && <Loader />}
       {['disconnected', 'connecting'].includes(auth.status) && (
         <>
-          <Text color="gray">{l.auth.step1}</Text>
+          <Text>{l.auth.step1}</Text>
           <Space h="sm" />
           <Button
             leftIcon={<Icon icon="login" />}
@@ -52,7 +51,7 @@ const Auth = () => {
       )}
       {['connected', 'authing'].includes(auth.status) && (
         <>
-          <Text color="gray">
+          <Text>
             {auth.members?.length > 0 ? l.auth.step2Alt : l.auth.step2}
           </Text>
           {auth.members?.length > 0 && (
@@ -71,6 +70,16 @@ const Auth = () => {
               />
             </>
           )}
+          <Space h="sm" />
+          <Select
+            disabled={auth.status !== 'connected'}
+            icon={<Icon icon="cloud" />}
+            value={auth.service}
+            data={[{ value: 'dropbox', label: 'Dropbox' }].map(
+              ({ value, label }) => ({ value, label }),
+            )}
+            onChange={(value) => dispatch(authActions.service(value))}
+          />
           <Space h="sm" />
           <TextInput
             disabled={auth.status !== 'connected'}

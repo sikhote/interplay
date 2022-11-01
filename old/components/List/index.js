@@ -1,5 +1,4 @@
-import React, { useRef, useMemo, useCallback } from 'react';
-import PropTypes from 'prop-types';
+import { useRef, useMemo, useCallback } from 'react';
 import { get, throttle } from 'lodash';
 import Router from 'next/router';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -183,12 +182,6 @@ const List = ({ title, header, source, store, dispatch }) => {
   //     </View>
   //   </View>
   // );
-};
-
-List.propTypes = {
-  source: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  header: PropTypes.string.isRequired,
 };
 
 export default List;

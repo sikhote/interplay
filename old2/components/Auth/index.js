@@ -3,6 +3,7 @@ import Icon from 'components/Icon';
 import styles from './styles';
 import l from 'lib/language';
 import * as authActions from 'lib/features/auth';
+import * as notificationActions from 'lib/features/notifications';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Button,
@@ -16,6 +17,7 @@ import {
 import Text from 'components/Text';
 
 const Auth = () => {
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
   return (
@@ -29,6 +31,7 @@ const Auth = () => {
       padding="xl"
       size={540}
     >
+      <button onClick={() => dispatch(notificationActions.notify({ type: 'error', message: 'testttt' }))}>pressss</button>
       <Title>{l.auth.header}</Title>
       <Text shade={3} size="xl">
         {l.auth.body}

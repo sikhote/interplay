@@ -1,10 +1,10 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import * as React from 'react';
-// import { createGetInitialProps } from '@mantine/next';
+import { createGetInitialProps } from '@mantine/next';
 
-// const getInitialProps = createGetInitialProps();
+const getInitialProps = createGetInitialProps();
 export default class AppDocument extends Document {
-  // static getInitialProps = getInitialProps;
+  static getInitialProps = getInitialProps;
 
   render() {
     return (

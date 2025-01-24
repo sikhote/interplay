@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNotifications as useMantifications } from '@mantine/notifications';
 import { useSelector, useDispatch } from 'react-redux';
 import { active, remove } from 'lib/features/notifications';
+import {  } from '@mantine/notifications';
 
 const useNotifications = () => {
   const notifications = useSelector((state) => state.notifications);
@@ -12,7 +13,7 @@ const useNotifications = () => {
     const newOnes = notifications.filter(({ status }) => status === 'new');
     const handler = (newOne) => {
       dispatch(active(newOne.id));
-      notificationsSystem.showNotification(newOne);
+      notificationsSystem.show(newOne);
       setTimeout(() => {
         dispatch(remove(newOne.id));
       }, 3000);
